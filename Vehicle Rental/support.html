@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="support">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+<h1>Support Center</h1>
+<div class="grid">
+  <div class="card">
+    <h3>AI Support Assistant</h3>
+    <p>Get instant help with booking, vehicle info, and common questions.</p>
+    <button type="button" id="openChatbot">Start AI Chat</button>
+  </div>
+</div>
+
+<!-- AI Chatbot Interface -->
+<div id="chatbotContainer" class="chatbot-container" style="display: none;">
+  <div class="chatbot-header">
+    <h4>DriveHive AI Assistant</h4>
+    <button id="closeChatbot" class="close-btn">&times;</button>
+  </div>
+  <div id="chatbotMessages" class="chatbot-messages">
+    <div class="bot-message">
+      <p>Hi! I'm your DriveHive AI assistant. How can I help you today?</p>
+    </div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="chatInput" placeholder="Type your message..." />
+    <button id="sendMessage">Send</button>
+  </div>
+</div>
+  <form id="supportForm" class="card">
+    <h3>Submit Ticket</h3>
+    <label>Subject</label><input name="subject" required />
+    <label>Priority</label><select name="priority"><option>low</option><option>medium</option><option>high</option></select>
+    <label>Description</label><textarea name="description" required></textarea>
+    <button type="submit">Create Ticket</button>
+    <div id="supportNotice"></div>
+  </form>
+</div>
+<h2>Ticket Status</h2>
+<ul id="ticketList" class="ticket-list"></ul>
+<p><a href="faqs.html">Go to FAQs</a> | <a href="contact.html">Contact Team</a></p>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

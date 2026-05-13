@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle Listings | DriveHive</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="listings">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+<h1>Vehicle Listings</h1>
+<p>Filter and compare vehicles based on your trip needs.</p>
+<section class="filters card">
+  <div><label>Vehicle Type</label><select id="filterType" onchange="renderListings()"><option value="all">All</option><option>Sedan</option><option>SUV</option><option>Van</option><option>Electric</option><option>Hatchback</option><option>Bike</option></select></div>
+  <div><label>Fuel Type</label><select id="filterFuel" onchange="renderListings()"><option value="all">All</option><option value="Petrol">Petrol</option><option value="Diesel">Diesel</option><option value="Hybrid">Hybrid</option><option value="EV">EV</option></select></div>
+  <div><label>Transmission</label><select id="filterTransmission" onchange="renderListings()"><option value="all">All</option><option value="Automatic">Automatic</option><option value="Manual">Manual</option></select></div>
+  <div><label>Max Price/Day (INR)</label><input id="filterPrice" type="number" value="10000" oninput="renderListings()" /></div>
+  <div><label>Sort By</label><select id="filterSort" onchange="renderListings()"><option value="priceAsc">Price: Low to High</option><option value="priceDesc">Price: High to Low</option><option value="rating">Top Rated</option></select></div>
+</section>
+<div id="vehicleGrid" class="grid"></div>
+<section class="banner">Hot Offers are auto-applied at checkout when valid.</section>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

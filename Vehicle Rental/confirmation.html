@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmation</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="listings">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <div id="confirmationCard" class="card"></div>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const bookingId = params.get("bookingId");
+  const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+  const booking = bookings.find((b) => String(b.id) === String(bookingId));
+  const vehicleNameMap = new Map((JSON.parse(localStorage.getItem("vehicles")) || []).map((v) => [String(v.id), v.name]));
+  const card = document.getElementById("confirmationCard");
+
+  if (!booking) {
+    card.innerHTML = "<h2>Booking not found</h2><p>Please return to listings and book again.</p>";
+  } else {
+    const total = Number(booking?.total || 0);
+    const amount = total > 0 ? `₹${total.toLocaleString("en-IN")}` : "N/A";
+    card.innerHTML = `
+      <h2>Booking Confirmed ✅</h2>
+      <p>Booking ID: ${booking.id}</p>
+      <p>Vehicle: ${vehicleNameMap.get(String(booking.vehicleId)) || booking.vehicleId}</p>
+      <p>Pickup: ${booking.pickup}</p>
+      <p>Dropoff: ${booking.dropoff}</p>
+      <p>Total Paid: ${amount}</p>
+      <p>Status: Confirmed</p>
+    `;
+  }
+</script>
+</body>
+</html>

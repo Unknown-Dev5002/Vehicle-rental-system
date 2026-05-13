@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="blog">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+<h1>Travel Blog - Explore India</h1>
+<p>Discover amazing destinations, distances from your location, and travel times for your road trips.</p>
+
+<!-- Location Detection Section -->
+<section class="card location-section">
+  <h3>Your Location</h3>
+  <div id="locationInfo">
+    <button id="detectLocation" class="btn">Detect My Location</button>
+    <p class="small">Or enter your city manually:</p>
+    <input type="text" id="manualLocation" placeholder="Enter city name..." />
+    <button id="setLocation" class="btn secondary">Set Location</button>
+  </div>
+  <div id="currentLocation" class="location-display" style="display: none;">
+    <p><strong>Your current location:</strong> <span id="locationName"></span></p>
+  </div>
+</section>
+
+<!-- Travel Destinations Section -->
+<section class="destinations-section">
+  <h2>Popular Indian Destinations</h2>
+  <div class="filters card">
+    <div>
+      <label>Filter by Region</label>
+      <select id="regionFilter">
+        <option value="all">All Regions</option>
+        <option value="north">North India</option>
+        <option value="south">South India</option>
+        <option value="east">East India</option>
+        <option value="west">West India</option>
+        <option value="central">Central India</option>
+      </select>
+    </div>
+    <div>
+      <label>Sort by</label>
+      <select id="sortBy">
+        <option value="distance">Distance</option>
+        <option value="time">Travel Time</option>
+        <option value="popularity">Popularity</option>
+      </select>
+    </div>
+  </div>
+  <div id="destinationsGrid" class="grid"></div>
+</section>
+
+<!-- Blog Posts Section -->
+<section class="blog-section">
+  <h2>Travel Guides & Tips</h2>
+  <ul id="blogList" class="blog-list"></ul>
+</section>
+
+<!-- Article Detail View (Hidden by default) -->
+<section id="articleDetail" class="article-detail" style="display: none;">
+  <button id="backToBlog" class="btn secondary">← Back to Blog</button>
+  <article class="article-content">
+    <h1 id="articleTitle"></h1>
+    <div class="article-meta">
+      <span id="articleCategory"></span> | <span id="articleReadTime"></span> | <span id="articleDate"></span>
+    </div>
+    <div id="articleImage" class="article-image"></div>
+    <div id="articleContent" class="article-text"></div>
+    <div class="article-tags" id="articleTags"></div>
+  </article>
+</section>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

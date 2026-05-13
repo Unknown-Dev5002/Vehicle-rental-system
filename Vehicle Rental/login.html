@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="login">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+<h1>Login</h1>
+<form id="loginForm" class="card">
+  <label>Email</label><input name="email" type="email" required />
+  <label>Password</label><input name="password" type="password" required />
+  <button type="submit">Login</button>
+  <div id="loginNotice"></div>
+  <p><a href="forgot-password.html">Forgot password?</a> | <a href="register.html">Create account</a></p>
+</form>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle Details</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="listings">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+<h1>Vehicle Details</h1>
+<div id="vehicleDetailsPanel" class="card"></div>
+<section>
+  <h2>Customer Reviews</h2>
+  <ul id="reviewList" class="review-list"></ul>
+  <form id="reviewForm" class="card">
+    <label>Name</label><input name="author" required />
+    <label>Rating (1-5)</label><input name="rating" type="number" min="1" max="5" required />
+    <label>Review</label><textarea name="text" required></textarea>
+    <button type="submit">Submit Review</button>
+    <div id="reviewNotice"></div>
+  </form>
+</section>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

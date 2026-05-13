@@ -1,0 +1,2028 @@
+const API_BASE = "http://localhost:5000/api";
+
+const fallbackVehicles = [
+  { id: 1, name: "Mountain Explorer SUV", category: "Car", type: "SUV", brand: "Toyota", model: "Fortuner 4x4", year: 2024, fuel: "Diesel", transmission: "Manual", seats: 7, price: 2899, rating: 4.8, available: true, image: "assets/images/mountain-vehicle.jpg", description: "Rugged 4x4 SUV perfect for mountain roads and off-road adventures." },
+  { id: 2, name: "Alpine Cruiser", category: "Car", type: "SUV", brand: "Jeep", model: "Wrangler Rubicon", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 5, price: 3299, rating: 4.9, available: true, image: "assets/images/uploaded-2.jpg", description: "Ultimate mountain vehicle with advanced 4x4 capabilities for steep terrain." },
+  { id: 3, name: "Peak Performance Sedan", category: "Car", type: "Sedan", brand: "Subaru", model: "Outback", year: 2024, fuel: "Hybrid", transmission: "Automatic", seats: 5, price: 2499, rating: 4.6, available: true, image: "assets/images/uploaded-3.jpg", description: "All-wheel drive sedan ideal for mountain highways and scenic routes." },
+  { id: 4, name: "Summit Van", category: "Car", type: "Van", brand: "Mercedes", model: "Sprinter 4x4", year: 2024, fuel: "Diesel", transmission: "Automatic", seats: 9, price: 3899, rating: 4.7, available: true, image: "assets/images/uploaded-4.jpg", description: "Spacious 4x4 van for group mountain expeditions and camping trips." },
+  { id: 5, name: "Ridge Rider EV", category: "Car", type: "Electric", brand: "Tesla", model: "Model Y", year: 2024, fuel: "EV", transmission: "Automatic", seats: 5, price: 3599, rating: 4.8, available: true, image: "assets/images/uploaded-5.jpg", description: "Electric SUV with mountain mode and enhanced battery range for high altitude driving." },
+  { id: 6, name: "Mountain Rider Bike", category: "Bike", type: "Bike", brand: "Royal Enfield", model: "Himalayan", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1199, rating: 4.8, available: true, image: "https://images.pexels.com/photos/1366943/pexels-photo-1366943.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Adventure motorcycle built specifically for mountain terrain and high-altitude riding." },
+  { id: 7, name: "Peak Sport Bike", category: "Bike", type: "Bike", brand: "KTM", model: "Adventure 390", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1399, rating: 4.7, available: true, image: "https://images.pexels.com/photos/1366944/pexels-photo-1366944.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Lightweight adventure bike perfect for winding mountain roads." },
+  { id: 8, name: "Alpine Electric Scooter", category: "Bike", type: "Bike", brand: "Ather", model: "450X Mountain", year: 2024, fuel: "EV", transmission: "Automatic", seats: 2, price: 999, rating: 4.6, available: true, image: "https://images.pexels.com/photos/1366945/pexels-photo-1366945.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Electric scooter with mountain mode for hill climbing and extended range." },
+  { id: 9, name: "Valley Hatchback", category: "Car", type: "Hatchback", brand: "Suzuki", model: "Jimny", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 4, price: 1799, rating: 4.5, available: true, image: "https://images.pexels.com/photos/1366946/pexels-photo-1366946.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Compact 4x4 perfect for narrow mountain roads and trail access." },
+  { id: 10, name: "Crestline SUV", category: "Car", type: "SUV", brand: "Land Rover", model: "Defender", year: 2024, fuel: "Diesel", transmission: "Automatic", seats: 7, price: 4299, rating: 4.9, available: true, image: "https://images.pexels.com/photos/1366947/pexels-photo-1366947.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Premium luxury SUV with advanced terrain response for mountain expeditions." },
+  { id: 11, name: "Summit Executive Sedan", category: "Car", type: "Sedan", brand: "Audi", model: "A6 Allroad", year: 2024, fuel: "Diesel", transmission: "Automatic", seats: 5, price: 3199, rating: 4.7, available: true, image: "https://images.pexels.com/photos/1366948/pexels-photo-1366948.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Luxury all-wheel drive sedan for comfortable mountain business travel." },
+  { id: 12, name: "Mountain Trail Bike", category: "Bike", type: "Bike", brand: "Hero", model: "Xpulse 200 4x4", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1499, rating: 4.8, available: true, image: "https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Dual-sport motorcycle for both mountain trails and highway cruising." },
+  { id: 13, name: "Alpine Commuter Bike", category: "Bike", type: "Bike", brand: "Honda", model: "CB200X", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 899, rating: 4.4, available: true, image: "https://images.pexels.com/photos/1366950/pexels-photo-1366950.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Efficient commuter bike with mountain-friendly features and comfortable riding position." },
+  { id: 14, name: "Ridge Runner Naked Bike", category: "Bike", type: "Bike", brand: "Triumph", model: "Tiger Sport", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1699, rating: 4.6, available: true, image: "https://images.pexels.com/photos/1366951/pexels-photo-1366951.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Powerful street bike with mountain riding capabilities and adventure styling." }
+];
+
+const offers = [
+  { code: "MOUNTAIN20", title: "Mountain Explorer Discount", discount: "20% off on mountain vehicle rentals" },
+  { code: "PEAK10", title: "Peak Adventure Bonus", discount: "10% off for first-time mountain explorers" }
+];
+
+let vehiclesCache = [];
+const VEHICLES_KEY = "vehicles";
+const DEFAULT_VEHICLE_IMAGE = "https://images.pexels.com/photos/1366938/pexels-photo-1366938.jpeg?auto=compress&cs=tinysrgb&w=1200";
+const INR = new Intl.NumberFormat("en-IN");
+
+function formatINR(amount) {
+  return `\u20B9${INR.format(amount)}`;
+}
+
+function isLoggedIn() {
+  return localStorage.getItem("vr_session") === "active";
+}
+
+function toUiVehicle(row) {
+  const type = row.type || "Car";
+  const category = String(type).toLowerCase().includes("bike") ? "Bike" : "Car";
+  return {
+    id: row.id,
+    name: row.name,
+    category,
+    type: row.type,
+    fuel: row.fuelType || "Petrol",
+    transmission: row.transmission || "Manual",
+    seats: category === "Bike" ? 2 : 5,
+    price: Number(row.pricePerDay || 0),
+    rating: 4.5,
+    available: true,
+    image: row.imageUrl ? `http://localhost:5000${row.imageUrl}` : "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    brand: row.brand,
+    model: row.model,
+    year: row.year,
+    description: row.description,
+    ownerEmail: row.ownerEmail || ""
+  };
+}
+
+async function fetchVehicles() {
+  try {
+    const raw = localStorage.getItem(VEHICLES_KEY);
+    const stored = raw ? JSON.parse(raw) : [];
+    vehiclesCache = Array.isArray(stored) ? stored : [];
+    return vehiclesCache;
+  } catch (_err) {
+    vehiclesCache = [];
+    return vehiclesCache;
+  }
+}
+
+async function getVehicles() {
+  if (vehiclesCache.length) return vehiclesCache;
+  return fetchVehicles();
+}
+
+function setActiveNav() {
+  const page = document.body.dataset.page;
+  document.querySelectorAll(".nav-links a").forEach((link) => {
+    if (link.dataset.page === page) link.classList.add("active");
+  });
+}
+
+function updateAuthNav() {
+  const loginLink = document.querySelector(".nav-links a[data-page='login']");
+  if (!loginLink) return;
+  if (isLoggedIn()) {
+    loginLink.textContent = "Logout";
+    loginLink.setAttribute("href", "#");
+    loginLink.onclick = (e) => {
+      e.preventDefault();
+      localStorage.removeItem("vr_session");
+      localStorage.removeItem("vr_role");
+      localStorage.removeItem("vr_user_email");
+      window.location.href = "index.html";
+    };
+    return;
+  }
+  loginLink.textContent = "Login";
+  loginLink.setAttribute("href", "login.html");
+  loginLink.onclick = null;
+}
+
+async function renderListings() {
+  const container = document.getElementById("vehicleGrid");
+  if (!container) return;
+  const page = document.body.dataset.page;
+
+  // Keep Listings under ONE rendering system:
+  // - default/dummy vehicles (no static HTML cards)
+  // - plus user-added vehicles from localStorage
+  const defaultVehicles = [
+    {
+      id: "d1",
+      name: "Mountain Explorer SUV",
+      type: "SUV",
+      category: "Car",
+      brand: "Toyota",
+      model: "Fortuner 4x4",
+      year: 2024,
+      fuel: "Diesel",
+      transmission: "Manual",
+      seats: 7,
+      price: 2899,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/1366938/pexels-photo-1366938.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Rugged 4x4 SUV perfect for mountain roads and off-road adventures."
+    },
+    {
+      id: "d2",
+      name: "Hyundai Creta SUV",
+      type: "SUV",
+      category: "Car",
+      brand: "Hyundai",
+      model: "Creta",
+      year: 2024,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2699,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Feature-rich SUV ideal for highways, family travel, and long weekend trips."
+    },
+    {
+      id: "d3",
+      name: "Toyota Camry Hybrid",
+      type: "Sedan",
+      category: "Car",
+      brand: "Toyota",
+      model: "Camry Hybrid",
+      year: 2022,
+      fuel: "Hybrid",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2199,
+      rating: 4.5,
+      available: true,
+      image: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Fuel-efficient premium hybrid sedan with quiet cabin and refined ride."
+    },
+    {
+      id: "d4",
+      name: "Kia Carens Van",
+      type: "Van",
+      category: "Car",
+      brand: "Kia",
+      model: "Carens",
+      year: 2023,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      seats: 7,
+      price: 2999,
+      rating: 4.7,
+      available: true,
+      image: "https://images.pexels.com/photos/4674337/pexels-photo-4674337.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "7-seater family mover with ample luggage space and comfortable long-drive setup."
+    },
+    {
+      id: "d5",
+      name: "BYD Seal Electric",
+      type: "Electric",
+      category: "Car",
+      brand: "BYD",
+      model: "Seal",
+      year: 2024,
+      fuel: "EV",
+      transmission: "Automatic",
+      seats: 5,
+      price: 3199,
+      rating: 4.9,
+      available: true,
+      image: "https://images.pexels.com/photos/110844/pexels-photo-110844.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Modern EV sedan with fast acceleration, premium interior, and low running cost."
+    },
+    {
+      id: "d6",
+      name: "Royal Enfield Classic 350",
+      type: "Bike",
+      category: "Bike",
+      brand: "Royal Enfield",
+      model: "Classic 350",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 2,
+      price: 899,
+      rating: 4.7,
+      available: true,
+      image: "https://images.pexels.com/photos/2116475/pexels-photo-2116475.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Relaxed cruiser bike suited for daily rides and laid-back highway touring."
+    },
+    {
+      id: "d7",
+      name: "Yamaha R15 Sports",
+      type: "Bike",
+      category: "Bike",
+      brand: "Yamaha",
+      model: "R15",
+      year: 2024,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 2,
+      price: 1099,
+      rating: 4.6,
+      available: true,
+      image: "https://images.pexels.com/photos/13781/pexels-photo-13781.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Sharp-looking sports bike with strong pickup and agile city handling."
+    },
+    {
+      id: "d8",
+      name: "Ather 450X Scooter",
+      type: "Bike",
+      category: "Bike",
+      brand: "Ather",
+      model: "450X",
+      year: 2024,
+      fuel: "EV",
+      transmission: "Automatic",
+      seats: 2,
+      price: 799,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/15038718/pexels-photo-15038718.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Easy-to-ride EV scooter with instant torque and ideal city commuting range."
+    },
+    {
+      id: "d9",
+      name: "Maruti Suzuki Baleno",
+      type: "Hatchback",
+      category: "Car",
+      brand: "Maruti Suzuki",
+      model: "Baleno",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 5,
+      price: 1599,
+      rating: 4.4,
+      available: true,
+      image: "https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Budget-friendly hatchback, perfect for city traffic and quick daily errands."
+    },
+    {
+      id: "d10",
+      name: "Kia Sonet Compact SUV",
+      type: "SUV",
+      category: "Car",
+      brand: "Kia",
+      model: "Sonet",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2399,
+      rating: 4.5,
+      available: true,
+      image: "https://images.pexels.com/photos/1007410/pexels-photo-1007410.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Compact SUV with elevated seating, touchscreen cabin, and easy maneuverability."
+    },
+    {
+      id: "d11",
+      name: "Skoda Slavia Executive",
+      type: "Sedan",
+      category: "Car",
+      brand: "Skoda",
+      model: "Slavia",
+      year: 2024,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2799,
+      rating: 4.7,
+      available: true,
+      image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Refined executive sedan with premium styling and stable high-speed performance."
+    },
+    {
+      id: "d12",
+      name: "Hero XPulse 200",
+      type: "Bike",
+      category: "Bike",
+      brand: "Hero",
+      model: "XPulse 200",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 2,
+      price: 1299,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/595808/pexels-photo-595808.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Adventure-ready bike built for rough roads, touring comfort, and weekend exploration."
+    }
+  ];
+  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+  const mergedVehiclesRaw = [...defaultVehicles, ...storedVehicles];
+
+  // Prevent duplicate rendering (last one wins: stored over default).
+  const byId = new Map();
+  for (const v of mergedVehiclesRaw) byId.set(String(v.id), v);
+
+  function parsePriceToNumber(price) {
+    if (typeof price === "number" && Number.isFinite(price)) return price;
+    if (typeof price === "string") {
+      const n = Number(price.replace(/[^\d.]/g, ""));
+      return Number.isFinite(n) ? n : 0;
+    }
+    return 0;
+  }
+
+  function normalizeVehicle(v) {
+    // Normalize default/dummy shape to match the existing card template.
+    const type = v.type || (String(v.category || "").toLowerCase().includes("bike") ? "Bike" : "Sedan");
+    const category = v.category || (String(type).toLowerCase().includes("bike") ? "Bike" : "Car");
+    const fuel = v.fuel || "Petrol";
+    const transmission = v.transmission || "Automatic";
+    const seats = Number(v.seats ?? (category === "Bike" ? 2 : 5));
+    const priceNum = parsePriceToNumber(v.price);
+
+    return {
+      ...v,
+      id: v.id,
+      type,
+      category,
+      fuel,
+      transmission,
+      seats,
+      price: priceNum,
+      rating: Number(v.rating ?? 4.5),
+      available: v.available ?? true,
+      description: v.description || (v.location ? `Located in ${v.location}.` : "Well-maintained rental vehicle ready for your next trip."),
+      brand: v.brand || "",
+      model: v.model || "",
+      year: v.year || "",
+      image: v.image || "assets/images/sample.jpg"
+    };
+  }
+
+  const allVehicles = Array.from(byId.values()).map(normalizeVehicle);
+
+  const type = document.getElementById("filterType")?.value || "all";
+  const fuel = document.getElementById("filterFuel")?.value || "all";
+  const transmission = document.getElementById("filterTransmission")?.value || "all";
+  const max = Number(document.getElementById("filterPrice")?.value || 999999);
+  const sort = document.getElementById("filterSort")?.value || "priceAsc";
+
+  const scoped = page === "home" ? allVehicles.filter((v) => v.category === "Car") : allVehicles;
+  let list = scoped.filter((v) =>
+    (type === "all" || v.type === type || v.category === type) &&
+    (fuel === "all" || v.fuel === fuel) &&
+    (transmission === "all" || v.transmission === transmission) &&
+    v.price <= max
+  );
+
+  if (sort === "priceAsc") list.sort((a, b) => a.price - b.price);
+  if (sort === "priceDesc") list.sort((a, b) => b.price - a.price);
+  if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
+
+  if (!list.length) {
+    container.innerHTML = `<div class="card"><p>No vehicles match these filters right now.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = list.map((v) => `
+    <article class="card vehicle-card">
+      <img class="vehicle-image" src="${v.image}" alt="${v.name}" loading="lazy" />
+      <p class="small vehicle-tag">${v.category}</p>
+      <h3>${v.name}</h3>
+      <p class="small">${v.brand || ""} ${v.model || ""} ${v.year || ""}</p>
+      <p class="small">${v.type} | ${v.transmission} | ${v.fuel} | ${v.seats} seats</p>
+      <p class="small">${v.description || "Well-maintained rental vehicle ready for your next trip."}</p>
+      <p>Rating: ${v.rating} ${v.available ? "| Available" : "| Not available"}</p>
+      <p class="price">${formatINR(v.price)}/day</p>
+      <a class="btn" href="vehicle-details.html?id=${v.id}">View Details</a>
+    </article>
+  `).join("");
+}
+
+function renderOffers(targetId = "offerGrid") {
+  const container = document.getElementById(targetId);
+  if (!container) return;
+  container.innerHTML = offers.map((o) => `<div class="card"><h4>${o.title}</h4><p>${o.discount}</p><p class="small">Code: ${o.code}</p></div>`).join("");
+}
+
+function handleAuthForms() {
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+  const forgotForm = document.getElementById("forgotForm");
+  const resetForm = document.getElementById("resetForm");
+
+  function generateResetToken() {
+    // Prefer strong randomness when available; fallback keeps the flow working.
+    try {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const bytes = new Uint8Array(32);
+        window.crypto.getRandomValues(bytes);
+        return Array.from(bytes)
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("");
+      }
+    } catch (_err) {
+      // ignore and fallback
+    }
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+  }
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(registerForm).entries());
+      if (!data.email || !String(data.password).match(/^(?=.*\d).{8,}$/)) {
+        return notify("authNotice", "Password must be 8+ chars and include a number.", true);
+      }
+      localStorage.setItem("vr_user", JSON.stringify(data));
+      notify("authNotice", "Registration successful. You can now login.");
+      registerForm.reset();
+    });
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(loginForm).entries());
+      const user = JSON.parse(localStorage.getItem("vr_user") || "null");
+      if (!user || user.email !== data.email || user.password !== data.password) {
+        return notify("loginNotice", "Invalid credentials.", true);
+      }
+      localStorage.setItem("vr_session", "active");
+      localStorage.setItem("vr_user_email", data.email);
+      localStorage.setItem("vr_role", data.email.toLowerCase().includes("admin") ? "admin" : "user");
+      notify("loginNotice", "Login successful. Redirecting to dashboard...");
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 700);
+    });
+  }
+
+  if (forgotForm) {
+    forgotForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const data = Object.fromEntries(new FormData(forgotForm).entries());
+      const email = String(data.email || "").trim().toLowerCase();
+      const user = JSON.parse(localStorage.getItem("vr_user") || "null");
+
+      if (!email) return notify("forgotNotice", "Please enter your email.", true);
+      if (!user || !user.email || String(user.email).toLowerCase() !== email) {
+        return notify("forgotNotice", "No account found for this email.", true);
+      }
+
+      const token = generateResetToken();
+      const expiryMs = Date.now() + 15 * 60 * 1000;
+
+      localStorage.setItem("vr_reset_token", token);
+      localStorage.setItem("vr_reset_expiry", String(expiryMs));
+      localStorage.setItem("vr_reset_email", email);
+
+      notify("forgotNotice", `Reset link ready. Token valid for 15 minutes. Redirecting... (token: ${token})`);
+      forgotForm.reset();
+
+      setTimeout(() => {
+        window.location.href = `reset-password.html?token=${encodeURIComponent(token)}`;
+      }, 700);
+    });
+  }
+
+  if (resetForm) {
+    resetForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const params = new URLSearchParams(window.location.search);
+      const token = String(params.get("token") || "").trim();
+      const data = Object.fromEntries(new FormData(resetForm).entries());
+      const newPassword = String(data.newPassword || "");
+
+      const storedToken = String(localStorage.getItem("vr_reset_token") || "");
+      const expiryMs = Number(localStorage.getItem("vr_reset_expiry") || 0);
+      const resetEmail = String(localStorage.getItem("vr_reset_email") || "").toLowerCase();
+
+      if (!token || !storedToken || token !== storedToken) {
+        return notify("resetNotice", "Invalid or missing reset token.", true);
+      }
+      if (!expiryMs || Date.now() > expiryMs) {
+        return notify("resetNotice", "Reset token has expired. Please request a new one.", true);
+      }
+      if (!newPassword.match(/^(?=.*\d).{8,}$/)) {
+        return notify("resetNotice", "Password must be 8+ chars and include a number.", true);
+      }
+
+      const user = JSON.parse(localStorage.getItem("vr_user") || "null");
+      if (!user || !user.email || String(user.email).toLowerCase() !== resetEmail) {
+        return notify("resetNotice", "Reset failed. Please request a new token.", true);
+      }
+
+      user.password = newPassword;
+      localStorage.setItem("vr_user", JSON.stringify(user));
+
+      localStorage.removeItem("vr_reset_token");
+      localStorage.removeItem("vr_reset_expiry");
+      localStorage.removeItem("vr_reset_email");
+
+      notify("resetNotice", "Password updated. Redirecting to login...");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 700);
+    });
+  }
+}
+
+function handleDashboard() {
+  const panel = document.getElementById("dashboardPanel");
+  if (!panel) return;
+  // Show dashboard without requiring login
+  const email = localStorage.getItem("vr_user_email") || "Guest User";
+  panel.innerHTML = `<p class="small">Welcome: ${email}</p>`;
+}
+
+async function populateVehicleSelect() {
+  const select = document.querySelector("select[name='vehicle']");
+  if (!select) return;
+  const vehicles = await getVehicles();
+  select.innerHTML = vehicles.filter((v) => v.available).map((v) => `<option value="${v.id}">${v.name} (${v.category}) - ${formatINR(v.price)}/day</option>`).join("");
+}
+
+function handleBookingFlow() {
+  const bookingForm = document.getElementById("bookingForm");
+  const paymentForm = document.getElementById("paymentForm");
+
+  if (bookingForm) {
+    const pickupInput = document.getElementById("pickupDateTime");
+    const dropoffInput = document.getElementById("dropoffDateTime");
+    const confirmBookingBtn = document.getElementById("confirmBookingBtn");
+    let pendingBooking = null;
+    if (pickupInput && pickupInput.type !== "datetime-local") pickupInput.type = "datetime-local";
+    if (dropoffInput && dropoffInput.type !== "datetime-local") dropoffInput.type = "datetime-local";
+    const now = new Date().toISOString().slice(0, 16);
+    if (pickupInput) pickupInput.min = now;
+    if (pickupInput && dropoffInput) {
+      pickupInput.addEventListener("change", (e) => {
+        dropoffInput.min = e.target.value;
+        if (confirmBookingBtn) confirmBookingBtn.disabled = true;
+        pendingBooking = null;
+      });
+    }
+
+    bookingForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const dlInput = document.getElementById("license")?.value || "";
+      const cleanDL = dlInput.replace(/[\s-]/g, "").toUpperCase();
+      const dlRegex = /^[A-Z]{2}\d{2}\d{4}\d{7}$/;
+      if (!dlRegex.test(cleanDL)) {
+        alert("Enter a valid Driving License number");
+        return;
+      }
+      const pickup = document.getElementById("pickupDateTime")?.value || "";
+      const dropoff = document.getElementById("dropoffDateTime")?.value || "";
+      if (dropoff <= pickup) {
+        alert("Drop-off must be after pickup");
+        return;
+      }
+      const data = Object.fromEntries(new FormData(bookingForm).entries());
+      const vehicles = await getVehicles();
+      const selected = vehicles.find((v) => String(v.id) === String(data.vehicle));
+      const vehicleId = String(data.vehicle || "");
+      const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+      const vehicleBookings = bookings.filter((b) => String(b.vehicleId) === vehicleId);
+      const isBooked = vehicleBookings.some((b) => (pickup < b.dropoff) && (dropoff > b.pickup));
+
+      if (isBooked) {
+        pendingBooking = null;
+        if (confirmBookingBtn) confirmBookingBtn.disabled = true;
+        notify("bookingNotice", "Vehicle not available", true);
+        return;
+      }
+
+      const hours = (new Date(dropoff) - new Date(pickup)) / (1000 * 60 * 60);
+      const days = Math.ceil(hours / 24);
+      const ratePerDay = Number(selected?.pricePerDay ?? selected?.price ?? 0);
+      const total = days * ratePerDay;
+
+      pendingBooking = {
+        ...data,
+        vehicleId,
+        pickup,
+        dropoff,
+        user: localStorage.getItem("vr_user_email") || "guest",
+        total,
+        days,
+        status: "pending_payment",
+        bookingId: `BK-${Date.now()}`
+      };
+      if (confirmBookingBtn) confirmBookingBtn.disabled = false;
+      notify("bookingNotice", `Available. Estimated total: ${formatINR(total)} for ${days} day(s).`);
+    });
+
+    if (confirmBookingBtn) {
+      confirmBookingBtn.addEventListener("click", () => {
+        if (!pendingBooking) {
+          notify("bookingNotice", "Please check availability first.", true);
+          return;
+        }
+        const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+        const vehicleId = pendingBooking.vehicleId;
+        const pickup = pendingBooking.pickup;
+        const dropoff = pendingBooking.dropoff;
+        const pickupDate = new Date(pickup);
+        const dropoffDate = new Date(dropoff);
+        const vehicleBookings = bookings.filter((b) => b.vehicleId === vehicleId);
+        const isBooked = vehicleBookings.some((b) => {
+          const existingPickup = new Date(b.pickup);
+          const existingDropoff = new Date(b.dropoff);
+          return (pickupDate < existingDropoff) && (dropoffDate > existingPickup);
+        });
+        if (isBooked) {
+          alert("Vehicle just got booked for this time. Please select another slot.");
+          return;
+        }
+        const bookingRecord = {
+          id: `BK-${Date.now()}`,
+          vehicleId: pendingBooking.vehicleId,
+          pickup: pendingBooking.pickup,
+          dropoff: pendingBooking.dropoff,
+          user: pendingBooking.user,
+          total: pendingBooking.total,
+          status: "pending"
+        };
+        bookings.push(bookingRecord);
+        localStorage.setItem("bookings", JSON.stringify(bookings));
+        localStorage.setItem("vr_booking", JSON.stringify({ ...pendingBooking, id: bookingRecord.id }));
+        window.location.href = `payment.html?bookingId=${bookingRecord.id}`;
+      });
+    }
+  }
+
+  if (paymentForm) {
+    const summary = document.getElementById("paymentSummary");
+    const payButton = paymentForm.querySelector("button[type='submit']");
+    const params = new URLSearchParams(window.location.search);
+    const bookingId = params.get("bookingId");
+    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+    const booking = bookings.find((b) => String(b.id) === String(bookingId));
+    const totalAmount = Number(booking?.total || 0);
+
+    if (summary && booking) {
+      summary.innerHTML = `<p>Booking ID: <b>${booking.id}</b></p><p>Total: <b>${formatINR(totalAmount)}</b></p><p>Status: Pending payment</p>`;
+    }
+
+    paymentForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const cardName = paymentForm.querySelector("#cardName")?.value || "";
+      const cardNumber = (paymentForm.querySelector("#cardNumber")?.value || "").replace(/\s+/g, "");
+
+      if (!cardName || cardName.trim() === "") {
+        alert("Enter cardholder name");
+        return;
+      }
+      if (!cardNumber || cardNumber.length < 9 || cardNumber.length > 18) {
+        alert("Card number must be between 9 and 18 digits");
+        return;
+      }
+      if (!bookingId) {
+        alert("No booking found.");
+        return;
+      }
+
+      if (payButton) {
+        payButton.disabled = true;
+        payButton.textContent = "Processing payment...";
+      }
+
+      setTimeout(() => {
+        if (Math.random() < 0.1) {
+          alert("Payment failed. Try again.");
+          if (payButton) {
+            payButton.disabled = false;
+            payButton.textContent = "Pay Securely";
+          }
+          return;
+        }
+
+        const allBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
+        const idx = allBookings.findIndex((b) => String(b.id) === String(bookingId));
+        if (idx === -1) {
+          alert("No booking found.");
+          if (payButton) {
+            payButton.disabled = false;
+            payButton.textContent = "Pay Securely";
+          }
+          return;
+        }
+
+        allBookings[idx].status = "confirmed";
+        allBookings[idx].paymentStatus = "paid";
+        allBookings[idx].paidAt = new Date().toISOString();
+        localStorage.setItem("bookings", JSON.stringify(allBookings));
+
+        alert("Payment successful!");
+        window.location.href = `confirmation.html?bookingId=${allBookings[idx].id}`;
+      }, 2000);
+    });
+  }
+}
+
+async function renderVehicleDetails() {
+  const panel = document.getElementById("vehicleDetailsPanel");
+  if (!panel) return;
+  const params = new URLSearchParams(window.location.search);
+  const id = String(params.get("id") || "d1");
+
+  const defaultVehicles = [
+    {
+      id: "d1",
+      name: "Honda City Sedan",
+      type: "Sedan",
+      category: "Car",
+      brand: "Honda",
+      model: "City",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Automatic",
+      seats: 5,
+      price: 1899,
+      rating: 4.6,
+      available: true,
+      image: "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Smooth city sedan with automatic gearbox, strong AC, and comfortable rear seating."
+    },
+    {
+      id: "d2",
+      name: "Hyundai Creta SUV",
+      type: "SUV",
+      category: "Car",
+      brand: "Hyundai",
+      model: "Creta",
+      year: 2024,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2699,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Feature-rich SUV ideal for highways, family travel, and long weekend trips."
+    },
+    {
+      id: "d3",
+      name: "Toyota Camry Hybrid",
+      type: "Sedan",
+      category: "Car",
+      brand: "Toyota",
+      model: "Camry Hybrid",
+      year: 2022,
+      fuel: "Hybrid",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2199,
+      rating: 4.5,
+      available: true,
+      image: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Fuel-efficient premium hybrid sedan with quiet cabin and refined ride."
+    },
+    {
+      id: "d4",
+      name: "Kia Carens Van",
+      type: "Van",
+      category: "Car",
+      brand: "Kia",
+      model: "Carens",
+      year: 2023,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      seats: 7,
+      price: 2999,
+      rating: 4.7,
+      available: true,
+      image: "https://images.pexels.com/photos/4674337/pexels-photo-4674337.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "7-seater family mover with ample luggage space and comfortable long-drive setup."
+    },
+    {
+      id: "d5",
+      name: "BYD Seal Electric",
+      type: "Electric",
+      category: "Car",
+      brand: "BYD",
+      model: "Seal",
+      year: 2024,
+      fuel: "EV",
+      transmission: "Automatic",
+      seats: 5,
+      price: 3199,
+      rating: 4.9,
+      available: true,
+      image: "https://images.pexels.com/photos/110844/pexels-photo-110844.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Modern EV sedan with fast acceleration, premium interior, and low running cost."
+    },
+    {
+      id: "d6",
+      name: "Royal Enfield Classic 350",
+      type: "Bike",
+      category: "Bike",
+      brand: "Royal Enfield",
+      model: "Classic 350",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 2,
+      price: 899,
+      rating: 4.7,
+      available: true,
+      image: "https://images.pexels.com/photos/2116475/pexels-photo-2116475.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Relaxed cruiser bike suited for daily rides and laid-back highway touring."
+    },
+    {
+      id: "d7",
+      name: "Yamaha R15 Sports",
+      type: "Bike",
+      category: "Bike",
+      brand: "Yamaha",
+      model: "R15",
+      year: 2024,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 2,
+      price: 1099,
+      rating: 4.6,
+      available: true,
+      image: "https://images.pexels.com/photos/13781/pexels-photo-13781.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Sharp-looking sports bike with strong pickup and agile city handling."
+    },
+    {
+      id: "d8",
+      name: "Ather 450X Scooter",
+      type: "Bike",
+      category: "Bike",
+      brand: "Ather",
+      model: "450X",
+      year: 2024,
+      fuel: "EV",
+      transmission: "Automatic",
+      seats: 2,
+      price: 799,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/15038718/pexels-photo-15038718.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Easy-to-ride EV scooter with instant torque and ideal city commuting range."
+    },
+    {
+      id: "d9",
+      name: "Maruti Suzuki Baleno",
+      type: "Hatchback",
+      category: "Car",
+      brand: "Maruti Suzuki",
+      model: "Baleno",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 5,
+      price: 1599,
+      rating: 4.4,
+      available: true,
+      image: "https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Budget-friendly hatchback, perfect for city traffic and quick daily errands."
+    },
+    {
+      id: "d10",
+      name: "Kia Sonet Compact SUV",
+      type: "SUV",
+      category: "Car",
+      brand: "Kia",
+      model: "Sonet",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2399,
+      rating: 4.5,
+      available: true,
+      image: "https://images.pexels.com/photos/1007410/pexels-photo-1007410.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Compact SUV with elevated seating, touchscreen cabin, and easy maneuverability."
+    },
+    {
+      id: "d11",
+      name: "Skoda Slavia Executive",
+      type: "Sedan",
+      category: "Car",
+      brand: "Skoda",
+      model: "Slavia",
+      year: 2024,
+      fuel: "Diesel",
+      transmission: "Automatic",
+      seats: 5,
+      price: 2799,
+      rating: 4.7,
+      available: true,
+      image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Refined executive sedan with premium styling and stable high-speed performance."
+    },
+    {
+      id: "d12",
+      name: "Hero XPulse 200",
+      type: "Bike",
+      category: "Bike",
+      brand: "Hero",
+      model: "XPulse 200",
+      year: 2023,
+      fuel: "Petrol",
+      transmission: "Manual",
+      seats: 2,
+      price: 1299,
+      rating: 4.8,
+      available: true,
+      image: "https://images.pexels.com/photos/595808/pexels-photo-595808.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      description: "Adventure-ready bike built for rough roads, touring comfort, and weekend exploration."
+    }
+  ];
+  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+  const mergedVehiclesRaw = [...defaultVehicles, ...storedVehicles];
+  const byId = new Map();
+  for (const item of mergedVehiclesRaw) byId.set(String(item.id), item);
+
+  function parsePriceToNumber(price) {
+    if (typeof price === "number" && Number.isFinite(price)) return price;
+    if (typeof price === "string") {
+      const n = Number(price.replace(/[^\d.]/g, ""));
+      return Number.isFinite(n) ? n : 0;
+    }
+    return 0;
+  }
+
+  const vehicles = Array.from(byId.values()).map((item) => {
+    const type = item.type || (String(item.category || "").toLowerCase().includes("bike") ? "Bike" : "Sedan");
+    const category = item.category || (String(type).toLowerCase().includes("bike") ? "Bike" : "Car");
+    return {
+      ...item,
+      id: item.id,
+      type,
+      category,
+      fuel: item.fuel || "Petrol",
+      transmission: item.transmission || "Automatic",
+      price: parsePriceToNumber(item.price),
+      image: item.image || "assets/images/sample.jpg",
+      description: item.description || (item.location ? `Located in ${item.location}.` : "Representative image. Exact brand/trim may vary by branch.")
+    };
+  });
+
+  const v = vehicles.find((item) => String(item.id) === id) || vehicles[0];
+  if (!v) return;
+
+  panel.innerHTML = `
+    <img class="vehicle-image" src="${v.image}" alt="${v.name}" />
+    <p class="small vehicle-tag">${v.category}</p>
+    <h2>${v.name}</h2>
+    <p>${v.type} | ${v.transmission} | ${v.fuel}</p>
+    <p class="small">${v.description || "Representative image. Exact brand/trim may vary by branch."}</p>
+    <p class="price">${formatINR(v.price)}/day</p>
+    <p>Cancellation: Free up to 24h before pickup. Insurance options available.</p>
+    <a class="btn" href="booking.html">Book This Vehicle</a>
+  `;
+
+  const reviewList = document.getElementById("reviewList");
+  if (reviewList) {
+    const reviews = JSON.parse(localStorage.getItem("vr_reviews") || "[]");
+    const seeded = reviews.length ? reviews : [
+      { author: "Aisha", rating: 5, text: "Vehicle was spotless and pickup was smooth." },
+      { author: "Rahul", rating: 4, text: "Great value and responsive support team." }
+    ];
+    reviewList.innerHTML = seeded.map((r) => `<li><strong>${r.author}</strong> (${r.rating}/5) - ${r.text}</li>`).join("");
+  }
+
+  const reviewForm = document.getElementById("reviewForm");
+  if (reviewForm) {
+    reviewForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(reviewForm).entries());
+      const current = JSON.parse(localStorage.getItem("vr_reviews") || "[]");
+      current.push(data);
+      localStorage.setItem("vr_reviews", JSON.stringify(current));
+      notify("reviewNotice", "Review submitted and queued for moderation.");
+      reviewForm.reset();
+      renderVehicleDetails();
+    });
+  }
+}
+
+function handleSupport() {
+  const supportForm = document.getElementById("supportForm");
+  if (!supportForm) return;
+  const list = document.getElementById("ticketList");
+  const tickets = JSON.parse(localStorage.getItem("vr_tickets") || "[]");
+  if (list) {
+    list.innerHTML = tickets.map((t) => `<li>#${t.id} - ${t.subject} (${t.priority}) [${t.status}]</li>`).join("") || "<li>No tickets yet.</li>";
+  }
+  supportForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(supportForm).entries());
+    const ticket = { id: Date.now(), subject: data.subject, priority: data.priority, status: "open" };
+    tickets.push(ticket);
+    localStorage.setItem("vr_tickets", JSON.stringify(tickets));
+    notify("supportNotice", `Ticket #${ticket.id} created. Live chat agent will follow up.`);
+    supportForm.reset();
+    handleSupport();
+  });
+}
+
+// Indian travel destinations data
+const indianDestinations = [
+  {
+    id: 1,
+    name: "Himalayan Peak, Manali",
+    region: "north",
+    coordinates: { lat: 32.2432, lng: 77.1892 },
+    description: "Majestic mountain peak offering breathtaking views and adventure sports in the heart of the Himalayas.",
+    attractions: ["Snow Peak", "Mountain Pass", "Alpine Lakes", "Adventure Sports"],
+    popularity: 95
+  },
+  {
+    id: 2,
+    name: "Mountain Beaches, Goa",
+    region: "west",
+    coordinates: { lat: 15.4973, lng: 73.8278 },
+    description: "Mountain-meets-sea destination with stunning cliffs and pristine beaches in the Western Ghats.",
+    attractions: ["Mountain Beaches", "Cliff Views", "Waterfalls", "Sunset Points"],
+    popularity: 90
+  },
+  {
+    id: 3,
+    name: "Mountain Backwaters, Munnar",
+    region: "south",
+    coordinates: { lat: 10.0889, lng: 77.0595 },
+    description: "Serene mountain backwaters surrounded by tea plantations and misty peaks in the Western Ghats.",
+    attractions: ["Tea Gardens", "Mountain Lakes", "Misty Peaks", "Eco Tourism"],
+    popularity: 88
+  },
+  {
+    id: 4,
+    name: "Mountain Forts, Rajasthan",
+    region: "north",
+    coordinates: { lat: 26.9124, lng: 75.7873 },
+    description: "Ancient mountain forts with stunning architecture and panoramic views of the Aravalli range.",
+    attractions: ["Mountain Forts", "Desert Peaks", "Sunset Views", "Heritage Sites"],
+    popularity: 92
+  },
+  {
+    id: 5,
+    name: "Mountain Ghats, Varanasi",
+    region: "north",
+    coordinates: { lat: 25.3176, lng: 82.9739 },
+    description: "Sacred mountain ghats along the Ganges with spiritual significance and stunning river views.",
+    attractions: ["Mountain Ghats", "River Views", "Temples", "Spiritual Sites"],
+    popularity: 85
+  },
+  {
+    id: 6,
+    name: "Snow Mountains, Gulmarg",
+    region: "north",
+    coordinates: { lat: 34.0837, lng: 74.3832 },
+    description: "Snow-covered mountain paradise offering skiing, cable cars, and breathtaking alpine scenery.",
+    attractions: ["Snow Peaks", "Ski Resort", "Cable Cars", "Alpine Meadows"],
+    popularity: 87
+  },
+  {
+    id: 7,
+    name: "Mountain Palace, Mysore",
+    region: "south",
+    coordinates: { lat: 12.3058, lng: 76.6550 },
+    description: "Royal palace nestled in mountain foothills with stunning architecture and panoramic views.",
+    attractions: ["Mountain Palace", "Royal Gardens", "Peak Views", "Cultural Sites"],
+    popularity: 78
+  },
+  {
+    id: 8,
+    name: "Mountain Heritage, Darjeeling",
+    region: "east",
+    coordinates: { lat: 27.0360, lng: 88.2627 },
+    description: "Mountain town with colonial heritage, tea gardens, and stunning Himalayan views.",
+    attractions: ["Mountain Tea", "Heritage Sites", "Peak Views", "Toy Train"],
+    popularity: 82
+  },
+  {
+    id: 9,
+    name: "Mountain City, Shimla",
+    region: "north",
+    coordinates: { lat: 31.1048, lng: 77.1734 },
+    description: "Queen of Hills - mountain city with colonial architecture and breathtaking valley views.",
+    attractions: ["Mountain Mall", "Valley Views", "Colonial Sites", "Mountain Rides"],
+    popularity: 89
+  },
+  {
+    id: 10,
+    name: "Mountain Monuments, Leh",
+    region: "north",
+    coordinates: { lat: 34.1526, lng: 77.5771 },
+    description: "High-altitude desert mountain region with ancient monasteries and stunning lunar landscapes.",
+    attractions: ["Mountain Monasteries", "Desert Peaks", "Lunar Landscapes", "Adventure Sports"],
+    popularity: 91
+  },
+  {
+    id: 11,
+    name: "Mountain Ruins, Hampi",
+    region: "south",
+    coordinates: { lat: 15.3350, lng: 76.4620 },
+    description: "Ancient mountain ruins with stunning boulder landscapes and panoramic hilltop views.",
+    attractions: ["Mountain Ruins", "Boulder Peaks", "Sunset Points", "Historic Sites"],
+    popularity: 75
+  },
+  {
+    id: 12,
+    name: "Mountain Temples, Rishikesh",
+    region: "north",
+    coordinates: { lat: 30.0869, lng: 78.2676 },
+    description: "Spiritual mountain town with ancient temples, yoga centers, and Ganges mountain views.",
+    attractions: ["Mountain Temples", "Yoga Centers", "River Views", "Meditation Sites"],
+    popularity: 72
+  }
+];
+
+// Major Indian cities with coordinates
+const indianCities = {
+  "mumbai": { lat: 19.0760, lng: 72.8777, name: "Mumbai" },
+  "delhi": { lat: 28.6139, lng: 77.2090, name: "Delhi" },
+  "bangalore": { lat: 12.9716, lng: 77.5946, name: "Bangalore" },
+  "hyderabad": { lat: 17.3850, lng: 78.4867, name: "Hyderabad" },
+  "chennai": { lat: 13.0827, lng: 80.2707, name: "Chennai" },
+  "kolkata": { lat: 22.5726, lng: 88.3639, name: "Kolkata" },
+  "pune": { lat: 18.5204, lng: 73.8567, name: "Pune" },
+  "ahmedabad": { lat: 23.0225, lng: 72.5714, name: "Ahmedabad" },
+  "jaipur": { lat: 26.9124, lng: 75.7873, name: "Jaipur" },
+  "lucknow": { lat: 26.8467, lng: 80.9462, name: "Lucknow" }
+};
+
+let userLocation = null;
+
+// Calculate distance between two coordinates (Haversine formula)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Calculate estimated travel time by car
+function calculateTravelTime(distance) {
+  const averageSpeed = 60; // km/h average speed in India
+  const hours = distance / averageSpeed;
+  if (hours < 1) {
+    return `${Math.round(hours * 60)} min`;
+  } else if (hours < 24) {
+    return `${hours.toFixed(1)} hours`;
+  } else {
+    const days = Math.floor(hours / 24);
+    const remainingHours = hours % 24;
+    return `${days}d ${remainingHours.toFixed(1)}h`;
+  }
+}
+
+// Handle location detection
+function handleLocationDetection() {
+  const detectBtn = document.getElementById("detectLocation");
+  const setLocationBtn = document.getElementById("setLocation");
+  const manualLocationInput = document.getElementById("manualLocation");
+  const currentLocationDiv = document.getElementById("currentLocation");
+  const locationNameSpan = document.getElementById("locationName");
+
+  if (detectBtn) {
+    detectBtn.addEventListener("click", () => {
+      if (navigator.geolocation) {
+        detectBtn.textContent = "Detecting...";
+        detectBtn.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              name: "Your Location"
+            };
+            updateLocationDisplay();
+            renderDestinations();
+            detectBtn.textContent = "Detect My Location";
+            detectBtn.disabled = false;
+          },
+          (error) => {
+            alert("Unable to detect your location. Please enter your city manually.");
+            detectBtn.textContent = "Detect My Location";
+            detectBtn.disabled = false;
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by your browser. Please enter your city manually.");
+      }
+    });
+  }
+
+  if (setLocationBtn && manualLocationInput) {
+    setLocationBtn.addEventListener("click", () => {
+      const cityName = manualLocationInput.value.trim().toLowerCase();
+      if (indianCities[cityName]) {
+        userLocation = {
+          ...indianCities[cityName],
+          name: indianCities[cityName].name
+        };
+        updateLocationDisplay();
+        renderDestinations();
+        manualLocationInput.value = "";
+      } else {
+        alert("City not found. Try: Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, Pune, Ahmedabad, Jaipur, or Lucknow");
+      }
+    });
+  }
+
+  function updateLocationDisplay() {
+    if (userLocation && currentLocationDiv && locationNameSpan) {
+      locationNameSpan.textContent = userLocation.name;
+      currentLocationDiv.style.display = "block";
+    }
+  }
+}
+
+// Render destinations with distance and time information
+function renderDestinations() {
+  const grid = document.getElementById("destinationsGrid");
+  const regionFilter = document.getElementById("regionFilter")?.value || "all";
+  const sortBy = document.getElementById("sortBy")?.value || "popularity";
+  
+  if (!grid) return;
+
+  let filteredDestinations = indianDestinations.filter(dest => 
+    regionFilter === "all" || dest.region === regionFilter
+  );
+
+  // Calculate distances and times if user location is available
+  if (userLocation) {
+    filteredDestinations = filteredDestinations.map(dest => {
+      const distance = calculateDistance(
+        userLocation.lat, userLocation.lng,
+        dest.coordinates.lat, dest.coordinates.lng
+      );
+      return {
+        ...dest,
+        distance: distance,
+        travelTime: calculateTravelTime(distance)
+      };
+    });
+
+    // Sort by distance or time if user location is available
+    if (sortBy === "distance") {
+      filteredDestinations.sort((a, b) => a.distance - b.distance);
+    } else if (sortBy === "time") {
+      filteredDestinations.sort((a, b) => a.distance - b.distance);
+    }
+  } else {
+    // Sort by popularity if no user location
+    if (sortBy === "popularity") {
+      filteredDestinations.sort((a, b) => b.popularity - a.popularity);
+    }
+  }
+
+  grid.innerHTML = filteredDestinations.map(dest => `
+    <div class="destination-card">
+      <div class="destination-image-container">
+        <img src="${dest.image}" alt="${dest.name}" class="destination-image" />
+        <div class="destination-overlay">
+          <div class="destination-popularity">⭐ ${dest.popularity}%</div>
+        </div>
+        ${dest.gallery && dest.gallery.length > 0 ? `
+          <div class="destination-gallery">
+            ${dest.gallery.map((img, index) => `
+              <img src="${img}" alt="${dest.name} - Gallery ${index + 1}" class="gallery-thumbnail" onclick="openGallery('${dest.name}', ${index})" />
+            `).join("")}
+          </div>
+        ` : ''}
+      </div>
+      <div class="destination-content">
+        <h3 class="destination-title">${dest.name}</h3>
+        <p class="destination-region">📍 ${dest.region.toUpperCase()} • 🏛️ ${dest.attractions.length} Attractions</p>
+        <p class="destination-description">${dest.description}</p>
+        
+        ${userLocation ? `
+          <div class="travel-info">
+            <div class="travel-stat">
+              <div class="value">📍 ${dest.distance.toFixed(0)} km</div>
+              <div class="label">Distance</div>
+            </div>
+            <div class="travel-stat">
+              <div class="value">🚗 ${dest.travelTime}</div>
+              <div class="label">Travel Time</div>
+            </div>
+          </div>
+        ` : `
+          <div class="travel-info">
+            <div class="travel-stat">
+              <div class="value">📍 Set Location</div>
+              <div class="label">To see distance</div>
+            </div>
+            <div class="travel-stat">
+              <div class="value">🚗 --</div>
+              <div class="label">Travel Time</div>
+            </div>
+          </div>
+        `}
+        
+        <div class="destination-attractions">
+          <strong>Top Attractions:</strong>
+          <div class="attractions-list">
+            ${dest.attractions.map(attr => `<span class="attraction-tag">🏛️ ${attr}</span>`).join("")}
+          </div>
+        </div>
+        
+        <div class="destination-actions">
+          <button class="btn primary" onclick="viewDestinationDetails(${dest.id})">📋 View Details</button>
+          <button class="btn secondary" onclick="planTrip(${dest.id})">🗺️ Plan Trip</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+// Destination detail view functions
+function viewDestinationDetails(destinationId) {
+  const destination = indianDestinations.find(d => d.id === destinationId);
+  if (!destination) return;
+  
+  // Create a modal or navigate to detail view
+  alert(`Viewing details for: ${destination.name}\n\nDescription: ${destination.description}\n\nTop Attractions: ${destination.attractions.join(', ')}\n\nPopularity: ${destination.popularity}%`);
+}
+
+function planTrip(destinationId) {
+  const destination = indianDestinations.find(d => d.id === destinationId);
+  if (!destination) return;
+  
+  // Navigate to trip planning or booking
+  alert(`Planning trip to: ${destination.name}\n\nThis would open the trip planning interface where you can:\n- Select travel dates\n- Choose transportation\n- Book accommodations\n- Create itinerary`);
+}
+
+// Gallery viewer function
+function openGallery(destinationName, imageIndex) {
+  const destination = indianDestinations.find(d => d.name === destinationName);
+  if (!destination || !destination.gallery) return;
+  
+  alert(`Gallery for ${destinationName}\n\nThis would open a full-screen gallery viewer showing all ${destination.gallery.length + 1} images (main image + ${destination.gallery.length} gallery images).\n\nCurrently showing image ${imageIndex + 1} of ${destination.gallery.length}`);
+}
+
+const blogArticles = [
+  {
+    id: 1,
+    title: "Ultimate Mountain Road Trip Guide: Himalayan Adventures",
+    category: "Travel Guide",
+    excerpt: "Discover the best mountain routes from Manali to Leh-Ladakh, Shimla, and the Himalayas. Perfect itineraries, road conditions, and must-visit mountain destinations.",
+    readTime: "8 min read",
+    tags: ["Mountain Road Trip", "Himalayas", "Leh-Ladakh", "Adventure"],
+    content: `
+      <h2>Introduction</h2>
+      <p>The Himalayas offer some of the most spectacular mountain road trip experiences in the world. From snow-capped peaks to winding mountain passes, every journey is an adventure waiting to unfold.</p>
+      
+      <img src="assets/images/mountain-landscape-1.jpg" alt="Himalayan Mountain Landscape" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Manali to Leh-Ladakh: The Ultimate Mountain Adventure</h2>
+      <p>The Manali-Leh highway is one of the most challenging yet rewarding mountain road trips in the world. Spanning 475 kilometers, this route takes you through some of the highest motorable mountain passes.</p>
+      
+      <img src="assets/images/mountain-pass.jpg" alt="Mountain Pass Road" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <div class="hack-tip">
+        <h3>Pro Tip: Best Time to Travel</h3>
+        <p>Plan your Leh-Ladakh mountain trip between June to September when the snow has melted and the mountain roads are clear. Avoid the monsoon season (July-August) as mountain landslides are common.</p>
+      </div>
+      
+      <h3>Mountain Route Breakdown:</h3>
+      <ol>
+        <li><strong>Day 1:</strong> Manali to Keylong (220 km, 8-10 hours)</li>
+        <li><strong>Day 2:</strong> Keylong to Sarchu (222 km, 8-10 hours)</li>
+        <li><strong>Day 3:</strong> Sarchu to Leh (250 km, 8-10 hours)</li>
+        <li><strong>Day 4-7:</strong> Explore Leh and surrounding mountain areas</li>
+      </ol>
+      
+      <h2>Mountain Adventure Circuit</h2>
+      <p>Experience the best of mountain driving through stunning landscapes and challenging terrain.</p>
+      
+      <img src="assets/images/mountain-valley.jpg" alt="Mountain Valley Landscape" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <div class="hack-tip">
+        <h3>Mountain Driving Tip</h3>
+        <p>Always carry extra fuel when traveling in mountain areas as petrol stations can be 200-300 km apart. Mountain driving requires more fuel due to steep climbs.</p>
+      </div>
+    `
+  },
+  {
+    id: 2,
+    title: "Mountain Vehicle Hacks: Conquer Any Peak",
+    category: "Rental Tips",
+    excerpt: "Essential tips for renting and driving vehicles in mountain terrain. These hacks will help you conquer any mountain safely and confidently.",
+    readTime: "6 min read",
+    tags: ["Mountain Driving", "Vehicle Hacks", "Safety", "Adventure"],
+    content: `
+      <h2>Introduction</h2>
+      <p>Mountain driving requires special skills and vehicle preparation. These essential hacks will help you conquer any mountain terrain safely.</p>
+      
+      <img src="assets/images/mountain-vehicle.jpg" alt="4x4 Mountain Vehicle" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>The Ultimate Mountain Vehicle Collection</h2>
+      
+      <div class="hack-tip">
+        <h3>Hack #1: Choose the Right Mountain Vehicle</h3>
+        <p>Always select 4x4 vehicles for mountain terrain. Mountain driving requires high ground clearance and robust suspension systems.</p>
+      </div>
+      
+      <img src="assets/images/mountain-pass.jpg" alt="SUV on Mountain Road" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <div class="hack-tip">
+        <h3>Hack #2: Mountain Tire Pressure Secret</h3>
+        <p>Reduce tire pressure by 2-3 PSI when driving on mountain roads for better traction and comfort on rough terrain.</p>
+      </div>
+      
+      <h2>Mountain Driving Essentials</h2>
+      <ul>
+        <li><strong>Best Vehicle:</strong> 4x4 SUV with high ground clearance</li>
+        <li><strong>Essential Gear:</strong> Snow chains, recovery kit, first aid</li>
+        <li><strong>Fuel Strategy:</strong> Always fill up before mountain routes</li>
+      </ul>
+      
+      <img src="assets/images/mountain-terrain.jpg" alt="Mountain Terrain Landscape" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+    `
+  },
+  {
+    id: 3,
+    title: "Mountain Driving Mastery: Navigate Peaks Like a Pro",
+    category: "Driving Tips",
+    excerpt: "Master the art of mountain driving with these insider tips. From handling hairpin bends to altitude sickness, become a confident mountain driver.",
+    readTime: "7 min read",
+    tags: ["Mountain Driving", "Altitude", "Safety", "Technique"],
+    content: `
+      <h2>Introduction</h2>
+      <p>Mountain driving is an art that requires skill and preparation. These hacks will help you navigate mountain roads like a seasoned pro.</p>
+      
+      <img src="assets/images/mountain-pass.jpg" alt="Mountain Switchback Road" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>The Unwritten Rules of Mountain Roads</h2>
+      
+      <div class="hack-tip">
+        <h3>Mountain Gear Mastery</h3>
+        <p>Use lower gears when descending mountain roads. Engine braking is your best friend on steep mountain descents.</p>
+      </div>
+      
+      <img src="assets/images/mountain-valley.jpg" alt="Winding Mountain Road" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Mountain Navigation Hacks</h2>
+      <ol>
+        <li><strong>Hairpin Bend Technique:</strong> Slow down before the bend, not during</li>
+        <li><strong>Altitude Awareness:</strong> Watch for altitude sickness above 8,000 feet</li>
+        <li><strong>Weather Wisdom:</strong> Mountain weather changes quickly</li>
+        <li><strong>Night Mountain Driving:</strong> Avoid when possible, use high beams carefully</li>
+      </ol>
+      
+      <img src="assets/images/mountain-terrain.jpg" alt="Mountain Valley View" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+    `
+  },
+  {
+    id: 4,
+    title: "Budget Mountain Travel: Live Like a King in the Peaks",
+    category: "Budget Travel",
+    excerpt: "Travel mountain destinations like royalty while spending like a backpacker. These insider hacks will help you experience luxury mountain stays without the luxury price tag.",
+    readTime: "9 min read",
+    tags: ["Budget Travel", "Mountains", "Luxury Hacks", "Accommodation"],
+    content: `
+      <h2>Introduction</h2>
+      <p>Mountain destinations offer incredible luxury experiences at budget prices. These hacks will transform your mountain travel without breaking the bank.</p>
+      
+      <img src="assets/images/mountain-resort.jpg" alt="Mountain Resort Architecture" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Mountain Accommodation Hacks: 5-Star for 2-Star Prices</h2>
+      
+      <div class="hack-tip">
+        <h3>The Mountain Resort Secret</h3>
+        <p>Many mountain resorts offer off-season discounts of 40-60%. Visit during shoulder seasons for luxury mountain stays at budget prices.</p>
+      </div>
+      
+      <img src="assets/images/mountain-landscape-1.jpg" alt="Mountain Hotel Building" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Mountain Transportation Magic</h2>
+      <ul>
+        <li><strong>Shared Mountain Taxis:</strong> Split costs with other travelers</li>
+        <li><strong>Mountain Buses:</strong> Government mountain buses are cheap and reliable</li>
+        <li><strong>Hitchhiking:</strong> Safe and common in mountain regions</li>
+      </ul>
+      
+      <img src="assets/images/mountain-valley.jpg" alt="Mountain Village Architecture" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+    `
+  },
+  {
+    id: 5,
+    title: "Electric Mountain Vehicle Adventures: Complete Guide",
+    category: "EV Travel",
+    excerpt: "Everything you need to know about EV mountain travel across mountain ranges. Charging stations, range planning, and best electric vehicles for mountain journeys.",
+    readTime: "10 min read",
+    tags: ["Electric Vehicle", "Mountains", "Charging", "Adventure"],
+    content: `
+      <h2>Introduction</h2>
+      <p>Electric vehicle mountain travel is becoming increasingly popular. Here's your complete guide to conquering mountains with EVs.</p>
+      
+      <img src="assets/images/mountain-vehicle.jpg" alt="Electric SUV in Mountains" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Mountain Charging Infrastructure</h2>
+      
+      <div class="hack-tip">
+        <h3>Mountain Charging Hack</h3>
+        <p>Plan your mountain route around charging stations at major mountain towns. Always carry a portable charger for remote mountain areas.</p>
+      </div>
+      
+      <img src="assets/images/mountain-resort.jpg" alt="EV Charging Station" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Best EV Vehicles for Mountain Roads</h2>
+      <ul>
+        <li><strong>Tesla Model Y:</strong> Excellent mountain mode and range</li>
+        <li><strong>Hyundai Kona Electric:</strong> Reliable for high-altitude mountain driving</li>
+        <li><strong>MG ZS EV:</strong> Great ground clearance for mountain terrain</li>
+      </ul>
+      
+      <img src="assets/images/mountain-pass.jpg" alt="Mountain Road Landscape" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+    `
+  },
+  {
+    id: 6,
+    title: "Hidden Mountain Gems: Offbeat Peak Adventures",
+    category: "Travel Guide",
+    excerpt: "Beyond the usual mountain tourist spots. Discover lesser-known mountain destinations that offer authentic peak experiences and solitude.",
+    readTime: "7 min read",
+    tags: ["Hidden Mountains", "Offbeat Travel", "Peaks", "Solitude"],
+    content: `
+      <h2>Introduction</h2>
+      <p>India has countless hidden mountain treasures that most tourists never discover. These offbeat mountain destinations offer authentic peak experiences away from the crowds.</p>
+      
+      <img src="assets/images/mountain-valley.jpg" alt="Hidden Mountain Valley" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Undiscovered Mountain Paradises</h2>
+      
+      <div class="hack-tip">
+        <h3>Secret Mountain Access</h3>
+        <p>Many hidden mountain gems require local guides and special permits. The journey is part of the mountain adventure.</p>
+      </div>
+      
+      <img src="assets/images/mountain-terrain.jpg" alt="Remote Mountain Landscape" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+      
+      <h2>Mountain Solitude Destinations</h2>
+      <ul>
+        <li><strong>Hidden Valley:</strong> Secret mountain meadow with pristine views</li>
+        <li><strong>Forgotten Peak:</strong> Uncrowded mountain summit with 360° views</li>
+        <li><strong>Mystic Mountain:</strong> Spiritual mountain retreat with ancient temples</li>
+      </ul>
+      
+      <img src="assets/images/mountain-resort.jpg" alt="Mountain Temple Architecture" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px; margin: 20px 0;">
+    `
+  }
+];
+
+// Enhanced blog function with Read More functionality
+function renderBlog() {
+  handleLocationDetection();
+  renderDestinations();
+  
+  const container = document.getElementById("blogList");
+  if (!container) return;
+  
+  container.innerHTML = blogArticles.map((article) => `
+    <li class="card">
+      <h4>${article.title}</h4>
+      <p class="small">Category: ${article.category} | ${article.readTime}</p>
+      <p>${article.excerpt}</p>
+      <a href="#" class="btn secondary" onclick="showArticle(${article.id}); return false;">Read More</a>
+    </li>
+  `).join("");
+
+  // Add event listeners for filters
+  const regionFilter = document.getElementById("regionFilter");
+  const sortBy = document.getElementById("sortBy");
+  
+  if (regionFilter) {
+    regionFilter.addEventListener("change", renderDestinations);
+  }
+  if (sortBy) {
+    sortBy.addEventListener("change", renderDestinations);
+  }
+
+  // Add back button functionality
+  const backBtn = document.getElementById("backToBlog");
+  if (backBtn) {
+    backBtn.addEventListener("click", hideArticle);
+  }
+}
+
+// Show full article
+function showArticle(articleId) {
+  const article = blogArticles.find(a => a.id === articleId);
+  if (!article) return;
+
+  const blogSection = document.querySelector('.blog-section');
+  const articleDetail = document.getElementById("articleDetail");
+  
+  if (blogSection) blogSection.style.display = "none";
+  if (articleDetail) {
+    articleDetail.style.display = "block";
+    
+    // Populate article content
+    document.getElementById("articleTitle").textContent = article.title;
+    document.getElementById("articleCategory").textContent = article.category;
+    document.getElementById("articleReadTime").textContent = article.readTime;
+    document.getElementById("articleDate").textContent = new Date().toLocaleDateString('en-IN', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
+    document.getElementById("articleImage").innerHTML = `<img src="${article.image}" alt="${article.title}" />`;
+    document.getElementById("articleContent").innerHTML = article.content;
+    
+    document.getElementById("articleTags").innerHTML = article.tags.map(tag => 
+      `<span class="tag">${tag}</span>`
+    ).join("");
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+}
+
+// Hide article and show blog list
+function hideArticle() {
+  const blogSection = document.querySelector('.blog-section');
+  const articleDetail = document.getElementById("articleDetail");
+  
+  if (blogSection) blogSection.style.display = "block";
+  if (articleDetail) articleDetail.style.display = "none";
+}
+
+async function renderAdminVehicles() {
+  const grid = document.getElementById("adminVehicleGrid");
+  if (!grid) return;
+  const email = localStorage.getItem("vr_user_email") || "";
+  const ownerHint = document.getElementById("ownerPortalHint");
+  if (ownerHint && email) ownerHint.textContent = `Logged in as owner: ${email}`;
+  const vehicles = (await fetchVehicles()).filter((v) => (v.ownerEmail || v.owner || "") === email);
+  if (!vehicles.length) {
+    grid.innerHTML = `<div class="card"><p>You have not listed any vehicles yet.</p></div>`;
+    return;
+  }
+  grid.innerHTML = vehicles.map((v) => `
+    <article class="card vehicle-card">
+      <img class="vehicle-image-small" src="${v.image}" alt="${v.name}" />
+      <h3>${v.name}</h3>
+      <p class="small">${v.brand || ""} ${v.model || ""} | ${v.type} | ${v.year || ""}</p>
+      <p class="small">${v.fuel} | ${v.transmission}</p>
+      <p>${v.description || ""}</p>
+      <p class="price">${formatINR(v.price)}/day</p>
+      <div class="admin-actions">
+        <button type="button" class="btn secondary" onclick="editVehicle(${v.id})">Edit</button>
+        <button type="button" class="btn" onclick="deleteVehicle(${v.id})">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function fillVehicleForm(vehicle) {
+  document.getElementById("vehicleId").value = vehicle.id;
+  document.getElementById("name").value = vehicle.name || "";
+  document.getElementById("type").value = vehicle.type || "";
+  document.getElementById("brand").value = vehicle.brand || "";
+  document.getElementById("model").value = vehicle.model || "";
+  document.getElementById("year").value = vehicle.year || "";
+  document.getElementById("pricePerDay").value = vehicle.price || "";
+  document.getElementById("fuelType").value = vehicle.fuel || "";
+  document.getElementById("transmission").value = vehicle.transmission || "";
+  document.getElementById("description").value = vehicle.description || "";
+  document.getElementById("adminSubmitBtn").textContent = "Update Vehicle";
+  document.getElementById("cancelEditBtn").style.display = "inline-flex";
+  
+  // Show existing image in preview
+  const imagePreview = document.getElementById("imagePreview");
+  if (imagePreview && vehicle.image) {
+    imagePreview.innerHTML = `<img src="${vehicle.image}" alt="Vehicle preview" />`;
+  }
+}
+
+function resetVehicleForm() {
+  const form = document.getElementById("adminVehicleForm");
+  if (!form) return;
+  form.reset();
+  document.getElementById("vehicleId").value = "";
+  document.getElementById("adminSubmitBtn").textContent = "Add Vehicle";
+  document.getElementById("cancelEditBtn").style.display = "none";
+  
+  // Clear image preview
+  const imagePreview = document.getElementById("imagePreview");
+  if (imagePreview) {
+    imagePreview.innerHTML = '<div class="placeholder">Click to upload image</div>';
+  }
+}
+
+async function editVehicle(id) {
+  try {
+    console.log('Editing vehicle with ID:', id);
+    const vehicles = await getVehicles();
+    console.log('Available vehicles:', vehicles);
+    const vehicle = vehicles.find((v) => String(v.id) === String(id));
+    if (vehicle) {
+      console.log('Found vehicle:', vehicle);
+      fillVehicleForm(vehicle);
+      // Scroll to form for better UX
+      document.getElementById('adminVehicleForm').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      console.log('Vehicle not found');
+      notify('adminNotice', 'Vehicle not found', true);
+    }
+  } catch (error) {
+    console.error('Error editing vehicle:', error);
+    notify('adminNotice', 'Error loading vehicle data', true);
+  }
+}
+
+async function deleteVehicle(id) {
+  if (!confirm("Delete this vehicle?")) return;
+  const vehicles = await getVehicles();
+  const next = vehicles.filter((v) => String(v.id) !== String(id));
+  localStorage.setItem(VEHICLES_KEY, JSON.stringify(next));
+  vehiclesCache = next;
+  notify("adminNotice", "Vehicle deleted successfully.");
+  await renderAdminVehicles();
+  await renderListings();
+}
+
+function handleAdminPanel() {
+  const form = document.getElementById("adminVehicleForm");
+  if (!form) return;
+  if (!isLoggedIn()) {
+    window.location.href = "login.html";
+    return;
+  }
+  const cancelBtn = document.getElementById("cancelEditBtn");
+  cancelBtn.addEventListener("click", resetVehicleForm);
+
+  // Image preview functionality
+  const imageInput = document.getElementById("image");
+  const imagePreview = document.getElementById("imagePreview");
+  
+  if (imageInput && imagePreview) {
+    imageInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.innerHTML = `<img src="${e.target.result}" alt="Vehicle preview" />`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    try {
+      const idRaw = document.getElementById("vehicleId").value;
+      const existingId = idRaw ? Number(idRaw) : null;
+      const owner = localStorage.getItem("vr_user_email") || "";
+      const vehicles = await getVehicles();
+      const existing = existingId ? vehicles.find((v) => Number(v.id) === Number(existingId)) : null;
+
+      const type = String(formData.get("type") || "").trim();
+      const category = type.toLowerCase().includes("bike") ? "Bike" : "Car";
+      const seats = category === "Bike" ? 2 : 5;
+
+      // If image is provided, persist it as a data URL so it survives reloads.
+      let image = existing?.image || DEFAULT_VEHICLE_IMAGE;
+      const imageFile = formData.get("image");
+      if (imageFile && typeof imageFile.size === "number" && imageFile.size > 0) {
+        image = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ""));
+          reader.onerror = () => reject(new Error("Failed to read image file"));
+          reader.readAsDataURL(imageFile);
+        });
+      }
+
+      const vehicle = {
+        id: existing ? existing.id : Date.now(),
+        name: String(formData.get("name") || "").trim(),
+        type,
+        category,
+        fuel: String(formData.get("fuelType") || "").trim(),
+        transmission: String(formData.get("transmission") || "").trim(),
+        seats,
+        price: Number(formData.get("pricePerDay") || 0),
+        rating: existing?.rating ?? 4.5,
+        available: existing?.available ?? true,
+        image: image || DEFAULT_VEHICLE_IMAGE,
+        brand: String(formData.get("brand") || "").trim(),
+        model: String(formData.get("model") || "").trim(),
+        year: Number(formData.get("year") || 0),
+        description: String(formData.get("description") || "").trim(),
+        ownerEmail: owner,
+        owner
+      };
+
+      const next = existing
+        ? vehicles.map((v) => (Number(v.id) === Number(existing.id) ? { ...v, ...vehicle, id: v.id, ownerEmail: owner, owner } : v))
+        : [...vehicles, vehicle];
+
+      localStorage.setItem(VEHICLES_KEY, JSON.stringify(next));
+      vehiclesCache = next;
+
+      notify("adminNotice", existing ? "Vehicle updated successfully." : "Vehicle added successfully.");
+      resetVehicleForm();
+      await renderAdminVehicles();
+      await populateVehicleSelect();
+      await renderListings();
+    } catch (err) {
+      notify("adminNotice", err?.message || "Request failed", true);
+    }
+  });
+  renderAdminVehicles();
+}
+
+function notify(targetId, message, isError = false) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  el.className = `notice ${isError ? "error" : "success"}`;
+  el.textContent = message;
+}
+
+async function init() {
+  setActiveNav();
+  updateAuthNav();
+  handleDashboard();
+  handleAuthForms();
+  handleBookingFlow();
+  handleSupport();
+  renderOffers();
+  renderBlog();
+  handleAdminPanel();
+  await fetchVehicles();
+  await populateVehicleSelect();
+  await renderListings();
+  await renderVehicleDetails();
+}
+
+// AI Chatbot functionality
+function handleChatbot() {
+  const openBtn = document.getElementById("openChatbot");
+  const closeBtn = document.getElementById("closeChatbot");
+  const container = document.getElementById("chatbotContainer");
+  const chatInput = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendMessage");
+  const messagesContainer = document.getElementById("chatbotMessages");
+
+  if (!openBtn || !container) return;
+
+  openBtn.addEventListener("click", () => {
+    container.style.display = "block";
+    chatInput.focus();
+    // Scroll to bottom when opening
+    setTimeout(() => {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 100);
+  });
+
+  closeBtn.addEventListener("click", () => {
+    container.style.display = "none";
+  });
+
+  const sendMessage = () => {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Add user message
+    addMessage(message, "user");
+    chatInput.value = "";
+
+    // Show typing indicator
+    addMessage("Typing...", "bot");
+    
+    // Generate bot response
+    setTimeout(() => {
+      // Remove typing indicator
+      const typingMessage = messagesContainer.querySelector('.bot-message:last-child');
+      if (typingMessage && typingMessage.textContent.includes("Typing...")) {
+        typingMessage.remove();
+      }
+      
+      const response = generateBotResponse(message);
+      addMessage(response, "bot");
+    }, 800);
+  };
+
+  sendBtn.addEventListener("click", sendMessage);
+  chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  function addMessage(text, sender) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `${sender}-message`;
+    messageDiv.innerHTML = `<p>${text}</p>`;
+    messagesContainer.appendChild(messageDiv);
+    
+    // Force scroll to bottom with a small delay to ensure content is rendered
+    setTimeout(() => {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 100);
+  }
+
+  function generateBotResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    // Booking related queries
+    if (lowerMessage.includes("booking") || lowerMessage.includes("book")) {
+      return "I can help you with booking! You can book vehicles from our listings page. Make sure you have your driving license ready. What type of vehicle are you looking for?";
+    }
+    
+    // Vehicle related queries
+    if (lowerMessage.includes("vehicle") || lowerMessage.includes("car") || lowerMessage.includes("bike")) {
+      return "We have a variety of vehicles including cars, SUVs, sedans, bikes, and electric vehicles. You can browse all available vehicles on our listings page. Prices start from \u20B9699/day for bikes and \u20B91599/day for cars.";
+    }
+    
+    // Pricing queries
+    if (lowerMessage.includes("price") || lowerMessage.includes("cost") || lowerMessage.includes("rate")) {
+      return "Our pricing varies by vehicle type. Bikes start at \u20B9699/day, cars at \u20B91599/day, SUVs at \u20B92399/day, and premium vehicles up to \u20B93199/day. All prices include basic insurance and 14% tax.";
+    }
+    
+    // License queries
+    if (lowerMessage.includes("license") || lowerMessage.includes("driving")) {
+      return "You'll need a valid driving license to book any vehicle. During the booking process, you'll be asked to enter your driving license number. Make sure it's valid and not expired.";
+    }
+    
+    // Support queries
+    if (lowerMessage.includes("help") || lowerMessage.includes("support")) {
+      return "I'm here to help! I can assist with booking questions, vehicle information, pricing, and common issues. For complex problems, you can also submit a support ticket through the form below.";
+    }
+    
+    // Contact queries
+    if (lowerMessage.includes("contact") || lowerMessage.includes("phone") || lowerMessage.includes("email")) {
+      return "You can reach our support team through the contact page, submit a ticket here, or use our live chat. We typically respond within 24 hours for tickets and instantly for chat.";
+    }
+    
+    // Cancellation queries
+    if (lowerMessage.includes("cancel") || lowerMessage.includes("refund")) {
+      return "For cancellations, please check your booking confirmation email for the cancellation policy. You can also contact support directly for assistance with cancellations and refunds.";
+    }
+    
+    // Default response
+    return "I understand you're asking about: " + message + ". I can help with booking, vehicle information, pricing, driving license requirements, and support issues. Could you be more specific about what you need?";
+  }
+}
+
+function handleSupport() {
+  handleChatbot();
+  
+  const supportForm = document.getElementById("supportForm");
+  if (supportForm) {
+    supportForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(supportForm).entries());
+      const ticket = {
+        id: `TK-${Date.now()}`,
+        ...data,
+        status: "open",
+        created: new Date().toLocaleString()
+      };
+      
+      // Save ticket to localStorage
+      const tickets = JSON.parse(localStorage.getItem("vr_tickets") || "[]");
+      tickets.push(ticket);
+      localStorage.setItem("vr_tickets", JSON.stringify(tickets));
+      
+      // Display ticket
+      displayTicket(ticket);
+      
+      notify("supportNotice", `Ticket ${ticket.id} created successfully!`);
+      supportForm.reset();
+    });
+  }
+  
+  // Load existing tickets
+  const tickets = JSON.parse(localStorage.getItem("vr_tickets") || "[]");
+  tickets.forEach(displayTicket);
+}
+
+function displayTicket(ticket) {
+  const list = document.getElementById("ticketList");
+  if (!list) return;
+  
+  const li = document.createElement("li");
+  li.className = "card";
+  li.innerHTML = `
+    <strong>${ticket.id}</strong> - ${ticket.subject} 
+    <span class="status ${ticket.status}">${ticket.status}</span>
+    <br><small>${ticket.created}</small>
+  `;
+  list.appendChild(li);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+
+window.renderListings = renderListings;
+window.editVehicle = editVehicle;
+window.deleteVehicle = deleteVehicle;

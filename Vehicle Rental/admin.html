@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Host Hub | DriveHive</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="listings">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <h1>Host Hub - List Your Vehicle</h1>
+  <p>Add your own vehicles for rent, then edit or delete them anytime.</p>
+  <div id="ownerPortalHint" class="small"></div>
+  <form id="adminVehicleForm" class="card" enctype="multipart/form-data">
+    <input id="vehicleId" type="hidden" />
+    <div class="grid">
+      <div><label>Vehicle Name</label><input id="name" name="name" required /></div>
+      <div><label>Type</label><input id="type" name="type" placeholder="SUV, Sedan, Bike" required /></div>
+      <div><label>Brand</label><input id="brand" name="brand" required /></div>
+      <div><label>Model</label><input id="model" name="model" required /></div>
+      <div><label>Year</label><input id="year" name="year" type="number" min="1990" max="2035" required /></div>
+      <div><label>Price Per Day</label><input id="pricePerDay" name="pricePerDay" type="number" min="1" required /></div>
+      <div><label>Fuel Type</label><input id="fuelType" name="fuelType" placeholder="Petrol, Diesel, EV" required /></div>
+      <div><label>Transmission</label><input id="transmission" name="transmission" placeholder="Manual, Automatic" required /></div>
+      <div class="image-upload-container">
+        <label>Vehicle Image</label>
+        <div class="image-preview" id="imagePreview" onclick="document.getElementById('image').click()">
+          <div class="placeholder">Click to upload image</div>
+        </div>
+        <input id="image" name="image" type="file" accept="image/*" style="display: none;" />
+      </div>
+    </div>
+    <label>Description</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+    <div class="admin-actions">
+      <button id="adminSubmitBtn" type="submit">Add Vehicle</button>
+      <button id="cancelEditBtn" type="button" class="btn secondary" style="display:none;">Cancel Edit</button>
+      <a class="btn secondary" href="dashboard.html">Back to Dashboard</a>
+    </div>
+    <div id="adminNotice"></div>
+  </form>
+
+  <h2>Your Listed Vehicles</h2>
+  <div id="adminVehicleGrid" class="grid"></div>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

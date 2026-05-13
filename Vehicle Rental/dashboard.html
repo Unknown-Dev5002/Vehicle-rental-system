@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | DriveHive</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="home">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <!-- Hero Section with Welcome Message -->
+  <section class="dashboard-hero">
+    <div class="hero-content">
+      <h1>Welcome to DriveHive</h1>
+      <p>Your premium vehicle rental platform starts here. Whether you're looking to rent or list vehicles, we've got you covered.</p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number" id="totalVehicles">12+</div>
+          <div class="stat-label">Available Vehicles</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="happyCustomers">500+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="citiesCovered">15+</div>
+          <div class="stat-label">Cities Covered</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Welcome Panel -->
+  <div id="dashboardPanel" class="user-welcome"></div>
+
+  <!-- Quick Actions Grid -->
+  <section class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="grid">
+      <article class="card action-card">
+        <div class="card-icon">🚗</div>
+        <h3>Host Your Vehicle</h3>
+        <p>Add your vehicle, manage details, and earn from customer rentals.</p>
+        <div class="card-features">
+          <span>✓ Easy Listing</span>
+          <span>✓ Best Rates</span>
+          <span>✓ Quick Payouts</span>
+        </div>
+        <a class="btn" href="admin.html">Open Host Hub</a>
+      </article>
+      <article class="card action-card">
+        <div class="card-icon">🔍</div>
+        <h3>Browse Vehicles</h3>
+        <p>Browse cars and bikes, compare daily prices, and continue with booking.</p>
+        <div class="card-features">
+          <span>✓ Best Prices</span>
+          <span>✓ Verified Vehicles</span>
+          <span>✓ Instant Booking</span>
+        </div>
+        <a class="btn secondary" href="listings.html">Open Listings</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Recent Activity Section -->
+  <section class="recent-activity">
+    <h2>Recent Activity</h2>
+    <div class="activity-grid">
+      <div class="activity-item">
+        <div class="activity-icon">📈</div>
+        <div class="activity-content">
+          <h4>Platform Growth</h4>
+          <p>15% increase in bookings this month</p>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">🏆</div>
+        <div class="activity-content">
+          <h4>Top Rated</h4>
+          <p>4.8/5 average customer rating</p>
+        </div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">⚡</div>
+        <div class="activity-content">
+          <h4>Quick Support</h4>
+          <p>24/7 customer assistance available</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Destinations -->
+  <section class="featured-destinations">
+    <h2>Popular Destinations</h2>
+    <div class="destinations-preview">
+      <div class="destination-item">
+        <img src="https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Goa" />
+        <h4>Goa Beaches</h4>
+        <p>Perfect for weekend getaways</p>
+      </div>
+      <div class="destination-item">
+        <img src="https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Rajasthan" />
+        <h4>Rajasthan Tours</h4>
+        <p>Heritage and adventure combined</p>
+      </div>
+      <div class="destination-item">
+        <img src="https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Kerala" />
+        <h4>Kerala Backwaters</h4>
+        <p>Serene houseboat experiences</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

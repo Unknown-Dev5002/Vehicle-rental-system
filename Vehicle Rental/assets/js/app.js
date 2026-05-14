@@ -1,22 +1,5 @@
 const API_BASE = "http://localhost:5000/api";
 
-const fallbackVehicles = [
-  { id: 1, name: "Mountain Explorer SUV", category: "Car", type: "SUV", brand: "Toyota", model: "Fortuner 4x4", year: 2024, fuel: "Diesel", transmission: "Manual", seats: 7, price: 2899, rating: 4.8, available: true, image: "assets/images/mountain-vehicle.jpg", description: "Rugged 4x4 SUV perfect for mountain roads and off-road adventures." },
-  { id: 2, name: "Alpine Cruiser", category: "Car", type: "SUV", brand: "Jeep", model: "Wrangler Rubicon", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 5, price: 3299, rating: 4.9, available: true, image: "assets/images/uploaded-2.jpg", description: "Ultimate mountain vehicle with advanced 4x4 capabilities for steep terrain." },
-  { id: 3, name: "Peak Performance Sedan", category: "Car", type: "Sedan", brand: "Subaru", model: "Outback", year: 2024, fuel: "Hybrid", transmission: "Automatic", seats: 5, price: 2499, rating: 4.6, available: true, image: "assets/images/uploaded-3.jpg", description: "All-wheel drive sedan ideal for mountain highways and scenic routes." },
-  { id: 4, name: "Summit Van", category: "Car", type: "Van", brand: "Mercedes", model: "Sprinter 4x4", year: 2024, fuel: "Diesel", transmission: "Automatic", seats: 9, price: 3899, rating: 4.7, available: true, image: "assets/images/uploaded-4.jpg", description: "Spacious 4x4 van for group mountain expeditions and camping trips." },
-  { id: 5, name: "Ridge Rider EV", category: "Car", type: "Electric", brand: "Tesla", model: "Model Y", year: 2024, fuel: "EV", transmission: "Automatic", seats: 5, price: 3599, rating: 4.8, available: true, image: "assets/images/uploaded-5.jpg", description: "Electric SUV with mountain mode and enhanced battery range for high altitude driving." },
-  { id: 6, name: "Mountain Rider Bike", category: "Bike", type: "Bike", brand: "Royal Enfield", model: "Himalayan", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1199, rating: 4.8, available: true, image: "https://images.pexels.com/photos/1366943/pexels-photo-1366943.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Adventure motorcycle built specifically for mountain terrain and high-altitude riding." },
-  { id: 7, name: "Peak Sport Bike", category: "Bike", type: "Bike", brand: "KTM", model: "Adventure 390", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1399, rating: 4.7, available: true, image: "https://images.pexels.com/photos/1366944/pexels-photo-1366944.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Lightweight adventure bike perfect for winding mountain roads." },
-  { id: 8, name: "Alpine Electric Scooter", category: "Bike", type: "Bike", brand: "Ather", model: "450X Mountain", year: 2024, fuel: "EV", transmission: "Automatic", seats: 2, price: 999, rating: 4.6, available: true, image: "https://images.pexels.com/photos/1366945/pexels-photo-1366945.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Electric scooter with mountain mode for hill climbing and extended range." },
-  { id: 9, name: "Valley Hatchback", category: "Car", type: "Hatchback", brand: "Suzuki", model: "Jimny", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 4, price: 1799, rating: 4.5, available: true, image: "https://images.pexels.com/photos/1366946/pexels-photo-1366946.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Compact 4x4 perfect for narrow mountain roads and trail access." },
-  { id: 10, name: "Crestline SUV", category: "Car", type: "SUV", brand: "Land Rover", model: "Defender", year: 2024, fuel: "Diesel", transmission: "Automatic", seats: 7, price: 4299, rating: 4.9, available: true, image: "https://images.pexels.com/photos/1366947/pexels-photo-1366947.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Premium luxury SUV with advanced terrain response for mountain expeditions." },
-  { id: 11, name: "Summit Executive Sedan", category: "Car", type: "Sedan", brand: "Audi", model: "A6 Allroad", year: 2024, fuel: "Diesel", transmission: "Automatic", seats: 5, price: 3199, rating: 4.7, available: true, image: "https://images.pexels.com/photos/1366948/pexels-photo-1366948.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Luxury all-wheel drive sedan for comfortable mountain business travel." },
-  { id: 12, name: "Mountain Trail Bike", category: "Bike", type: "Bike", brand: "Hero", model: "Xpulse 200 4x4", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1499, rating: 4.8, available: true, image: "https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Dual-sport motorcycle for both mountain trails and highway cruising." },
-  { id: 13, name: "Alpine Commuter Bike", category: "Bike", type: "Bike", brand: "Honda", model: "CB200X", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 899, rating: 4.4, available: true, image: "https://images.pexels.com/photos/1366950/pexels-photo-1366950.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Efficient commuter bike with mountain-friendly features and comfortable riding position." },
-  { id: 14, name: "Ridge Runner Naked Bike", category: "Bike", type: "Bike", brand: "Triumph", model: "Tiger Sport", year: 2024, fuel: "Petrol", transmission: "Manual", seats: 2, price: 1699, rating: 4.6, available: true, image: "https://images.pexels.com/photos/1366951/pexels-photo-1366951.jpeg?auto=compress&cs=tinysrgb&w=1200", description: "Powerful street bike with mountain riding capabilities and adventure styling." }
-];
-
 const offers = [
   { code: "MOUNTAIN20", title: "Mountain Explorer Discount", discount: "20% off on mountain vehicle rentals" },
   { code: "PEAK10", title: "Peak Adventure Bonus", discount: "10% off for first-time mountain explorers" }
@@ -60,9 +43,10 @@ function toUiVehicle(row) {
 
 async function fetchVehicles() {
   try {
-    const raw = localStorage.getItem(VEHICLES_KEY);
-    const stored = raw ? JSON.parse(raw) : [];
-    vehiclesCache = Array.isArray(stored) ? stored : [];
+    const response = await fetch(`${API_BASE}/vehicles`);
+    if (!response.ok) throw new Error("Failed to fetch vehicles");
+    const rows = await response.json();
+    vehiclesCache = Array.isArray(rows) ? rows.map(toUiVehicle) : [];
     return vehiclesCache;
   } catch (_err) {
     vehiclesCache = [];
@@ -71,7 +55,6 @@ async function fetchVehicles() {
 }
 
 async function getVehicles() {
-  if (vehiclesCache.length) return vehiclesCache;
   return fetchVehicles();
 }
 
@@ -107,222 +90,6 @@ async function renderListings() {
   if (!container) return;
   const page = document.body.dataset.page;
 
-  // Keep Listings under ONE rendering system:
-  // - default/dummy vehicles (no static HTML cards)
-  // - plus user-added vehicles from localStorage
-  const defaultVehicles = [
-    {
-      id: "d1",
-      name: "Mountain Explorer SUV",
-      type: "SUV",
-      category: "Car",
-      brand: "Toyota",
-      model: "Fortuner 4x4",
-      year: 2024,
-      fuel: "Diesel",
-      transmission: "Manual",
-      seats: 7,
-      price: 2899,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/1366938/pexels-photo-1366938.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Rugged 4x4 SUV perfect for mountain roads and off-road adventures."
-    },
-    {
-      id: "d2",
-      name: "Hyundai Creta SUV",
-      type: "SUV",
-      category: "Car",
-      brand: "Hyundai",
-      model: "Creta",
-      year: 2024,
-      fuel: "Diesel",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2699,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Feature-rich SUV ideal for highways, family travel, and long weekend trips."
-    },
-    {
-      id: "d3",
-      name: "Toyota Camry Hybrid",
-      type: "Sedan",
-      category: "Car",
-      brand: "Toyota",
-      model: "Camry Hybrid",
-      year: 2022,
-      fuel: "Hybrid",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2199,
-      rating: 4.5,
-      available: true,
-      image: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Fuel-efficient premium hybrid sedan with quiet cabin and refined ride."
-    },
-    {
-      id: "d4",
-      name: "Kia Carens Van",
-      type: "Van",
-      category: "Car",
-      brand: "Kia",
-      model: "Carens",
-      year: 2023,
-      fuel: "Diesel",
-      transmission: "Automatic",
-      seats: 7,
-      price: 2999,
-      rating: 4.7,
-      available: true,
-      image: "https://images.pexels.com/photos/4674337/pexels-photo-4674337.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "7-seater family mover with ample luggage space and comfortable long-drive setup."
-    },
-    {
-      id: "d5",
-      name: "BYD Seal Electric",
-      type: "Electric",
-      category: "Car",
-      brand: "BYD",
-      model: "Seal",
-      year: 2024,
-      fuel: "EV",
-      transmission: "Automatic",
-      seats: 5,
-      price: 3199,
-      rating: 4.9,
-      available: true,
-      image: "https://images.pexels.com/photos/110844/pexels-photo-110844.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Modern EV sedan with fast acceleration, premium interior, and low running cost."
-    },
-    {
-      id: "d6",
-      name: "Royal Enfield Classic 350",
-      type: "Bike",
-      category: "Bike",
-      brand: "Royal Enfield",
-      model: "Classic 350",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 2,
-      price: 899,
-      rating: 4.7,
-      available: true,
-      image: "https://images.pexels.com/photos/2116475/pexels-photo-2116475.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Relaxed cruiser bike suited for daily rides and laid-back highway touring."
-    },
-    {
-      id: "d7",
-      name: "Yamaha R15 Sports",
-      type: "Bike",
-      category: "Bike",
-      brand: "Yamaha",
-      model: "R15",
-      year: 2024,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 2,
-      price: 1099,
-      rating: 4.6,
-      available: true,
-      image: "https://images.pexels.com/photos/13781/pexels-photo-13781.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Sharp-looking sports bike with strong pickup and agile city handling."
-    },
-    {
-      id: "d8",
-      name: "Ather 450X Scooter",
-      type: "Bike",
-      category: "Bike",
-      brand: "Ather",
-      model: "450X",
-      year: 2024,
-      fuel: "EV",
-      transmission: "Automatic",
-      seats: 2,
-      price: 799,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/15038718/pexels-photo-15038718.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Easy-to-ride EV scooter with instant torque and ideal city commuting range."
-    },
-    {
-      id: "d9",
-      name: "Maruti Suzuki Baleno",
-      type: "Hatchback",
-      category: "Car",
-      brand: "Maruti Suzuki",
-      model: "Baleno",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 5,
-      price: 1599,
-      rating: 4.4,
-      available: true,
-      image: "https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Budget-friendly hatchback, perfect for city traffic and quick daily errands."
-    },
-    {
-      id: "d10",
-      name: "Kia Sonet Compact SUV",
-      type: "SUV",
-      category: "Car",
-      brand: "Kia",
-      model: "Sonet",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2399,
-      rating: 4.5,
-      available: true,
-      image: "https://images.pexels.com/photos/1007410/pexels-photo-1007410.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Compact SUV with elevated seating, touchscreen cabin, and easy maneuverability."
-    },
-    {
-      id: "d11",
-      name: "Skoda Slavia Executive",
-      type: "Sedan",
-      category: "Car",
-      brand: "Skoda",
-      model: "Slavia",
-      year: 2024,
-      fuel: "Diesel",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2799,
-      rating: 4.7,
-      available: true,
-      image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Refined executive sedan with premium styling and stable high-speed performance."
-    },
-    {
-      id: "d12",
-      name: "Hero XPulse 200",
-      type: "Bike",
-      category: "Bike",
-      brand: "Hero",
-      model: "XPulse 200",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 2,
-      price: 1299,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/595808/pexels-photo-595808.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Adventure-ready bike built for rough roads, touring comfort, and weekend exploration."
-    }
-  ];
-  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-  const mergedVehiclesRaw = [...defaultVehicles, ...storedVehicles];
-
-  // Prevent duplicate rendering (last one wins: stored over default).
-  const byId = new Map();
-  for (const v of mergedVehiclesRaw) byId.set(String(v.id), v);
-
   function parsePriceToNumber(price) {
     if (typeof price === "number" && Number.isFinite(price)) return price;
     if (typeof price === "string") {
@@ -333,7 +100,6 @@ async function renderListings() {
   }
 
   function normalizeVehicle(v) {
-    // Normalize default/dummy shape to match the existing card template.
     const type = v.type || (String(v.category || "").toLowerCase().includes("bike") ? "Bike" : "Sedan");
     const category = v.category || (String(type).toLowerCase().includes("bike") ? "Bike" : "Car");
     const fuel = v.fuel || "Petrol";
@@ -360,7 +126,7 @@ async function renderListings() {
     };
   }
 
-  const allVehicles = Array.from(byId.values()).map(normalizeVehicle);
+  const allVehicles = (await getVehicles()).map(normalizeVehicle);
 
   const type = document.getElementById("filterType")?.value || "all";
   const fuel = document.getElementById("filterFuel")?.value || "all";
@@ -729,218 +495,7 @@ async function renderVehicleDetails() {
   const panel = document.getElementById("vehicleDetailsPanel");
   if (!panel) return;
   const params = new URLSearchParams(window.location.search);
-  const id = String(params.get("id") || "d1");
-
-  const defaultVehicles = [
-    {
-      id: "d1",
-      name: "Honda City Sedan",
-      type: "Sedan",
-      category: "Car",
-      brand: "Honda",
-      model: "City",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Automatic",
-      seats: 5,
-      price: 1899,
-      rating: 4.6,
-      available: true,
-      image: "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Smooth city sedan with automatic gearbox, strong AC, and comfortable rear seating."
-    },
-    {
-      id: "d2",
-      name: "Hyundai Creta SUV",
-      type: "SUV",
-      category: "Car",
-      brand: "Hyundai",
-      model: "Creta",
-      year: 2024,
-      fuel: "Diesel",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2699,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Feature-rich SUV ideal for highways, family travel, and long weekend trips."
-    },
-    {
-      id: "d3",
-      name: "Toyota Camry Hybrid",
-      type: "Sedan",
-      category: "Car",
-      brand: "Toyota",
-      model: "Camry Hybrid",
-      year: 2022,
-      fuel: "Hybrid",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2199,
-      rating: 4.5,
-      available: true,
-      image: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Fuel-efficient premium hybrid sedan with quiet cabin and refined ride."
-    },
-    {
-      id: "d4",
-      name: "Kia Carens Van",
-      type: "Van",
-      category: "Car",
-      brand: "Kia",
-      model: "Carens",
-      year: 2023,
-      fuel: "Diesel",
-      transmission: "Automatic",
-      seats: 7,
-      price: 2999,
-      rating: 4.7,
-      available: true,
-      image: "https://images.pexels.com/photos/4674337/pexels-photo-4674337.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "7-seater family mover with ample luggage space and comfortable long-drive setup."
-    },
-    {
-      id: "d5",
-      name: "BYD Seal Electric",
-      type: "Electric",
-      category: "Car",
-      brand: "BYD",
-      model: "Seal",
-      year: 2024,
-      fuel: "EV",
-      transmission: "Automatic",
-      seats: 5,
-      price: 3199,
-      rating: 4.9,
-      available: true,
-      image: "https://images.pexels.com/photos/110844/pexels-photo-110844.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Modern EV sedan with fast acceleration, premium interior, and low running cost."
-    },
-    {
-      id: "d6",
-      name: "Royal Enfield Classic 350",
-      type: "Bike",
-      category: "Bike",
-      brand: "Royal Enfield",
-      model: "Classic 350",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 2,
-      price: 899,
-      rating: 4.7,
-      available: true,
-      image: "https://images.pexels.com/photos/2116475/pexels-photo-2116475.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Relaxed cruiser bike suited for daily rides and laid-back highway touring."
-    },
-    {
-      id: "d7",
-      name: "Yamaha R15 Sports",
-      type: "Bike",
-      category: "Bike",
-      brand: "Yamaha",
-      model: "R15",
-      year: 2024,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 2,
-      price: 1099,
-      rating: 4.6,
-      available: true,
-      image: "https://images.pexels.com/photos/13781/pexels-photo-13781.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Sharp-looking sports bike with strong pickup and agile city handling."
-    },
-    {
-      id: "d8",
-      name: "Ather 450X Scooter",
-      type: "Bike",
-      category: "Bike",
-      brand: "Ather",
-      model: "450X",
-      year: 2024,
-      fuel: "EV",
-      transmission: "Automatic",
-      seats: 2,
-      price: 799,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/15038718/pexels-photo-15038718.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Easy-to-ride EV scooter with instant torque and ideal city commuting range."
-    },
-    {
-      id: "d9",
-      name: "Maruti Suzuki Baleno",
-      type: "Hatchback",
-      category: "Car",
-      brand: "Maruti Suzuki",
-      model: "Baleno",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 5,
-      price: 1599,
-      rating: 4.4,
-      available: true,
-      image: "https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Budget-friendly hatchback, perfect for city traffic and quick daily errands."
-    },
-    {
-      id: "d10",
-      name: "Kia Sonet Compact SUV",
-      type: "SUV",
-      category: "Car",
-      brand: "Kia",
-      model: "Sonet",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2399,
-      rating: 4.5,
-      available: true,
-      image: "https://images.pexels.com/photos/1007410/pexels-photo-1007410.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Compact SUV with elevated seating, touchscreen cabin, and easy maneuverability."
-    },
-    {
-      id: "d11",
-      name: "Skoda Slavia Executive",
-      type: "Sedan",
-      category: "Car",
-      brand: "Skoda",
-      model: "Slavia",
-      year: 2024,
-      fuel: "Diesel",
-      transmission: "Automatic",
-      seats: 5,
-      price: 2799,
-      rating: 4.7,
-      available: true,
-      image: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Refined executive sedan with premium styling and stable high-speed performance."
-    },
-    {
-      id: "d12",
-      name: "Hero XPulse 200",
-      type: "Bike",
-      category: "Bike",
-      brand: "Hero",
-      model: "XPulse 200",
-      year: 2023,
-      fuel: "Petrol",
-      transmission: "Manual",
-      seats: 2,
-      price: 1299,
-      rating: 4.8,
-      available: true,
-      image: "https://images.pexels.com/photos/595808/pexels-photo-595808.jpeg?auto=compress&cs=tinysrgb&w=1200",
-      description: "Adventure-ready bike built for rough roads, touring comfort, and weekend exploration."
-    }
-  ];
-  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-  const mergedVehiclesRaw = [...defaultVehicles, ...storedVehicles];
-  const byId = new Map();
-  for (const item of mergedVehiclesRaw) byId.set(String(item.id), item);
+  const id = String(params.get("id") || "");
 
   function parsePriceToNumber(price) {
     if (typeof price === "number" && Number.isFinite(price)) return price;
@@ -951,7 +506,7 @@ async function renderVehicleDetails() {
     return 0;
   }
 
-  const vehicles = Array.from(byId.values()).map((item) => {
+  const vehicles = (await getVehicles()).map((item) => {
     const type = item.type || (String(item.category || "").toLowerCase().includes("bike") ? "Bike" : "Sedan");
     const category = item.category || (String(type).toLowerCase().includes("bike") ? "Bike" : "Car");
     return {
@@ -1743,10 +1298,13 @@ async function editVehicle(id) {
 
 async function deleteVehicle(id) {
   if (!confirm("Delete this vehicle?")) return;
-  const vehicles = await getVehicles();
-  const next = vehicles.filter((v) => String(v.id) !== String(id));
-  localStorage.setItem(VEHICLES_KEY, JSON.stringify(next));
-  vehiclesCache = next;
+  const response = await fetch(`${API_BASE}/vehicles/${id}`, { method: "DELETE" });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    notify("adminNotice", data.message || "Failed to delete vehicle", true);
+    return;
+  }
+  await fetchVehicles();
   notify("adminNotice", "Vehicle deleted successfully.");
   await renderAdminVehicles();
   await renderListings();
@@ -1785,53 +1343,19 @@ function handleAdminPanel() {
       const idRaw = document.getElementById("vehicleId").value;
       const existingId = idRaw ? Number(idRaw) : null;
       const owner = localStorage.getItem("vr_user_email") || "";
-      const vehicles = await getVehicles();
-      const existing = existingId ? vehicles.find((v) => Number(v.id) === Number(existingId)) : null;
+      formData.set("ownerEmail", owner);
 
-      const type = String(formData.get("type") || "").trim();
-      const category = type.toLowerCase().includes("bike") ? "Bike" : "Car";
-      const seats = category === "Bike" ? 2 : 5;
+      const url = existingId ? `${API_BASE}/vehicles/${existingId}` : `${API_BASE}/vehicles`;
+      const response = await fetch(url, {
+        method: existingId ? "PUT" : "POST",
+        body: formData
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.message || "Request failed");
 
-      // If image is provided, persist it as a data URL so it survives reloads.
-      let image = existing?.image || DEFAULT_VEHICLE_IMAGE;
-      const imageFile = formData.get("image");
-      if (imageFile && typeof imageFile.size === "number" && imageFile.size > 0) {
-        image = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(String(reader.result || ""));
-          reader.onerror = () => reject(new Error("Failed to read image file"));
-          reader.readAsDataURL(imageFile);
-        });
-      }
+      await fetchVehicles();
 
-      const vehicle = {
-        id: existing ? existing.id : Date.now(),
-        name: String(formData.get("name") || "").trim(),
-        type,
-        category,
-        fuel: String(formData.get("fuelType") || "").trim(),
-        transmission: String(formData.get("transmission") || "").trim(),
-        seats,
-        price: Number(formData.get("pricePerDay") || 0),
-        rating: existing?.rating ?? 4.5,
-        available: existing?.available ?? true,
-        image: image || DEFAULT_VEHICLE_IMAGE,
-        brand: String(formData.get("brand") || "").trim(),
-        model: String(formData.get("model") || "").trim(),
-        year: Number(formData.get("year") || 0),
-        description: String(formData.get("description") || "").trim(),
-        ownerEmail: owner,
-        owner
-      };
-
-      const next = existing
-        ? vehicles.map((v) => (Number(v.id) === Number(existing.id) ? { ...v, ...vehicle, id: v.id, ownerEmail: owner, owner } : v))
-        : [...vehicles, vehicle];
-
-      localStorage.setItem(VEHICLES_KEY, JSON.stringify(next));
-      vehiclesCache = next;
-
-      notify("adminNotice", existing ? "Vehicle updated successfully." : "Vehicle added successfully.");
+      notify("adminNotice", existingId ? "Vehicle updated successfully." : "Vehicle added successfully.");
       resetVehicleForm();
       await renderAdminVehicles();
       await populateVehicleSelect();

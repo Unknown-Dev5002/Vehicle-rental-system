@@ -307,14 +307,47 @@ function handleDashboard() {
 
 async function populateVehicleSelect() {
   const select = document.querySelector("select[name='vehicle']");
-  if (!select) return;
   const vehicles = await getVehicles();
-  select.innerHTML = vehicles.filter((v) => v.available).map((v) => `<option value="${v.id}">${v.name} (${v.category}) - ${formatINR(v.price)}/day</option>`).join("");
+  if (select) {
+    select.innerHTML = vehicles.filter((v) => v.available).map((v) => `<option value="${v.id}">${v.name} (${v.category}) - ${formatINR(v.price)}/day</option>`).join("");
+    return;
+  }
+
+  const selectedVehicleBox = document.getElementById("selectedVehicle");
+  const selectedVehicleInput = document.getElementById("selectedVehicleId");
+  if (!selectedVehicleBox || !selectedVehicleInput) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const vehicleId = params.get("vehicleId");
+  const vehicle = vehicles.find((v) => String(v.id) === String(vehicleId));
+  if (!vehicle) {
+    selectedVehicleBox.textContent = "Selected vehicle not found. Please return to listings.";
+    selectedVehicleInput.value = "";
+    return;
+  }
+
+  selectedVehicleInput.value = vehicle.id;
+  selectedVehicleBox.textContent = `${vehicle.name} (${vehicle.category}) - ${formatINR(vehicle.price)}/day`;
 }
 
 function handleBookingFlow() {
   const bookingForm = document.getElementById("bookingForm");
   const paymentForm = document.getElementById("paymentForm");
+  let paymentBooking = null;
+
+  function toISTDateTimeLocal(date = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).formatToParts(date);
+    const value = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+    return `${value.year}-${value.month}-${value.day}T${value.hour}:${value.minute}`;
+  }
 
   if (bookingForm) {
     const pickupInput = document.getElementById("pickupDateTime");
@@ -323,7 +356,7 @@ function handleBookingFlow() {
     let pendingBooking = null;
     if (pickupInput && pickupInput.type !== "datetime-local") pickupInput.type = "datetime-local";
     if (dropoffInput && dropoffInput.type !== "datetime-local") dropoffInput.type = "datetime-local";
-    const now = new Date().toISOString().slice(0, 16);
+    const now = toISTDateTimeLocal();
     if (pickupInput) pickupInput.min = now;
     if (pickupInput && dropoffInput) {
       pickupInput.addEventListener("change", (e) => {
@@ -350,11 +383,15 @@ function handleBookingFlow() {
       }
       const data = Object.fromEntries(new FormData(bookingForm).entries());
       const vehicles = await getVehicles();
-      const selected = vehicles.find((v) => String(v.id) === String(data.vehicle));
       const vehicleId = String(data.vehicle || "");
-      const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-      const vehicleBookings = bookings.filter((b) => String(b.vehicleId) === vehicleId);
-      const isBooked = vehicleBookings.some((b) => (pickup < b.dropoff) && (dropoff > b.pickup));
+      const selected = vehicles.find((v) => String(v.id) === vehicleId);
+      if (!selected) {
+        notify("bookingNotice", "Selected vehicle not found. Please return to listings.", true);
+        return;
+      }
+      const availabilityResponse = await fetch(`${API_BASE}/bookings/availability?vehicleId=${encodeURIComponent(vehicleId)}&start=${encodeURIComponent(pickup)}&end=${encodeURIComponent(dropoff)}`);
+      const availability = await availabilityResponse.json().catch(() => ({}));
+      const isBooked = !availabilityResponse.ok || availability.available === false;
 
       if (isBooked) {
         pendingBooking = null;
@@ -384,24 +421,17 @@ function handleBookingFlow() {
     });
 
     if (confirmBookingBtn) {
-      confirmBookingBtn.addEventListener("click", () => {
+      confirmBookingBtn.addEventListener("click", async () => {
         if (!pendingBooking) {
           notify("bookingNotice", "Please check availability first.", true);
           return;
         }
-        const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
         const vehicleId = pendingBooking.vehicleId;
         const pickup = pendingBooking.pickup;
         const dropoff = pendingBooking.dropoff;
-        const pickupDate = new Date(pickup);
-        const dropoffDate = new Date(dropoff);
-        const vehicleBookings = bookings.filter((b) => b.vehicleId === vehicleId);
-        const isBooked = vehicleBookings.some((b) => {
-          const existingPickup = new Date(b.pickup);
-          const existingDropoff = new Date(b.dropoff);
-          return (pickupDate < existingDropoff) && (dropoffDate > existingPickup);
-        });
-        if (isBooked) {
+        const availabilityResponse = await fetch(`${API_BASE}/bookings/availability?vehicleId=${encodeURIComponent(vehicleId)}&start=${encodeURIComponent(pickup)}&end=${encodeURIComponent(dropoff)}`);
+        const availability = await availabilityResponse.json().catch(() => ({}));
+        if (!availabilityResponse.ok || availability.available === false) {
           alert("Vehicle just got booked for this time. Please select another slot.");
           return;
         }
@@ -414,10 +444,17 @@ function handleBookingFlow() {
           total: pendingBooking.total,
           status: "pending"
         };
-        bookings.push(bookingRecord);
-        localStorage.setItem("bookings", JSON.stringify(bookings));
-        localStorage.setItem("vr_booking", JSON.stringify({ ...pendingBooking, id: bookingRecord.id }));
-        window.location.href = `payment.html?bookingId=${bookingRecord.id}`;
+        const response = await fetch(`${API_BASE}/bookings`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...pendingBooking, ...bookingRecord })
+        });
+        const saved = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          notify("bookingNotice", saved.message || "Failed to create booking", true);
+          return;
+        }
+        window.location.href = `payment.html?bookingId=${saved.id || bookingRecord.id}`;
       });
     }
   }
@@ -427,13 +464,17 @@ function handleBookingFlow() {
     const payButton = paymentForm.querySelector("button[type='submit']");
     const params = new URLSearchParams(window.location.search);
     const bookingId = params.get("bookingId");
-    const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-    const booking = bookings.find((b) => String(b.id) === String(bookingId));
-    const totalAmount = Number(booking?.total || 0);
-
-    if (summary && booking) {
-      summary.innerHTML = `<p>Booking ID: <b>${booking.id}</b></p><p>Total: <b>${formatINR(totalAmount)}</b></p><p>Status: Pending payment</p>`;
-    }
+    fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId || "")}`, { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((booking) => {
+        paymentBooking = booking;
+        const totalAmount = Number(booking?.total || 0);
+        if (summary && booking) {
+          const status = booking.paymentStatus === "paid" ? "Paid" : booking.status === "confirmed" ? "Confirmed" : "Pending payment";
+          summary.innerHTML = `<p>Booking ID: <b>${booking.id}</b></p><p>Total: <b>${formatINR(totalAmount)}</b></p><p>Status: ${status}</p>`;
+        }
+      })
+      .catch(() => {});
 
     paymentForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -458,7 +499,7 @@ function handleBookingFlow() {
         payButton.textContent = "Processing payment...";
       }
 
-      setTimeout(() => {
+      setTimeout(async () => {
         if (Math.random() < 0.1) {
           alert("Payment failed. Try again.");
           if (payButton) {
@@ -468,9 +509,8 @@ function handleBookingFlow() {
           return;
         }
 
-        const allBookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-        const idx = allBookings.findIndex((b) => String(b.id) === String(bookingId));
-        if (idx === -1) {
+        const latestBookingResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId)}`, { cache: "no-store" });
+        if (!latestBookingResponse.ok) {
           alert("No booking found.");
           if (payButton) {
             payButton.disabled = false;
@@ -478,14 +518,39 @@ function handleBookingFlow() {
           }
           return;
         }
+        paymentBooking = await latestBookingResponse.json();
 
-        allBookings[idx].status = "confirmed";
-        allBookings[idx].paymentStatus = "paid";
-        allBookings[idx].paidAt = new Date().toISOString();
-        localStorage.setItem("bookings", JSON.stringify(allBookings));
+        try {
+          const updateResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId)}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              status: "confirmed",
+              paymentStatus: "paid",
+              paidAt: new Date().toISOString()
+            })
+          });
+          if (!updateResponse.ok) throw new Error("No booking found.");
+          paymentBooking = await updateResponse.json();
 
-        alert("Payment successful!");
-        window.location.href = `confirmation.html?bookingId=${allBookings[idx].id}`;
+          const confirmedResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(paymentBooking.id)}`, { cache: "no-store" });
+          if (!confirmedResponse.ok) throw new Error("No booking found.");
+          const confirmedBooking = await confirmedResponse.json();
+          if (summary) {
+            const totalAmount = Number(confirmedBooking?.total || 0);
+            const status = confirmedBooking.paymentStatus === "paid" ? "Paid" : confirmedBooking.status === "confirmed" ? "Confirmed" : "Pending payment";
+            summary.innerHTML = `<p>Booking ID: <b>${confirmedBooking.id}</b></p><p>Total: <b>${formatINR(totalAmount)}</b></p><p>Status: ${status}</p>`;
+          }
+
+          //alert("Payment successful!");
+          window.location.href = `confirmation.html?bookingId=${encodeURIComponent(confirmedBooking.id)}`;
+        } catch (_err) {
+          alert("No booking found.");
+          if (payButton) {
+            payButton.disabled = false;
+            payButton.textContent = "Pay Securely";
+          }
+        }
       }, 2000);
     });
   }
@@ -533,7 +598,7 @@ async function renderVehicleDetails() {
     <p class="small">${v.description || "Representative image. Exact brand/trim may vary by branch."}</p>
     <p class="price">${formatINR(v.price)}/day</p>
     <p>Cancellation: Free up to 24h before pickup. Insurance options available.</p>
-    <a class="btn" href="booking.html">Book This Vehicle</a>
+    <a class="btn" href="booking.html?vehicleId=${encodeURIComponent(v.id)}">Book This Vehicle</a>
   `;
 
   const reviewList = document.getElementById("reviewList");

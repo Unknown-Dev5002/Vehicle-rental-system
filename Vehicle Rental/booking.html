@@ -25,7 +25,8 @@
 <h1>Book Your Vehicle</h1>
 <form id="bookingForm" class="card">
   <label>Vehicle</label>
-  <select name="vehicle" required></select>
+  <div id="selectedVehicle" class="notice"></div>
+  <input id="selectedVehicleId" name="vehicle" type="hidden" required />
   <label>Pickup Location</label><input name="pickupLocation" required />
   <label>Dropoff Location</label><input name="dropoffLocation" required />
   <label>Pickup Date</label><input id="pickupDateTime" name="pickupDate" type="datetime-local" required />

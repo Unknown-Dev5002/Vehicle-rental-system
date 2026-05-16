@@ -33,6 +33,24 @@ db.serialize(() => {
       db.run("ALTER TABLE vehicles ADD COLUMN ownerEmail TEXT");
     }
   });
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS bookings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      bookingId TEXT UNIQUE NOT NULL,
+      vehicleId TEXT NOT NULL,
+      userDetails TEXT,
+      pickupLocation TEXT,
+      dropoffLocation TEXT,
+      pickupDate TEXT NOT NULL,
+      dropoffDate TEXT NOT NULL,
+      totalPrice REAL NOT NULL,
+      status TEXT DEFAULT 'pending',
+      paymentStatus TEXT DEFAULT 'pending',
+      paidAt TEXT,
+      createdAt TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 });
 
 module.exports = db;

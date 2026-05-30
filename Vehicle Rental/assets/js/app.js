@@ -464,19 +464,44 @@ function handleBookingFlow() {
     const payButton = paymentForm.querySelector("button[type='submit']");
     const params = new URLSearchParams(window.location.search);
     const bookingId = params.get("bookingId");
+
+    function redirectToConfirmation(id, reason) {
+      const targetId = String(id || "").trim();
+      console.log("[payment] redirect", { reason, bookingId: targetId });
+      if (!targetId) {
+        console.error("[payment] redirect blocked: missing bookingId");
+        return false;
+      }
+      window.location.href = `confirmation.html?bookingId=${encodeURIComponent(targetId)}`;
+      return true;
+    }
+
     fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId || "")}`, { cache: "no-store" })
-      .then((response) => response.ok ? response.json() : null)
+      .then((response) => {
+        console.log("[payment] load booking response", { ok: response.ok, status: response.status, bookingId });
+        return response.ok ? response.json() : null;
+      })
       .then((booking) => {
         paymentBooking = booking;
+        console.log("[payment] loaded booking", {
+          bookingId: booking?.id || booking?.bookingId,
+          paymentStatus: booking?.paymentStatus
+        });
+        if (booking?.paymentStatus === "paid") {
+          redirectToConfirmation(booking.id || booking.bookingId || bookingId, "already-paid-on-load");
+          return;
+        }
         const totalAmount = Number(booking?.total || 0);
         if (summary && booking) {
           const status = booking.paymentStatus === "paid" ? "Paid" : booking.status === "confirmed" ? "Confirmed" : "Pending payment";
           summary.innerHTML = `<p>Booking ID: <b>${booking.id}</b></p><p>Total: <b>${formatINR(totalAmount)}</b></p><p>Status: ${status}</p>`;
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error("[payment] load booking failed", err);
+      });
 
-    paymentForm.addEventListener("submit", (e) => {
+    paymentForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const cardName = paymentForm.querySelector("#cardName")?.value || "";
       const cardNumber = (paymentForm.querySelector("#cardNumber")?.value || "").replace(/\s+/g, "");
@@ -490,7 +515,14 @@ function handleBookingFlow() {
         return;
       }
       if (!bookingId) {
+        console.error("[payment] submit blocked: no bookingId in URL");
         alert("No booking found.");
+        return;
+      }
+
+      if (paymentBooking?.paymentStatus === "paid") {
+        console.log("[payment] already paid before submit", paymentBooking);
+        redirectToConfirmation(paymentBooking.id || paymentBooking.bookingId || bookingId, "already-paid-on-submit");
         return;
       }
 
@@ -499,59 +531,53 @@ function handleBookingFlow() {
         payButton.textContent = "Processing payment...";
       }
 
-      setTimeout(async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         if (Math.random() < 0.1) {
-          alert("Payment failed. Try again.");
-          if (payButton) {
-            payButton.disabled = false;
-            payButton.textContent = "Pay Securely";
-          }
-          return;
+          throw new Error("Payment failed. Try again.");
         }
 
-        const latestBookingResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId)}`, { cache: "no-store" });
-        if (!latestBookingResponse.ok) {
-          alert("No booking found.");
-          if (payButton) {
-            payButton.disabled = false;
-            payButton.textContent = "Pay Securely";
-          }
-          return;
+        console.log("[payment] PUT start", { bookingId });
+        const updateResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId)}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "confirmed",
+            paymentStatus: "paid",
+            paidAt: new Date().toISOString()
+          })
+        });
+
+        const updatedBooking = await updateResponse.json().catch(() => ({}));
+        console.log("[payment] PUT response", {
+          ok: updateResponse.ok,
+          status: updateResponse.status,
+          body: updatedBooking
+        });
+
+        if (!updateResponse.ok) {
+          throw new Error(updatedBooking.message || "Payment update failed.");
         }
-        paymentBooking = await latestBookingResponse.json();
 
-        try {
-          const updateResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId)}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              status: "confirmed",
-              paymentStatus: "paid",
-              paidAt: new Date().toISOString()
-            })
-          });
-          if (!updateResponse.ok) throw new Error("No booking found.");
-          paymentBooking = await updateResponse.json();
+        paymentBooking = updatedBooking;
+        const successId = updatedBooking.id || updatedBooking.bookingId || bookingId;
+        const isPaid = String(updatedBooking.paymentStatus || "").toLowerCase() === "paid";
+        console.log("[payment] success check", { successId, paymentStatus: updatedBooking.paymentStatus, isPaid });
 
-          const confirmedResponse = await fetch(`${API_BASE}/bookings/${encodeURIComponent(paymentBooking.id)}`, { cache: "no-store" });
-          if (!confirmedResponse.ok) throw new Error("No booking found.");
-          const confirmedBooking = await confirmedResponse.json();
-          if (summary) {
-            const totalAmount = Number(confirmedBooking?.total || 0);
-            const status = confirmedBooking.paymentStatus === "paid" ? "Paid" : confirmedBooking.status === "confirmed" ? "Confirmed" : "Pending payment";
-            summary.innerHTML = `<p>Booking ID: <b>${confirmedBooking.id}</b></p><p>Total: <b>${formatINR(totalAmount)}</b></p><p>Status: ${status}</p>`;
-          }
-
-          //alert("Payment successful!");
-          window.location.href = `confirmation.html?bookingId=${encodeURIComponent(confirmedBooking.id)}`;
-        } catch (_err) {
-          alert("No booking found.");
-          if (payButton) {
-            payButton.disabled = false;
-            payButton.textContent = "Pay Securely";
-          }
+        if (!isPaid) {
+          throw new Error("Payment was not confirmed by the server.");
         }
-      }, 2000);
+
+        redirectToConfirmation(successId, "payment-success");
+      } catch (err) {
+        console.error("[payment] failed", err);
+        alert(err.message || "Payment failed. Try again.");
+        if (payButton) {
+          payButton.disabled = false;
+          payButton.textContent = "Pay Securely";
+        }
+      }
     });
   }
 }

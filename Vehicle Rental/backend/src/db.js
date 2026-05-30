@@ -7,6 +7,11 @@ if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const dbPath = path.join(dataDir, "drivehive.db");
 const db = new sqlite3.Database(dbPath);
 
+let readyResolve;
+const whenReady = new Promise((resolve) => {
+  readyResolve = resolve;
+});
+
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS vehicles (
@@ -21,17 +26,23 @@ db.serialize(() => {
       transmission TEXT NOT NULL,
       description TEXT NOT NULL,
       imageUrl TEXT,
+      ownerEmail TEXT,
       createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
       updatedAt TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
   db.all("PRAGMA table_info(vehicles)", [], (err, rows) => {
-    if (err) return;
+    if (err) {
+      readyResolve();
+      return;
+    }
     const hasOwnerEmail = rows.some((row) => row.name === "ownerEmail");
     if (!hasOwnerEmail) {
-      db.run("ALTER TABLE vehicles ADD COLUMN ownerEmail TEXT");
+      db.run("ALTER TABLE vehicles ADD COLUMN ownerEmail TEXT", () => readyResolve());
+      return;
     }
+    readyResolve();
   });
 
   db.run(`
@@ -52,5 +63,8 @@ db.serialize(() => {
     )
   `);
 });
+
+db.whenReady = whenReady;
+db.dbPath = dbPath;
 
 module.exports = db;

@@ -1,9 +1,12 @@
+require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const db = require("./db");
+const { sendBookingConfirmationEmail } = require("./email");
 
 const app = express();
 const PORT = 5000;
@@ -30,6 +33,14 @@ const upload = multer({
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(uploadsDir));
+app.use((req, res, next) => {
+  db.whenReady
+    .then(() => next())
+    .catch((err) => {
+      console.error("[db] initialization failed", err);
+      res.status(503).json({ message: "Database is not ready" });
+    });
+});
 
 function validateVehicle(body, isUpdate = false) {
   const required = ["name", "type", "brand", "model", "year", "pricePerDay", "fuelType", "transmission", "description"];
@@ -47,6 +58,12 @@ function validateVehicle(body, isUpdate = false) {
   }
 
   return null;
+}
+
+function getBookingRecipientEmail(booking) {
+  const details = booking.userDetails || {};
+  const candidate = String(details.email || details.user || "").trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate) ? candidate : "";
 }
 
 function toBooking(row) {
@@ -78,8 +95,12 @@ function toBooking(row) {
 }
 
 app.get("/api/vehicles", (_req, res) => {
+  res.set("Cache-Control", "no-store");
   db.all("SELECT * FROM vehicles ORDER BY id DESC", [], (err, rows) => {
-    if (err) return res.status(500).json({ message: "Failed to fetch vehicles" });
+    if (err) {
+      console.error("[vehicles] fetch failed", err);
+      return res.status(500).json({ message: "Failed to fetch vehicles" });
+    }
     res.json(rows);
   });
 });
@@ -108,7 +129,10 @@ app.post("/api/vehicles", upload.single("image"), (req, res) => {
      VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
     data,
     function onInsert(err) {
-      if (err) return res.status(500).json({ message: "Failed to add vehicle" });
+      if (err) {
+        console.error("[vehicles] insert failed", err);
+        return res.status(500).json({ message: "Failed to add vehicle" });
+      }
       db.get("SELECT * FROM vehicles WHERE id = ?", [this.lastID], (readErr, row) => {
         if (readErr) return res.status(500).json({ message: "Vehicle added but failed to load" });
         res.status(201).json({ message: "Vehicle added successfully", vehicle: row });
@@ -223,8 +247,10 @@ app.post("/api/bookings", (req, res) => {
     return res.status(400).json({ message: "Missing booking details" });
   }
 
+  const userEmail = String(req.body.user || req.body.email || "").trim();
   const userDetails = JSON.stringify({
-    user: req.body.user || "guest",
+    user: userEmail || "guest",
+    email: userEmail || null,
     drivingLicense: req.body.drivingLicense || ""
   });
 
@@ -263,7 +289,6 @@ app.put("/api/bookings/:id", (req, res) => {
       paymentStatus: req.body.paymentStatus || existing.paymentStatus,
       paidAt: req.body.paidAt || existing.paidAt
     };
-
     db.run(
       "UPDATE bookings SET status = ?, paymentStatus = ?, paidAt = ? WHERE bookingId = ?",
       [next.status, next.paymentStatus, next.paidAt, String(req.params.id)],
@@ -271,7 +296,43 @@ app.put("/api/bookings/:id", (req, res) => {
         if (updateErr) return res.status(500).json({ message: "Failed to update booking" });
         db.get("SELECT * FROM bookings WHERE bookingId = ?", [String(req.params.id)], (readErr, row) => {
           if (readErr) return res.status(500).json({ message: "Booking updated but failed to load" });
-          res.json(toBooking(row));
+
+          const booking = toBooking(row);
+          const paymentMarkedPaid = req.body.paymentStatus === "paid";
+          const paymentJustCompleted =
+            paymentMarkedPaid &&
+            row.paymentStatus === "paid" &&
+            existing.paymentStatus !== "paid";
+
+          if (!paymentJustCompleted) {
+            return res.json(booking);
+          }
+
+          const recipient = getBookingRecipientEmail(booking);
+          const userDetails = booking.userDetails || {};
+          const customerName = String(userDetails.name || userDetails.user || "Guest").trim() || "Guest";
+
+          if (!recipient) {
+            console.error("[email] skipped: booking has no valid recipient email", row.bookingId);
+            return res.json(booking);
+          }
+
+          res.json(booking);
+
+          db.get("SELECT name FROM vehicles WHERE id = ?", [String(row.vehicleId)], (vehicleErr, vehicle) => {
+            if (vehicleErr) {
+              console.error("[email] vehicle lookup failed", vehicleErr);
+            }
+            sendBookingConfirmationEmail({
+              to: recipient,
+              customerName,
+              booking,
+              vehicleName: vehicle?.name
+            }).catch((emailErr) => {
+              console.error("[email] booking confirmation failed", emailErr.message || emailErr);
+            });
+          });
+          return;
         });
       }
     );
@@ -285,4 +346,5 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`DriveHive backend running on http://localhost:${PORT}`);
+  console.log(`SQLite database: ${db.dbPath}`);
 });

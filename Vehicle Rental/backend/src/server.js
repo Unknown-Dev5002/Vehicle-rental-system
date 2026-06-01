@@ -2,24 +2,18 @@ require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") }
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
 const multer = require("multer");
+const CloudinaryStorage = require("multer-storage-cloudinary");
+const cloudinary = require("./cloudinary");
 const db = require("./db");
 const { sendBookingConfirmationEmail } = require("./email");
 
 const app = express();
 const PORT = 5000;
 
-const uploadsDir = path.join(__dirname, "..", "uploads");
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadsDir),
-  filename: (_req, file, cb) => {
-    const safeName = `${Date.now()}-${file.originalname.replace(/\s+/g, "-")}`;
-    cb(null, safeName);
-  }
+const storage = CloudinaryStorage({
+  cloudinary: { v2: cloudinary },
+  folder: "drivehive-vehicles"
 });
 const upload = multer({
   storage,
@@ -32,7 +26,6 @@ const upload = multer({
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(uploadsDir));
 app.use((req, res, next) => {
   db.whenReady
     .then(() => next())
@@ -109,7 +102,7 @@ app.post("/api/vehicles", upload.single("image"), (req, res) => {
   const error = validateVehicle(req.body);
   if (error) return res.status(400).json({ message: error });
 
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  const imageUrl = req.file ? req.file.secure_url : null;
   const data = [
     req.body.name.trim(),
     req.body.type.trim(),
@@ -151,7 +144,7 @@ app.put("/api/vehicles/:id", upload.single("image"), (req, res) => {
     if (findErr) return res.status(500).json({ message: "Failed to find vehicle" });
     if (!existing) return res.status(404).json({ message: "Vehicle not found" });
 
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : existing.imageUrl;
+    const imageUrl = req.file ? req.file.secure_url : existing.imageUrl;
     const merged = {
       name: (req.body.name || existing.name).trim(),
       type: (req.body.type || existing.type).trim(),
@@ -173,10 +166,6 @@ app.put("/api/vehicles/:id", upload.single("image"), (req, res) => {
       [merged.name, merged.type, merged.brand, merged.model, merged.year, merged.pricePerDay, merged.fuelType, merged.transmission, merged.description, merged.imageUrl, merged.ownerEmail, id],
       (updateErr) => {
         if (updateErr) return res.status(500).json({ message: "Failed to update vehicle" });
-        if (req.file && existing.imageUrl && existing.imageUrl.startsWith("/uploads/")) {
-          const oldPath = path.join(__dirname, "..", existing.imageUrl);
-          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-        }
         db.get("SELECT * FROM vehicles WHERE id = ?", [id], (readErr, row) => {
           if (readErr) return res.status(500).json({ message: "Vehicle updated but failed to load" });
           res.json({ message: "Vehicle updated successfully", vehicle: row });
@@ -196,10 +185,6 @@ app.delete("/api/vehicles/:id", (req, res) => {
 
     db.run("DELETE FROM vehicles WHERE id = ?", [id], (deleteErr) => {
       if (deleteErr) return res.status(500).json({ message: "Failed to delete vehicle" });
-      if (vehicle.imageUrl && vehicle.imageUrl.startsWith("/uploads/")) {
-        const filePath = path.join(__dirname, "..", vehicle.imageUrl);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      }
       res.json({ message: "Vehicle deleted successfully" });
     });
   });

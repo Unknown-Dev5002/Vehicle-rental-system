@@ -1,4 +1,5 @@
 const API_BASE = "http://localhost:5000/api";
+const API_ORIGIN = API_BASE.replace(/\/api\/?$/, "");
 
 const offers = [
   { code: "MOUNTAIN20", title: "Mountain Explorer Discount", discount: "20% off on mountain vehicle rentals" },
@@ -12,6 +13,20 @@ const INR = new Intl.NumberFormat("en-IN");
 
 function formatINR(amount) {
   return `\u20B9${INR.format(amount)}`;
+}
+
+function resolveVehicleImageUrl(imageUrl) {
+  if (!imageUrl) {
+    return DEFAULT_VEHICLE_IMAGE;
+  }
+  const url = String(imageUrl).trim();
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+  if (url.startsWith("/")) {
+    return `${API_ORIGIN}${url}`;
+  }
+  return `${API_ORIGIN}/${url}`;
 }
 
 function isLoggedIn() {
@@ -32,7 +47,7 @@ function toUiVehicle(row) {
     price: Number(row.pricePerDay || 0),
     rating: 4.5,
     available: true,
-    image: row.imageUrl ? `http://localhost:5000${row.imageUrl}` : "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    image: resolveVehicleImageUrl(row.imageUrl),
     brand: row.brand,
     model: row.model,
     year: row.year,

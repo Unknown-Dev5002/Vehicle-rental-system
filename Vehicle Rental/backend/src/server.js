@@ -1,3 +1,5 @@
+const Vehicle = require("./models/Vehicle");
+const Booking = require("./models/Booking");
 const connectMongo = require("./mongo");
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
 
@@ -329,6 +331,9 @@ app.put("/api/bookings/:id", (req, res) => {
 app.use((err, _req, res, _next) => {
   res.status(400).json({ message: err.message || "Request failed" });
 });
+
+
+
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

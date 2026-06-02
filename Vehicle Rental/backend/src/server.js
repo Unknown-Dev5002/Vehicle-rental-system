@@ -91,51 +91,80 @@ function toBooking(row) {
   };
 }
 
-app.get("/api/vehicles", (_req, res) => {
+app.get("/api/vehicles", async (_req, res) => {
   res.set("Cache-Control", "no-store");
-  db.all("SELECT * FROM vehicles ORDER BY id DESC", [], (err, rows) => {
-    if (err) {
-      console.error("[vehicles] fetch failed", err);
-      return res.status(500).json({ message: "Failed to fetch vehicles" });
-    }
+  try {
+    const vehicles = await Vehicle.find({})
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const rows = vehicles.map((vehicle) => ({
+      id: vehicle.id ?? vehicle._id?.toString(),
+      name: vehicle.name,
+      type: vehicle.type,
+      brand: vehicle.brand,
+      model: vehicle.model,
+      year: vehicle.year,
+      pricePerDay: vehicle.pricePerDay,
+      fuelType: vehicle.fuelType,
+      transmission: vehicle.transmission,
+      description: vehicle.description,
+      imageUrl: vehicle.imageUrl ?? null,
+      ownerEmail: vehicle.ownerEmail ?? null,
+      createdAt: vehicle.createdAt,
+      updatedAt: vehicle.updatedAt
+    }));
+
     res.json(rows);
-  });
+  } catch (err) {
+    console.error("[vehicles] fetch failed", err);
+    res.status(500).json({ message: "Failed to fetch vehicles" });
+  }
 });
 
-app.post("/api/vehicles", upload.single("image"), (req, res) => {
+app.post("/api/vehicles", upload.single("image"), async (req, res) => {
   const error = validateVehicle(req.body);
   if (error) return res.status(400).json({ message: error });
 
-  const imageUrl = req.file ? req.file.secure_url : null;
-  const data = [
-    req.body.name.trim(),
-    req.body.type.trim(),
-    req.body.brand.trim(),
-    req.body.model.trim(),
-    Number(req.body.year),
-    Number(req.body.pricePerDay),
-    req.body.fuelType.trim(),
-    req.body.transmission.trim(),
-    req.body.description.trim(),
-    imageUrl,
-    String(req.body.ownerEmail || "").trim() || null
-  ];
+  try {
+    const imageUrl = req.file ? req.file.secure_url : null;
+    const payload = {
+      name: req.body.name.trim(),
+      type: req.body.type.trim(),
+      brand: req.body.brand.trim(),
+      model: req.body.model.trim(),
+      year: Number(req.body.year),
+      pricePerDay: Number(req.body.pricePerDay),
+      fuelType: req.body.fuelType.trim(),
+      transmission: req.body.transmission.trim(),
+      description: req.body.description.trim(),
+      imageUrl,
+      ownerEmail: String(req.body.ownerEmail || "").trim() || null
+    };
 
-  db.run(
-    `INSERT INTO vehicles (name,type,brand,model,year,pricePerDay,fuelType,transmission,description,imageUrl,ownerEmail)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-    data,
-    function onInsert(err) {
-      if (err) {
-        console.error("[vehicles] insert failed", err);
-        return res.status(500).json({ message: "Failed to add vehicle" });
-      }
-      db.get("SELECT * FROM vehicles WHERE id = ?", [this.lastID], (readErr, row) => {
-        if (readErr) return res.status(500).json({ message: "Vehicle added but failed to load" });
-        res.status(201).json({ message: "Vehicle added successfully", vehicle: row });
-      });
-    }
-  );
+    const created = await Vehicle.create(payload);
+    const vehicle = {
+      id: created.id ?? created._id?.toString(),
+      name: created.name,
+      type: created.type,
+      brand: created.brand,
+      model: created.model,
+      year: created.year,
+      pricePerDay: created.pricePerDay,
+      fuelType: created.fuelType,
+      transmission: created.transmission,
+      description: created.description,
+      imageUrl: created.imageUrl ?? null,
+      ownerEmail: created.ownerEmail ?? null,
+      createdAt: created.createdAt,
+      updatedAt: created.updatedAt
+    };
+
+    res.status(201).json({ message: "Vehicle added successfully", vehicle });
+  } catch (err) {
+    console.error("[vehicles] insert failed", err);
+    res.status(500).json({ message: "Failed to add vehicle" });
+  }
 });
 
 app.put("/api/vehicles/:id", upload.single("image"), (req, res) => {

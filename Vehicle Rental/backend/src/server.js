@@ -1,3 +1,4 @@
+const connectMongo = require("./mongo");
 require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
 
 const express = require("express");
@@ -9,6 +10,7 @@ const db = require("./db");
 const { sendBookingConfirmationEmail } = require("./email");
 
 const app = express();
+connectMongo();
 const PORT = 5000;
 
 const storage = CloudinaryStorage({

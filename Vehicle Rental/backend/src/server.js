@@ -8,11 +8,9 @@ const cors = require("cors");
 const multer = require("multer");
 const CloudinaryStorage = require("multer-storage-cloudinary");
 const cloudinary = require("./cloudinary");
-const db = require("./db");
 const { sendBookingConfirmationEmail } = require("./email");
 
 const app = express();
-connectMongo();
 const PORT = 5000;
 
 const storage = CloudinaryStorage({
@@ -30,14 +28,6 @@ const upload = multer({
 
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
-  db.whenReady
-    .then(() => next())
-    .catch((err) => {
-      console.error("[db] initialization failed", err);
-      res.status(503).json({ message: "Database is not ready" });
-    });
-});
 
 function validateVehicle(body, isUpdate = false) {
   const required = ["name", "type", "brand", "model", "year", "pricePerDay", "fuelType", "transmission", "description"];
@@ -167,14 +157,14 @@ app.post("/api/vehicles", upload.single("image"), async (req, res) => {
   }
 });
 
-app.put("/api/vehicles/:id", upload.single("image"), (req, res) => {
-  const id = Number(req.params.id);
+app.put("/api/vehicles/:id", upload.single("image"), async (req, res) => {
+  const id = String(req.params.id || "").trim();
   if (!id) return res.status(400).json({ message: "Invalid vehicle ID" });
   const error = validateVehicle(req.body, true);
   if (error) return res.status(400).json({ message: error });
 
-  db.get("SELECT * FROM vehicles WHERE id = ?", [id], (findErr, existing) => {
-    if (findErr) return res.status(500).json({ message: "Failed to find vehicle" });
+  try {
+    const existing = await Vehicle.findById(id).lean();
     if (!existing) return res.status(404).json({ message: "Vehicle not found" });
 
     const imageUrl = req.file ? req.file.secure_url : existing.imageUrl;
@@ -192,70 +182,120 @@ app.put("/api/vehicles/:id", upload.single("image"), (req, res) => {
       ownerEmail: String(req.body.ownerEmail || existing.ownerEmail || "").trim() || null
     };
 
-    db.run(
-      `UPDATE vehicles
-       SET name=?, type=?, brand=?, model=?, year=?, pricePerDay=?, fuelType=?, transmission=?, description=?, imageUrl=?, ownerEmail=?, updatedAt=CURRENT_TIMESTAMP
-       WHERE id=?`,
-      [merged.name, merged.type, merged.brand, merged.model, merged.year, merged.pricePerDay, merged.fuelType, merged.transmission, merged.description, merged.imageUrl, merged.ownerEmail, id],
-      (updateErr) => {
-        if (updateErr) return res.status(500).json({ message: "Failed to update vehicle" });
-        db.get("SELECT * FROM vehicles WHERE id = ?", [id], (readErr, row) => {
-          if (readErr) return res.status(500).json({ message: "Vehicle updated but failed to load" });
-          res.json({ message: "Vehicle updated successfully", vehicle: row });
-        });
-      }
-    );
-  });
+    const updated = await Vehicle.findByIdAndUpdate(id, merged, {
+      new: true,
+      runValidators: true
+    }).lean();
+
+    if (!updated) return res.status(404).json({ message: "Vehicle not found" });
+
+    const vehicle = {
+      id: updated.id ?? updated._id?.toString(),
+      name: updated.name,
+      type: updated.type,
+      brand: updated.brand,
+      model: updated.model,
+      year: updated.year,
+      pricePerDay: updated.pricePerDay,
+      fuelType: updated.fuelType,
+      transmission: updated.transmission,
+      description: updated.description,
+      imageUrl: updated.imageUrl ?? null,
+      ownerEmail: updated.ownerEmail ?? null,
+      createdAt: updated.createdAt,
+      updatedAt: updated.updatedAt
+    };
+
+    res.json({ message: "Vehicle updated successfully", vehicle });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update vehicle" });
+  }
 });
 
-app.delete("/api/vehicles/:id", (req, res) => {
-  const id = Number(req.params.id);
+app.delete("/api/vehicles/:id", async (req, res) => {
+  const id = String(req.params.id || "").trim();
   if (!id) return res.status(400).json({ message: "Invalid vehicle ID" });
 
-  db.get("SELECT * FROM vehicles WHERE id = ?", [id], (findErr, vehicle) => {
-    if (findErr) return res.status(500).json({ message: "Failed to find vehicle" });
+  try {
+    const vehicle = await Vehicle.findById(id).lean();
     if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
 
-    db.run("DELETE FROM vehicles WHERE id = ?", [id], (deleteErr) => {
-      if (deleteErr) return res.status(500).json({ message: "Failed to delete vehicle" });
-      res.json({ message: "Vehicle deleted successfully" });
-    });
-  });
-});
-
-app.get("/api/bookings/availability", (req, res) => {
-  const { vehicleId, start, end } = req.query;
-  if (!vehicleId || !start || !end) return res.status(400).json({ message: "vehicleId, start and end are required" });
-  db.get(
-    `SELECT COUNT(*) AS count FROM bookings
-     WHERE vehicleId = ?
-       AND status IN ('pending', 'pending_payment', 'confirmed')
-       AND pickupDate < ?
-       AND dropoffDate > ?`,
-    [String(vehicleId), String(end), String(start)],
-    (err, row) => {
-      if (err) return res.status(500).json({ message: "Failed to check availability" });
-      res.json({ available: Number(row.count || 0) === 0 });
+    await Vehicle.findByIdAndDelete(id);
+    res.json({ message: "Vehicle deleted successfully" });
+  } catch (err) {
+    if (err.name === "CastError") {
+      return res.status(400).json({ message: "Invalid vehicle ID" });
     }
-  );
+    console.error("[vehicles] delete failed", err);
+    res.status(500).json({ message: "Failed to delete vehicle" });
+  }
 });
 
-app.get("/api/bookings", (_req, res) => {
-  db.all("SELECT * FROM bookings ORDER BY id DESC", [], (err, rows) => {
-    if (err) return res.status(500).json({ message: "Failed to fetch bookings" });
-    res.json(rows.map(toBooking));
-  });
+app.get("/api/bookings/availability", async (req, res) => {
+  const { vehicleId, start, end } = req.query;
+  if (!vehicleId || !start || !end) {
+    return res.status(400).json({ message: "vehicleId, start and end are required" });
+  }
+
+  try {
+    const conflicts = await Booking.find({
+      vehicleId: String(vehicleId),
+      status: { $in: ["pending", "pending_payment", "confirmed"] },
+      pickupDate: { $lt: String(end) },
+      dropoffDate: { $gt: String(start) }
+    });
+
+    res.json({ available: conflicts.length === 0 });
+  } catch (err) {
+    console.error("[bookings] availability check failed", err);
+    res.status(500).json({ message: "Failed to check availability" });
+  }
 });
 
-app.get("/api/bookings/:id", (req, res) => {
-  db.get("SELECT * FROM bookings WHERE bookingId = ?", [String(req.params.id)], (err, row) => {
-    if (err) return res.status(500).json({ message: "Failed to fetch booking" });
+app.get("/api/bookings", async (_req, res) => {
+  try {
+    const rows = await Booking.find({})
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const bookings = rows.map((row) =>
+      toBooking({
+        ...row,
+        userDetails:
+          typeof row.userDetails === "string"
+            ? row.userDetails
+            : JSON.stringify(row.userDetails || {})
+      })
+    );
+
+    res.json(bookings);
+  } catch (err) {
+    console.error("[bookings] fetch failed", err);
+    res.status(500).json({ message: "Failed to fetch bookings" });
+  }
+});
+
+app.get("/api/bookings/:id", async (req, res) => {
+  const id = String(req.params.id || "").trim();
+
+  try {
+    const row = await Booking.findOne({ bookingId: id }).lean();
     if (!row) return res.status(404).json({ message: "Booking not found" });
-    res.json(toBooking(row));
-  });
+
+    res.json(toBooking({
+      ...row,
+      userDetails:
+        typeof row.userDetails === "string"
+          ? row.userDetails
+          : JSON.stringify(row.userDetails || {})
+    }));
+  } catch (err) {
+    console.error("[bookings] fetch one failed", err);
+    res.status(500).json({ message: "Failed to fetch booking" });
+  }
 });
 
-app.post("/api/bookings", (req, res) => {
+app.post("/api/bookings", async (req, res) => {
   const bookingId = String(req.body.id || req.body.bookingId || `BK-${Date.now()}`);
   const vehicleId = String(req.body.vehicleId || "");
   const pickupDate = String(req.body.pickup || req.body.pickupDate || "");
@@ -266,40 +306,45 @@ app.post("/api/bookings", (req, res) => {
   }
 
   const userEmail = String(req.body.user || req.body.email || "").trim();
-  const userDetails = JSON.stringify({
+  const userDetails = {
     user: userEmail || "guest",
     email: userEmail || null,
     drivingLicense: req.body.drivingLicense || ""
-  });
+  };
 
-  db.run(
-    `INSERT INTO bookings (bookingId, vehicleId, userDetails, pickupLocation, dropoffLocation, pickupDate, dropoffDate, totalPrice, status, paymentStatus)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
+  try {
+    const created = await Booking.create({
       bookingId,
       vehicleId,
       userDetails,
-      req.body.pickupLocation || null,
-      req.body.dropoffLocation || null,
+      pickupLocation: req.body.pickupLocation || null,
+      dropoffLocation: req.body.dropoffLocation || null,
       pickupDate,
       dropoffDate,
       totalPrice,
-      req.body.status || "pending",
-      req.body.paymentStatus || "pending"
-    ],
-    function onInsert(err) {
-      if (err) return res.status(500).json({ message: "Failed to create booking" });
-      db.get("SELECT * FROM bookings WHERE id = ?", [this.lastID], (readErr, row) => {
-        if (readErr) return res.status(500).json({ message: "Booking created but failed to load" });
-        res.status(201).json(toBooking(row));
-      });
-    }
-  );
+      status: req.body.status || "pending",
+      paymentStatus: req.body.paymentStatus || "pending"
+    });
+
+    res.status(201).json(
+      toBooking({
+        ...created.toObject(),
+        userDetails: JSON.stringify(created.userDetails || {})
+      })
+    );
+  } catch (err) {
+    console.error("[bookings] create failed", err);
+    res.status(500).json({ message: "Failed to create booking" });
+  }
 });
 
-app.put("/api/bookings/:id", (req, res) => {
-  db.get("SELECT * FROM bookings WHERE bookingId = ?", [String(req.params.id)], (findErr, existing) => {
-    if (findErr) return res.status(500).json({ message: "Failed to find booking" });
+app.put("/api/bookings/:id", async (req, res) => {
+  const id = String(req.params.id || "").trim();
+
+  if (!id) return res.status(400).json({ message: "Invalid booking ID" });
+
+  try {
+    const existing = await Booking.findOne({ bookingId: id }).lean();
     if (!existing) return res.status(404).json({ message: "Booking not found" });
 
     const next = {
@@ -307,54 +352,54 @@ app.put("/api/bookings/:id", (req, res) => {
       paymentStatus: req.body.paymentStatus || existing.paymentStatus,
       paidAt: req.body.paidAt || existing.paidAt
     };
-    db.run(
-      "UPDATE bookings SET status = ?, paymentStatus = ?, paidAt = ? WHERE bookingId = ?",
-      [next.status, next.paymentStatus, next.paidAt, String(req.params.id)],
-      (updateErr) => {
-        if (updateErr) return res.status(500).json({ message: "Failed to update booking" });
-        db.get("SELECT * FROM bookings WHERE bookingId = ?", [String(req.params.id)], (readErr, row) => {
-          if (readErr) return res.status(500).json({ message: "Booking updated but failed to load" });
 
-          const booking = toBooking(row);
-          const paymentMarkedPaid = req.body.paymentStatus === "paid";
-          const paymentJustCompleted =
-            paymentMarkedPaid &&
-            row.paymentStatus === "paid" &&
-            existing.paymentStatus !== "paid";
+    const row = await Booking.findOneAndUpdate({ bookingId: id }, next, { new: true }).lean();
+    if (!row) return res.status(404).json({ message: "Booking not found" });
 
-          if (!paymentJustCompleted) {
-            return res.json(booking);
-          }
+    const booking = toBooking({
+      ...row,
+      userDetails:
+        typeof row.userDetails === "string"
+          ? row.userDetails
+          : JSON.stringify(row.userDetails || {})
+    });
 
-          const recipient = getBookingRecipientEmail(booking);
-          const userDetails = booking.userDetails || {};
-          const customerName = String(userDetails.name || userDetails.user || "Guest").trim() || "Guest";
+    const paymentMarkedPaid = req.body.paymentStatus === "paid";
+    const paymentJustCompleted =
+      paymentMarkedPaid &&
+      row.paymentStatus === "paid" &&
+      existing.paymentStatus !== "paid";
 
-          if (!recipient) {
-            console.error("[email] skipped: booking has no valid recipient email", row.bookingId);
-            return res.json(booking);
-          }
+    if (!paymentJustCompleted) {
+      return res.json(booking);
+    }
 
-          res.json(booking);
+    const recipient = getBookingRecipientEmail(booking);
+    const userDetails = booking.userDetails || {};
+    const customerName = String(userDetails.name || userDetails.user || "Guest").trim() || "Guest";
 
-          db.get("SELECT name FROM vehicles WHERE id = ?", [String(row.vehicleId)], (vehicleErr, vehicle) => {
-            if (vehicleErr) {
-              console.error("[email] vehicle lookup failed", vehicleErr);
-            }
-            sendBookingConfirmationEmail({
-              to: recipient,
-              customerName,
-              booking,
-              vehicleName: vehicle?.name
-            }).catch((emailErr) => {
-              console.error("[email] booking confirmation failed", emailErr.message || emailErr);
-            });
-          });
-          return;
-        });
-      }
-    );
-  });
+    if (!recipient) {
+      console.error("[email] skipped: booking has no valid recipient email", row.bookingId);
+      return res.json(booking);
+    }
+
+    res.json(booking);
+
+    try {
+      const vehicle = await Vehicle.findById(String(row.vehicleId)).lean();
+      await sendBookingConfirmationEmail({
+        to: recipient,
+        customerName,
+        booking,
+        vehicleName: vehicle?.name
+      });
+    } catch (emailErr) {
+      console.error("[email] booking confirmation failed", emailErr.message || emailErr);
+    }
+  } catch (err) {
+    console.error("[bookings] update failed", err);
+    res.status(500).json({ message: "Failed to update booking" });
+  }
 });
 
 app.use((err, _req, res, _next) => {
@@ -364,8 +409,15 @@ app.use((err, _req, res, _next) => {
 
 
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`DriveHive backend running on http://localhost:${PORT}`);
-  console.log(`SQLite database: ${db.dbPath}`);
+async function start() {
+  await connectMongo();
+  app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`DriveHive backend running on http://localhost:${PORT}`);
+  });
+}
+
+start().catch((err) => {
+  console.error("[server] startup failed", err);
+  process.exit(1);
 });

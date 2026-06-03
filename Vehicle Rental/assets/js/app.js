@@ -1338,8 +1338,8 @@ async function renderAdminVehicles() {
       <p>${v.description || ""}</p>
       <p class="price">${formatINR(v.price)}/day</p>
       <div class="admin-actions">
-        <button type="button" class="btn secondary" onclick="editVehicle(${v.id})">Edit</button>
-        <button type="button" class="btn" onclick="deleteVehicle(${v.id})">Delete</button>
+        <button type="button" class="btn secondary" onclick='editVehicle(${JSON.stringify(v.id)})'>Edit</button>
+        <button type="button" class="btn" onclick='deleteVehicle(${JSON.stringify(v.id)})'>Delete</button>
       </div>
     </article>
   `).join("");
@@ -1447,7 +1447,7 @@ function handleAdminPanel() {
     const formData = new FormData(form);
     try {
       const idRaw = document.getElementById("vehicleId").value;
-      const existingId = idRaw ? Number(idRaw) : null;
+      const existingId = idRaw ? String(idRaw).trim() : null;
       const owner = localStorage.getItem("vr_user_email") || "";
       formData.set("ownerEmail", owner);
 

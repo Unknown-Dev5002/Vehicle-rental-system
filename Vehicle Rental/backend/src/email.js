@@ -73,4 +73,41 @@ async function sendBookingConfirmationEmail({ to, customerName, booking, vehicle
   console.log("[email] booking confirmation sent", { bookingId: booking.id, recipient });
 }
 
-module.exports = { sendBookingConfirmationEmail };
+function hasSmtpCredentials() {
+  const { user, pass } = getSmtpCredentials();
+  return Boolean(user && pass);
+}
+
+async function sendPasswordResetEmail({ to, resetUrl }) {
+  const recipient = String(to || "").trim();
+  if (!isValidEmail(recipient)) {
+    throw new Error(`Invalid or missing recipient email: "${recipient || ""}"`);
+  }
+
+  const { user } = getSmtpCredentials();
+  const from = process.env.EMAIL_FROM || user;
+  const text = [
+    "Hello,",
+    "",
+    "You requested a password reset for your DriveHive account.",
+    "",
+    `Reset your password using this link (valid for 1 hour):`,
+    resetUrl,
+    "",
+    "If you did not request this, you can ignore this email.",
+    "",
+    "Thank you,",
+    "DriveHive"
+  ].join("\n");
+
+  const transporter = await getTransporter();
+  await transporter.sendMail({
+    from,
+    to: recipient,
+    subject: "DriveHive password reset",
+    text
+  });
+  console.log("[email] password reset sent", { recipient });
+}
+
+module.exports = { sendBookingConfirmationEmail, sendPasswordResetEmail, hasSmtpCredentials };

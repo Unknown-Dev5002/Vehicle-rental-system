@@ -9,6 +9,7 @@ const multer = require("multer");
 const CloudinaryStorage = require("multer-storage-cloudinary");
 const cloudinary = require("./cloudinary");
 const { sendBookingConfirmationEmail } = require("./email");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const PORT = 5000;
@@ -28,6 +29,7 @@ const upload = multer({
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 function validateVehicle(body, isUpdate = false) {
   const required = ["name", "type", "brand", "model", "year", "pricePerDay", "fuelType", "transmission", "description"];

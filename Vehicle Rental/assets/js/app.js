@@ -29,8 +29,12 @@ function resolveVehicleImageUrl(imageUrl) {
   return `${API_ORIGIN}/${url}`;
 }
 
+function getAuthToken() {
+  return localStorage.getItem("token") || "";
+}
+
 function isLoggedIn() {
-  return localStorage.getItem("vr_session") === "active";
+  return Boolean(getAuthToken());
 }
 
 function toUiVehicle(row) {
@@ -91,6 +95,7 @@ function updateAuthNav() {
       localStorage.removeItem("vr_session");
       localStorage.removeItem("vr_role");
       localStorage.removeItem("vr_user_email");
+      localStorage.removeItem("token");
       window.location.href = "index.html";
     };
     return;
@@ -193,84 +198,120 @@ function handleAuthForms() {
   const forgotForm = document.getElementById("forgotForm");
   const resetForm = document.getElementById("resetForm");
 
-  function generateResetToken() {
-    // Prefer strong randomness when available; fallback keeps the flow working.
-    try {
-      if (window.crypto && window.crypto.getRandomValues) {
-        const bytes = new Uint8Array(32);
-        window.crypto.getRandomValues(bytes);
-        return Array.from(bytes)
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
-      }
-    } catch (_err) {
-      // ignore and fallback
-    }
-    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
-  }
-
   if (registerForm) {
-    registerForm.addEventListener("submit", (e) => {
+    registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(registerForm).entries());
       if (!data.email || !String(data.password).match(/^(?=.*\d).{8,}$/)) {
         return notify("authNotice", "Password must be 8+ chars and include a number.", true);
       }
-      localStorage.setItem("vr_user", JSON.stringify(data));
-      notify("authNotice", "Registration successful. You can now login.");
-      registerForm.reset();
+
+      const submitButton = registerForm.querySelector("button[type='submit']");
+      if (submitButton) submitButton.disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          return notify("authNotice", result.message || "Registration failed.", true);
+        }
+
+        notify("authNotice", result.message || "Registration successful. You can now login.");
+        registerForm.reset();
+      } catch (_err) {
+        notify("authNotice", "Unable to reach the registration server.", true);
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+      }
     });
   }
 
   if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(loginForm).entries());
-      const user = JSON.parse(localStorage.getItem("vr_user") || "null");
-      if (!user || user.email !== data.email || user.password !== data.password) {
-        return notify("loginNotice", "Invalid credentials.", true);
+
+      const submitButton = loginForm.querySelector("button[type='submit']");
+      if (submitButton) submitButton.disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password
+          })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          return notify("loginNotice", result.message || "Invalid credentials.", true);
+        }
+
+        const user = result.user || {};
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("vr_session", "active");
+        localStorage.setItem("vr_user_email", user.email);
+        localStorage.setItem("vr_role", user.role);
+        notify("loginNotice", "Login successful. Redirecting to dashboard...");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 700);
+      } catch (_err) {
+        notify("loginNotice", "Unable to reach the login server.", true);
+      } finally {
+        if (submitButton) submitButton.disabled = false;
       }
-      localStorage.setItem("vr_session", "active");
-      localStorage.setItem("vr_user_email", data.email);
-      localStorage.setItem("vr_role", data.email.toLowerCase().includes("admin") ? "admin" : "user");
-      notify("loginNotice", "Login successful. Redirecting to dashboard...");
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 700);
     });
   }
 
   if (forgotForm) {
-    forgotForm.addEventListener("submit", (e) => {
+    forgotForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const data = Object.fromEntries(new FormData(forgotForm).entries());
-      const email = String(data.email || "").trim().toLowerCase();
-      const user = JSON.parse(localStorage.getItem("vr_user") || "null");
+      const email = String(data.email || "").trim();
 
       if (!email) return notify("forgotNotice", "Please enter your email.", true);
-      if (!user || !user.email || String(user.email).toLowerCase() !== email) {
-        return notify("forgotNotice", "No account found for this email.", true);
+
+      const submitButton = forgotForm.querySelector("button[type='submit']");
+      if (submitButton) submitButton.disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          return notify("forgotNotice", result.message || "Request failed.", true);
+        }
+
+        notify("forgotNotice", result.message || "Check your email for reset instructions.");
+        forgotForm.reset();
+
+        if (result.resetLink) {
+          setTimeout(() => {
+            window.location.href = result.resetLink.startsWith("http")
+              ? result.resetLink
+              : `${result.resetLink}`;
+          }, 1500);
+        }
+      } catch (_err) {
+        notify("forgotNotice", "Unable to reach the server.", true);
+      } finally {
+        if (submitButton) submitButton.disabled = false;
       }
-
-      const token = generateResetToken();
-      const expiryMs = Date.now() + 15 * 60 * 1000;
-
-      localStorage.setItem("vr_reset_token", token);
-      localStorage.setItem("vr_reset_expiry", String(expiryMs));
-      localStorage.setItem("vr_reset_email", email);
-
-      notify("forgotNotice", `Reset link ready. Token valid for 15 minutes. Redirecting... (token: ${token})`);
-      forgotForm.reset();
-
-      setTimeout(() => {
-        window.location.href = `reset-password.html?token=${encodeURIComponent(token)}`;
-      }, 700);
     });
   }
 
   if (resetForm) {
-    resetForm.addEventListener("submit", (e) => {
+    resetForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const params = new URLSearchParams(window.location.search);
@@ -278,36 +319,36 @@ function handleAuthForms() {
       const data = Object.fromEntries(new FormData(resetForm).entries());
       const newPassword = String(data.newPassword || "");
 
-      const storedToken = String(localStorage.getItem("vr_reset_token") || "");
-      const expiryMs = Number(localStorage.getItem("vr_reset_expiry") || 0);
-      const resetEmail = String(localStorage.getItem("vr_reset_email") || "").toLowerCase();
-
-      if (!token || !storedToken || token !== storedToken) {
+      if (!token) {
         return notify("resetNotice", "Invalid or missing reset token.", true);
-      }
-      if (!expiryMs || Date.now() > expiryMs) {
-        return notify("resetNotice", "Reset token has expired. Please request a new one.", true);
       }
       if (!newPassword.match(/^(?=.*\d).{8,}$/)) {
         return notify("resetNotice", "Password must be 8+ chars and include a number.", true);
       }
 
-      const user = JSON.parse(localStorage.getItem("vr_user") || "null");
-      if (!user || !user.email || String(user.email).toLowerCase() !== resetEmail) {
-        return notify("resetNotice", "Reset failed. Please request a new token.", true);
+      const submitButton = resetForm.querySelector("button[type='submit']");
+      if (submitButton) submitButton.disabled = true;
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/reset-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, newPassword })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          return notify("resetNotice", result.message || "Reset failed.", true);
+        }
+
+        notify("resetNotice", result.message || "Password updated. Redirecting to login...");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 700);
+      } catch (_err) {
+        notify("resetNotice", "Unable to reach the server.", true);
+      } finally {
+        if (submitButton) submitButton.disabled = false;
       }
-
-      user.password = newPassword;
-      localStorage.setItem("vr_user", JSON.stringify(user));
-
-      localStorage.removeItem("vr_reset_token");
-      localStorage.removeItem("vr_reset_expiry");
-      localStorage.removeItem("vr_reset_email");
-
-      notify("resetNotice", "Password updated. Redirecting to login...");
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 700);
     });
   }
 }

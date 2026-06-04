@@ -410,6 +410,64 @@ function handleBookingFlow() {
     const dropoffInput = document.getElementById("dropoffDateTime");
     const confirmBookingBtn = document.getElementById("confirmBookingBtn");
     let pendingBooking = null;
+
+    function setupAutocomplete(inputId, suggestionsId) {
+      const input = document.getElementById(inputId);
+      const suggestionsContainer = document.getElementById(suggestionsId);
+      if (!input || !suggestionsContainer) return;
+
+      let debounceTimer;
+
+      input.addEventListener("input", () => {
+        clearTimeout(debounceTimer);
+        const query = input.value.trim();
+
+        if (query.length < 3) {
+          suggestionsContainer.innerHTML = "";
+          return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+          try {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`;
+            const response = await fetch(url, {
+              headers: {
+                "User-Agent": "DriveHiveRentalApp/1.0"
+              }
+            });
+            if (!response.ok) throw new Error("API error");
+            const results = await response.json();
+
+            suggestionsContainer.innerHTML = "";
+
+            if (results && results.length > 0) {
+              results.slice(0, 5).forEach((item) => {
+                const div = document.createElement("div");
+                div.className = "autocomplete-suggestion";
+                div.textContent = item.display_name;
+                div.addEventListener("click", () => {
+                  input.value = item.display_name;
+                  suggestionsContainer.innerHTML = "";
+                });
+                suggestionsContainer.appendChild(div);
+              });
+            }
+          } catch (err) {
+            console.error("Autocomplete fetch error:", err);
+          }
+        }, 300);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+          suggestionsContainer.innerHTML = "";
+        }
+      });
+    }
+
+    setupAutocomplete("pickupLocation", "pickupSuggestions");
+    setupAutocomplete("dropoffLocation", "dropoffSuggestions");
+
     if (pickupInput && pickupInput.type !== "datetime-local") pickupInput.type = "datetime-local";
     if (dropoffInput && dropoffInput.type !== "datetime-local") dropoffInput.type = "datetime-local";
     const now = toISTDateTimeLocal();

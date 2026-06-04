@@ -27,8 +27,16 @@
   <label>Vehicle</label>
   <div id="selectedVehicle" class="notice"></div>
   <input id="selectedVehicleId" name="vehicle" type="hidden" required />
-  <label>Pickup Location</label><input name="pickupLocation" required />
-  <label>Dropoff Location</label><input name="dropoffLocation" required />
+  <label>Pickup Location</label>
+  <div class="autocomplete-container">
+    <input id="pickupLocation" name="pickupLocation" autocomplete="off" required />
+    <div id="pickupSuggestions" class="autocomplete-suggestions"></div>
+  </div>
+  <label>Dropoff Location</label>
+  <div class="autocomplete-container">
+    <input id="dropoffLocation" name="dropoffLocation" autocomplete="off" required />
+    <div id="dropoffSuggestions" class="autocomplete-suggestions"></div>
+  </div>
   <label>Pickup Date</label><input id="pickupDateTime" name="pickupDate" type="datetime-local" required />
   <label>Dropoff Date</label><input id="dropoffDateTime" name="dropoffDate" type="datetime-local" required />
   <label>Enter Your Driving License</label><input id="license" name="drivingLicense" type="text" placeholder="e.g. DL-0120110062821" required maxlength="18" />

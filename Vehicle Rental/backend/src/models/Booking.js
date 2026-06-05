@@ -19,8 +19,16 @@ const bookingSchema = new mongoose.Schema(
       drivingLicense: String
     },
 
-    pickupLocation: String,
-    dropoffLocation: String,
+    pickupLocation: {
+      address: String,
+      latitude: Number,
+      longitude: Number
+    },
+    dropoffLocation: {
+      address: String,
+      latitude: Number,
+      longitude: Number
+    },
 
     pickupDate: {
       type: String,

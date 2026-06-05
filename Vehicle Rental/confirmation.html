@@ -44,12 +44,21 @@
       const vehicleNameMap = new Map(vehicles.map((v) => [String(v.id), v.name]));
       const total = Number(booking?.total || 0);
       const amount = total > 0 ? `₹${total.toLocaleString("en-IN")}` : "N/A";
+      const pickupAddress = booking.pickupLocation && typeof booking.pickupLocation === 'object'
+        ? booking.pickupLocation.address
+        : (booking.pickupLocation || 'N/A');
+      const dropoffAddress = booking.dropoffLocation && typeof booking.dropoffLocation === 'object'
+        ? booking.dropoffLocation.address
+        : (booking.dropoffLocation || 'N/A');
+
       card.innerHTML = `
         <h2>Booking Confirmed ✅</h2>
         <p>Booking ID: ${booking.id}</p>
         <p>Vehicle: ${vehicleNameMap.get(String(booking.vehicleId)) || booking.vehicleId}</p>
-        <p>Pickup: ${booking.pickup}</p>
-        <p>Dropoff: ${booking.dropoff}</p>
+        <p>Pickup Date: ${booking.pickup}</p>
+        <p>Pickup Location: ${pickupAddress}</p>
+        <p>Dropoff Date: ${booking.dropoff}</p>
+        <p>Dropoff Location: ${dropoffAddress}</p>
         <p>Total Paid: ${amount}</p>
         <p>Status: Confirmed</p>
       `;

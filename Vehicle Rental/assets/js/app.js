@@ -410,6 +410,8 @@ function handleBookingFlow() {
     const dropoffInput = document.getElementById("dropoffDateTime");
     const confirmBookingBtn = document.getElementById("confirmBookingBtn");
     let pendingBooking = null;
+    let selectedPickup = null;
+    let selectedDropoff = null;
 
     function setupAutocomplete(inputId, suggestionsId) {
       const input = document.getElementById(inputId);
@@ -421,6 +423,12 @@ function handleBookingFlow() {
       input.addEventListener("input", () => {
         clearTimeout(debounceTimer);
         const query = input.value.trim();
+
+        if (inputId === "pickupLocation") {
+          selectedPickup = null;
+        } else {
+            selectedDropoff = null;
+        }
 
         if (query.length < 3) {
           suggestionsContainer.innerHTML = "";
@@ -447,7 +455,20 @@ function handleBookingFlow() {
                 div.textContent = item.display_name;
                 div.addEventListener("click", () => {
                   input.value = item.display_name;
-                  suggestionsContainer.innerHTML = "";
+
+                  const locationData = {
+                    address: item.display_name,
+                    lat: item.lat,
+                    lon: item.lon
+                  };
+
+                if (inputId === "pickupLocation") {
+                    selectedPickup = locationData;
+                } else {
+                    selectedDropoff = locationData;
+                }
+
+suggestionsContainer.innerHTML = "";
                 });
                 suggestionsContainer.appendChild(div);
               });
@@ -482,6 +503,15 @@ function handleBookingFlow() {
 
     bookingForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (!selectedPickup) {
+        alert("Please select a pickup location from the suggestions.");
+        return;
+      }
+
+      if (!selectedDropoff) {
+        alert("Please select a dropoff location from the suggestions.");
+        return;
+      }
       const dlInput = document.getElementById("license")?.value || "";
       const cleanDL = dlInput.replace(/[\s-]/g, "").toUpperCase();
       const dlRegex = /^[A-Z]{2}\d{2}\d{4}\d{7}$/;
@@ -521,6 +551,16 @@ function handleBookingFlow() {
 
       pendingBooking = {
         ...data,
+        pickupLocation: {
+          address: selectedPickup.address,
+          latitude: Number(selectedPickup.lat),
+          longitude: Number(selectedPickup.lon)
+        },
+        dropoffLocation: {
+          address: selectedDropoff.address,
+          latitude: Number(selectedDropoff.lat),
+          longitude: Number(selectedDropoff.lon)
+        },
         vehicleId,
         pickup,
         dropoff,

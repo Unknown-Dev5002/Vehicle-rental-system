@@ -4,39 +4,222 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vehicle Listings | DriveHive</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/listings-redesign.css">
+
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#1a1c1d",
+                      "inverse-surface": "#e2e2e4",
+                      "secondary-container": "#474746",
+                      "on-secondary": "#313030",
+                      "on-error": "#690005",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "tertiary-fixed": "#d8e2ff",
+                      "surface-dim": "#111415",
+                      "surface-bright": "#37393b",
+                      "surface-container-highest": "#333537",
+                      "on-error-container": "#ffdad6",
+                      "surface-tint": "#e9c400",
+                      "primary-fixed-dim": "#e9c400",
+                      "on-tertiary-container": "#005bc1",
+                      "error": "#ffb4ab",
+                      "on-surface": "#e2e2e4",
+                      "on-primary": "#3b2f00",
+                      "surface-container-high": "#282a2c",
+                      "on-secondary-container": "#b7b5b4",
+                      "on-primary-fixed-variant": "#554600",
+                      "surface-variant": "#333537",
+                      "primary-fixed": "#ffe171",
+                      "surface-container-lowest": "#0c0e10",
+                      "tertiary-container": "#cad9ff",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-background": "#e2e2e4",
+                      "tertiary": "#f4f5ff",
+                      "inverse-primary": "#705d00",
+                      "tertiary-fixed-dim": "#adc6ff",
+                      "primary": "#fff5dc",
+                      "secondary": "#c8c6c5",
+                      "outline": "#999077",
+                      "on-tertiary-fixed-variant": "#004493",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-primary-container": "#705d00",
+                      "on-tertiary": "#002e69",
+                      "on-secondary-fixed-variant": "#474746",
+                      "inverse-on-surface": "#2f3132",
+                      "on-surface-variant": "#d0c6ab",
+                      "primary-container": "#ffd60a",
+                      "outline-variant": "#4d4632",
+                      "surface": "#111415",
+                      "surface-container": "#1e2021",
+                      "on-tertiary-fixed": "#001a41",
+                      "error-container": "#93000a",
+                      "on-primary-fixed": "#221b00",
+                      "background": "#111415"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "32px",
+                      "gutter": "24px",
+                      "card-p": "32px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "section-v": "120px",
+                      "section-h": "64px"
+              },
+              "fontFamily": {
+                      "display-hero-mobile": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "label-sm": ["Inter"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-hero": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "display-hero-mobile": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "display-hero": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+    
 </head>
-<body data-page="listings">
-<header>
-  <div class="container nav">
-    <a class="brand" href="index.html">DriveHive</a>
-    <nav class="nav-links">
-      <a data-page="home" href="dashboard.html">Dashboard</a>
-      <a data-page="listings" href="listings.html">Listings</a>
-      <a data-page="about" href="about.html">About</a>
-      <a data-page="contact" href="contact.html">Contact</a>
-      <a data-page="blog" href="blog.html">Blog</a>
-      <a data-page="support" href="support.html">Support</a>
-      <a data-page="login" href="login.html">Login</a>
-    </nav>
-  </div>
+<body class="font-body-md text-on-surface" data-page="listings" data-listings-layout="redesign">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter py-4 max-w-7xl mx-auto left-1/2 -translate-x-1/2 bg-surface/80 backdrop-blur-xl border-b border-white/10">
+<a class="font-headline-md text-headline-md font-extrabold text-primary-container tracking-tighter" href="index.html">DriveHive</a>
+<nav class="hidden md:flex items-center gap-8"><a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="dashboard.html">Dashboard</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="listings.html">Listings</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="about.html">About</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="blog.html">Blog</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="support.html">Support</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="contact.html">Contact</a></nav>
+<div class="flex items-center gap-4">
+<a id="navLoginLink" class="text-on-surface-variant font-medium hover:text-primary-container transition-colors px-4 py-2" href="login.html" data-magnetic>Login</a>
+<a id="navDashboardLink" class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-bold transition-transform duration-200 active:scale-95" href="dashboard.html" data-magnetic>Dashboard</a>
+</div>
 </header>
-<main class="container">
-<h1>Vehicle Listings</h1>
-<p>Filter and compare vehicles based on your trip needs.</p>
-<section class="filters card">
-  <div><label>Vehicle Type</label><select id="filterType" onchange="renderListings()"><option value="all">All</option><option>Sedan</option><option>SUV</option><option>Van</option><option>Electric</option><option>Hatchback</option><option>Bike</option></select></div>
-  <div><label>Fuel Type</label><select id="filterFuel" onchange="renderListings()"><option value="all">All</option><option value="Petrol">Petrol</option><option value="Diesel">Diesel</option><option value="Hybrid">Hybrid</option><option value="EV">EV</option></select></div>
-  <div><label>Transmission</label><select id="filterTransmission" onchange="renderListings()"><option value="all">All</option><option value="Automatic">Automatic</option><option value="Manual">Manual</option></select></div>
-  <div><label>Max Price/Day (INR)</label><input id="filterPrice" type="number" value="10000" oninput="renderListings()" /></div>
-  <div><label>Sort By</label><select id="filterSort" onchange="renderListings()"><option value="priceAsc">Price: Low to High</option><option value="priceDesc">Price: High to Low</option><option value="rating">Top Rated</option></select></div>
+<main class="pt-32 pb-section-v max-w-7xl mx-auto px-gutter">
+<!-- Filter Panel -->
+<section class="mb-stack-lg">
+<div class="glass-surface rounded-xl p-6 md:p-8 flex flex-col gap-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<h1 class="font-headline-md text-headline-md text-primary">Discover the Fleet</h1>
+<span id="listingsCount" class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Loading vehicles...</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4 items-end">
+<div class="">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 ml-1" for="filterType">Vehicle Type</label>
+<select id="filterType" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 px-4 text-on-surface focus:outline-none focus:border-primary-container appearance-none">
+<option value="all">All Types</option>
+</select>
+</div>
+<div class="col-span-1">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 ml-1" for="filterBrand">Brand</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input id="filterBrand" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-on-surface focus:outline-none focus:border-primary-container transition-all" placeholder="Search brand..." type="text">
+</div>
+</div>
+<div class="">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 ml-1" for="filterTransmission">Transmission</label>
+<select id="filterTransmission" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 px-4 text-on-surface focus:outline-none focus:border-primary-container appearance-none">
+<option value="all">Any</option>
+</select>
+</div>
+<div class="">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2 ml-1" for="filterFuel">Fuel Type</label>
+<select id="filterFuel" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 px-4 text-on-surface focus:outline-none focus:border-primary-container appearance-none">
+<option value="all">Any</option>
+</select>
+</div>
+<div class="col-span-1">
+<div class="flex justify-between items-center mb-2 ml-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="filterPrice">Price Range</label>
+<span id="priceRangeLabel" class="font-label-sm text-label-sm text-primary-container">₹30,000/day</span>
+</div>
+<input id="filterPrice" class="w-full h-1 bg-outline-variant rounded-lg appearance-none cursor-pointer custom-slider" max="30000" min="500" step="500" type="range" value="30000">
+</div></div>
+</div>
 </section>
-<div id="vehicleGrid" class="grid"></div>
-<section class="banner">Hot Offers are auto-applied at checkout when valid.</section>
+<!-- Vehicle Grid -->
+<section id="vehicleGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div class="col-span-full glass-surface rounded-xl p-10 text-center">
+    <p class="text-on-surface-variant text-body-md">Loading vehicles...</p>
+  </div>
+</section>
 </main>
-<footer class="footer">
-  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+<!-- Footer -->
+<footer class="w-full px-gutter py-section-v bg-surface-container-lowest border-t border-white/5">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 mb-12">
+      <!-- Column 1: Logo & Description -->
+      <div class="col-span-2 lg:col-span-1">
+        <div class="font-headline-md text-headline-md font-bold text-primary mb-4">DriveHive</div>
+        <p class="font-body-md text-body-md text-on-surface-variant">Experience the pinnacle of automotive engineering with our curated high-performance fleet.</p>
+      </div>
+      <!-- Column 2: Company -->
+      <div>
+        <h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-6">Company</h4>
+        <ul class="flex flex-col gap-3">
+          <li class=""><a href="about.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">About</a></li>
+          <li class=""><a href="blog.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Blog</a></li>
+        </ul>
+      </div>
+      <!-- Column 3: Support -->
+      <div>
+        <h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-6">Support</h4>
+        <ul class="flex flex-col gap-3">
+          <li class=""><a href="support.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Support</a></li>
+          <li class=""><a href="contact.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Contact</a></li>
+        </ul>
+      </div>
+      <!-- Column 4: Legal -->
+      <div>
+        <h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-6">Legal</h4>
+        <ul class="flex flex-col gap-3">
+          <li class=""><a href="privacy.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Privacy Policy</a></li>
+          <li class=""><a href="terms.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+      <!-- Column 5: Navigation -->
+      <div>
+        <h4 class="font-label-sm text-label-sm text-primary uppercase tracking-widest mb-6">Navigation</h4>
+        <ul class="flex flex-col gap-3">
+          <li class=""><a href="dashboard.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Dashboard</a></li>
+          <li class=""><a href="listings.html" class="text-on-surface-variant hover:text-primary-container transition-colors font-body-md text-body-md">Listings</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-8 border-t border-white/5">
+      <p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 DriveHive. High-Performance Rentals.</p>
+    </div>
+  </div>
 </footer>
+
+<script src="assets/js/listings-redesign.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

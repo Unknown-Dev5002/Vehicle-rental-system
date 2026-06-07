@@ -4,44 +4,467 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome | DriveHive</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/landing-redesign.css" />
+  <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#313030",
+                        "inverse-on-surface": "#2f3132",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "surface-container-highest": "#333537",
+                        "on-background": "#e2e2e4",
+                        "on-primary-container": "#705d00",
+                        "primary-fixed": "#ffe171",
+                        "inverse-primary": "#705d00",
+                        "on-surface": "#e2e2e4",
+                        "background": "#111415",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-tertiary-fixed-variant": "#004493",
+                        "on-surface-variant": "#d0c6ab",
+                        "surface-container": "#1e2021",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#474746",
+                        "tertiary-container": "#cad9ff",
+                        "error-container": "#93000a",
+                        "on-primary": "#3b2f00",
+                        "inverse-surface": "#e2e2e4",
+                        "outline": "#999077",
+                        "primary-container": "#ffd60a",
+                        "secondary-fixed": "#e5e2e1",
+                        "outline-variant": "#4d4632",
+                        "surface": "#111415",
+                        "surface-container-lowest": "#0c0e10",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#e9c400",
+                        "primary": "#fff5dc",
+                        "on-tertiary": "#002e69",
+                        "on-primary-fixed": "#221b00",
+                        "tertiary": "#f4f5ff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary-container": "#b7b5b4",
+                        "surface-dim": "#111415",
+                        "secondary-container": "#474746",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-primary-fixed-variant": "#554600",
+                        "surface-container-high": "#282a2c",
+                        "surface-variant": "#333537",
+                        "surface-bright": "#37393b",
+                        "surface-container-low": "#1a1c1d",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed": "#001a41",
+                        "on-tertiary-container": "#005bc1",
+                        "secondary": "#c8c6c5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-h": "64px",
+                        "stack-sm": "8px",
+                        "gutter": "24px",
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "card-p": "32px",
+                        "section-v": "120px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-hero-mobile": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "display-hero": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-hero-mobile": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+  </script>
 </head>
-<body data-page="home">
-<header>
-  <div class="container nav">
-    <a class="brand" href="index.html">DriveHive</a>
-    <nav class="nav-links">
-      <a data-page="home" href="dashboard.html">Dashboard</a>
-      <a data-page="listings" href="listings.html">Listings</a>
-      <a data-page="about" href="about.html">About</a>
-      <a data-page="contact" href="contact.html">Contact</a>
-      <a data-page="blog" href="blog.html">Blog</a>
-      <a data-page="support" href="support.html">Support</a>
-      <a data-page="login" href="login.html">Login</a>
-    </nav>
-  </div>
+<body class="font-body-md text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-gutter py-4">
+<div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+<a class="font-headline-md text-headline-md font-extrabold text-primary-container tracking-tighter" href="index.html">DriveHive</a>
+<div class="hidden md:flex gap-stack-lg items-center"><a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors duration-300" href="dashboard.html">Dashboard</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="listings.html">Listings</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="about.html">About</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="blog.html">Blog</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="support.html">Support</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="contact.html">Contact</a></div>
+<div class="flex gap-stack-md">
+<a class="px-6 py-2 rounded-full font-label-sm text-label-sm font-semibold border border-outline hover:bg-surface-container-high transition-all" href="login.html">Login</a>
+<a class="px-6 py-2 rounded-full font-label-sm text-label-sm font-semibold bg-primary-container text-on-primary-container magnetic-button" href="dashboard.html" style="transform: translate(0px, 0px);">Dashboard</a>
+</div>
+</div>
+</nav>
+<!-- Section 1: Hero -->
+<header class="relative min-h-screen pt-32 pb-section-v px-gutter overflow-hidden hero-gradient">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-section-h items-center">
+<div class="reveal active">
+<h1 class="font-display-hero text-display-hero mb-6 text-primary">Drive When You Need.<br class="">Earn When You Don't.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-lg">Whether you're looking for a vehicle or have one to share, DriveHive makes rentals simple, secure, and fast.</p>
+<div class="flex flex-wrap gap-stack-md mb-12">
+<a class="px-8 py-4 rounded-full font-headline-md text-body-md font-bold bg-primary-container text-on-primary-container magnetic-button shadow-lg shadow-primary-container/20" href="login.html" style="transform: translate(0px, 0px);">Login First</a>
+<a class="px-8 py-4 rounded-full font-headline-md text-body-md font-bold border border-outline-variant hover:border-primary transition-colors" href="dashboard.html">Open Dashboard</a>
+</div>
+<div class="flex items-center gap-stack-lg">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full bg-surface-container border-2 border-background flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container border-2 border-background flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-on-primary-container">star</span>
+</div>
+</div>
+<div>
+<div class="font-headline-md text-[20px] font-bold">Verified Fleet • Instant Booking</div>
+<div class="text-on-surface-variant text-label-sm">24/7 Support • Secure Payments</div>
+</div>
+</div>
+</div>
+<div class="relative h-[600px] flex items-center justify-center">
+<!-- 3D Vehicle Showcase -->
+<div class="relative w-full h-full perspective-1000">
+<!-- Top Left Car -->
+<div class="absolute top-0 left-0 w-3/4 floating" style="--tw-rotate: -5deg; z-index: 10;">
+<div class="glass-card p-4 rounded-xl">
+<img alt="Sports Car" class="w-full rounded-lg" data-alt="A high-end electric sports car captured in a studio setting with dramatic side lighting. The car's metallic paint reflects the minimalist surroundings, creating a sleek and powerful aesthetic. The deep black background emphasizes the vehicle's futuristic curves and precision engineering, aligning with a premium Neo-Modern design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgezrsX-NttbfFR7e1nOcmLrQjQU4KLeuvBO5AgSzFRVGZl81BvZ8dtaTtd87IwsAvi2MqUHDFIfy9XFnUFiNaWRGzScPJS8Swb1zNiXCRMDZPQoemgEx-rob6g3xyvVNVvcFfONeneL0ul6fA1u-uNW1JykeyW6KuWTuVedGiKKYM0IYPc2FPCFc1Wcda5qMp62cYDxNQcfQAQJeaGLpMl0-1lmsOXBvCCOd5WcCsvSyu5TrDwVk391gIlpAmsX5F2r_mWFuYKSU7">
+</div>
+</div>
+<!-- Center SUV -->
+<div class="absolute top-1/4 left-1/4 w-3/4 floating" style="--tw-rotate: 2deg; animation-delay: -2s; z-index: 20;">
+<div class="glass-card p-4 rounded-xl shadow-2xl">
+<img alt="Luxury SUV" class="w-full rounded-lg" data-alt="A luxurious dark grey SUV presented in a clean, three-quarter front view within a professional studio. The lighting is sophisticated, highlighting the bold contours and refined textures of the bodywork against an infinite black backdrop. The scene evokes a sense of sturdy elegance and high-performance reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFwKSOvxOSleiaW_kcQQWQgxkXFf01w9yUXrRuMA2XhsXQb9-rU2QU7s-Yb1PNtpB4EsGTt5_jxIIW7aopnj2baiTGq3izMogMclp_ByVv2ZR_krnHk-DU0_IPFafx712mscI-e7uweuWIU1NG_FE26wZUJ5Hif-_TlewfcjlvJAfmc0y9t1zBvpD-a1fAxH2CFHKShwIkfkHIC7HVAWHdoyeddOWtUMdzSfwS4IZFc4HBdGRuNZmRgUCYXZcvEhcSOcVzahgHer6T">
+</div>
+</div>
+<!-- Bottom Right Bike -->
+<div class="absolute bottom-0 right-0 w-2/3 floating" style="--tw-rotate: 8deg; animation-delay: -4s; z-index: 30;">
+<div class="glass-card p-4 rounded-xl">
+<img alt="Sports Motorcycle" class="w-full rounded-lg" data-alt="A high-performance sports motorcycle showcased under controlled studio lights, focusing on its intricate mechanical details and aggressive stance. The deep black background creates a high-contrast environment, making the metallic and composite materials pop. This image represents the pinnacle of two-wheeled engineering and speed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcKGY7SNDJNCOEd7FCByLbnG052pr77Z-3dTNH-0LEYt3GJkfRVlq4_Z-JO30dyBhazFd2ZAmu_K_8IepHjD5ydOMpK77ZpMW3bNvTg381vr8umWstYcUTjOGOI6NCw-M7tJDbzNxIZ9XchuPjhy4ywh-IApEwGlK4zbi1Y_a7YYeCC63I1XOGt1qOa4AqxsEqspy6lt_Ert519GUSXmFLoHC-Si_NaNkQaB2DKS3CLfSmCZ7BTe5nG42za392pii8eRETzfhl6lbH">
+</div>
+</div>
+</div>
+</div>
+</div>
 </header>
-<main class="container">
-<section class="hero">
-  <div>
-    <h1>Welcome to DriveHive</h1>
-    <p>Your trusted car and bike rental platform for city rides, business travel, and road trips.</p>
-    <p class="price-badge">Starting from ₹699/day</p>
-    <a class="btn" href="login.html">Login First</a>
-    <a class="btn secondary" href="dashboard.html">Open Dashboard</a>
-  </div>
-  <div class="card">
-    <h3>Start in 3 quick steps</h3>
-    <p>1) Login or create account</p>
-    <p>2) Pick your vehicle</p>
-    <p>3) Book and pay securely</p>
-  </div>
+<!-- Section 2: Trust Strip -->
+<section class="py-12 border-y border-white/5 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-gutter overflow-hidden">
+<div class="animate-marquee gap-stack-lg">
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">verified</span> Verified Vehicles
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">lock</span> Secure Payments
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">schedule</span> Real-Time Availability
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">support_agent</span> 24/7 Support
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap" aria-hidden="true">
+<span class="material-symbols-outlined text-[18px]">verified</span> Verified Vehicles
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap" aria-hidden="true">
+<span class="material-symbols-outlined text-[18px]">lock</span> Secure Payments
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap" aria-hidden="true">
+<span class="material-symbols-outlined text-[18px]">schedule</span> Real-Time Availability
+</div>
+<div class="flex items-center gap-2 px-6 py-2 rounded-full border border-outline-variant bg-surface/50 text-label-sm font-semibold text-primary whitespace-nowrap" aria-hidden="true">
+<span class="material-symbols-outlined text-[18px]">support_agent</span> 24/7 Support
+</div>
+</div>
+</div>
 </section>
-<section class="banner"><strong>New User Offer:</strong> Login and use FIRST10 for extra savings.</section>
-</main>
-<footer class="footer">
-  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+<!-- Section 3: How It Works -->
+<section class="py-section-v px-gutter">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20 reveal active">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">How It Works</h2>
+<div class="w-24 h-1 bg-primary-container mx-auto rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-stack-lg relative">
+<!-- Step 1 -->
+<div class="reveal relative flex flex-col items-center text-center active">
+<div class="w-16 h-16 rounded-full glass-card flex items-center justify-center text-primary-container mb-6 z-10">
+<span class="material-symbols-outlined text-[32px]">search</span>
+</div>
+<h3 class="font-headline-md text-[20px] mb-2">1. Browse</h3>
+<p class="text-on-surface-variant text-body-md">Find the perfect vehicle from our elite curated fleet.</p>
+</div>
+<!-- Step 2 -->
+<div class="reveal relative flex flex-col items-center text-center active" style="transition-delay: 100ms;">
+<div class="w-16 h-16 rounded-full glass-card flex items-center justify-center text-primary-container mb-6 z-10">
+<span class="material-symbols-outlined text-[32px]">directions_car</span>
+</div>
+<h3 class="font-headline-md text-[20px] mb-2">2. Select</h3>
+<p class="text-on-surface-variant text-body-md">Choose the model that fits your lifestyle and needs.</p>
+</div>
+<!-- Step 3 -->
+<div class="reveal relative flex flex-col items-center text-center active" style="transition-delay: 200ms;">
+<div class="w-16 h-16 rounded-full glass-card flex items-center justify-center text-primary-container mb-6 z-10">
+<span class="material-symbols-outlined text-[32px]">calendar_month</span>
+</div>
+<h3 class="font-headline-md text-[20px] mb-2">3. Book</h3>
+<p class="text-on-surface-variant text-body-md">Reserve instantly with secure zero-paperwork booking.</p>
+</div>
+<!-- Step 4 -->
+<div class="reveal relative flex flex-col items-center text-center active" style="transition-delay: 300ms;">
+<div class="w-16 h-16 rounded-full glass-card flex items-center justify-center text-primary-container mb-6 z-10">
+<span class="material-symbols-outlined text-[32px]">sports_motorsports</span>
+</div>
+<h3 class="font-headline-md text-[20px] mb-2">4. Drive</h3>
+<p class="text-on-surface-variant text-body-md">Hit the road and enjoy high-performance freedom.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Featured Vehicles -->
+<section class="py-section-v px-gutter bg-surface-container-low" id="featured-vehicles">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-16 reveal active">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Featured Vehicles</h2>
+<p class="text-on-surface-variant max-w-md">Our hand-picked selection of top performers for this season.</p>
+</div>
+<a class="text-primary font-semibold flex items-center gap-2 hover:translate-x-1 transition-transform" href="listings.html">
+                    View Full Fleet <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div id="featured-vehicle-grid" class="grid grid-cols-1 md:grid-cols-3 gap-gutter"></div>
+</div>
+</section>
+<!-- Section 5: Why Choose DriveHive -->
+<section class="py-section-v px-gutter">
+<div class="max-w-7xl mx-auto space-y-section-v">
+<!-- Block 1 -->
+<div class="flex flex-col md:flex-row items-center gap-section-h reveal active">
+<div class="flex-1">
+<div class="w-12 h-12 bg-primary-container/20 rounded-xl flex items-center justify-center text-primary-container mb-6">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: &quot;FILL&quot; 1;">shield</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">Real-Time Availability</h2>
+<p class="text-on-surface-variant text-body-lg mb-8">See which vehicles are currently available before booking. DriveHive helps users avoid unnecessary calls and guesswork by showing up-to-date vehicle availability in one place.</p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 font-semibold"><span class="material-symbols-outlined text-primary-container">check_circle</span>Simple Booking Process</li>
+<li class="flex items-center gap-3 font-semibold"><span class="material-symbols-outlined text-primary-container">check_circle</span>Instant Booking Status</li>
+</ul>
+</div>
+<div class="flex-1 relative">
+<div class="glass-card p-4 rounded-3xl">
+<img class="rounded-2xl" data-alt="A majestic luxury SUV parked in a minimalist showroom. The ceiling lights create parallel reflections on the hood, suggesting order and safety. The vehicle looks impenetrable and sophisticated, bathed in soft, atmospheric studio lighting against a dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFwKSOvxOSleiaW_kcQQWQgxkXFf01w9yUXrRuMA2XhsXQb9-rU2QU7s-Yb1PNtpB4EsGTt5_jxIIW7aopnj2baiTGq3izMogMclp_ByVv2ZR_krnHk-DU0_IPFafx712mscI-e7uweuWIU1NG_FE26wZUJ5Hif-_TlewfcjlvJAfmc0y9t1zBvpD-a1fAxH2CFHKShwIkfkHIC7HVAWHdoyeddOWtUMdzSfwS4IZFc4HBdGRuNZmRgUCYXZcvEhcSOcVzahgHer6T">
+</div>
+<div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-2xl animate-bounce" style="animation-duration: 3s;">
+<span class="material-symbols-outlined text-primary-container text-[40px]">lock_person</span>
+</div>
+</div>
+</div>
+<!-- Block 2 -->
+<div class="flex flex-col md:flex-row-reverse items-center gap-section-h reveal active">
+<div class="flex-1">
+<div class="w-12 h-12 bg-primary-container/20 rounded-xl flex items-center justify-center text-primary-container mb-6">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: &quot;FILL&quot; 1;">verified_user</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">Quick &amp; Easy Booking</h2>
+<p class="text-on-surface-variant text-body-lg mb-8">Browse vehicles, view details, choose your preferred pickup location, and reserve your ride in just a few clicks. The booking process is designed to be simple and hassle-free.</p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 font-semibold"><span class="material-symbols-outlined text-primary-container">check_circle</span>Reserve in Minutes</li>
+<li class="flex items-center gap-3 font-semibold"><span class="material-symbols-outlined text-primary-container">check_circle</span>Hassle-Free Experience</li>
+</ul>
+</div>
+<div class="flex-1 relative">
+<div class="glass-card p-4 rounded-3xl">
+<img class="rounded-2xl" data-alt="Side profile of a stunning sports car under vibrant, neon-tinted studio lights. The reflections along the door panels highlight the vehicle's pristine condition and quality of finish. The background is a velvety black, creating a focused, high-end gallery vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgezrsX-NttbfFR7e1nOcmLrQjQU4KLeuvBO5AgSzFRVGZl81BvZ8dtaTtd87IwsAvi2MqUHDFIfy9XFnUFiNaWRGzScPJS8Swb1zNiXCRMDZPQoemgEx-rob6g3xyvVNVvcFfONeneL0ul6fA1u-uNW1JykeyW6KuWTuVedGiKKYM0IYPc2FPCFc1Wcda5qMp62cYDxNQcfQAQJeaGLpMl0-1lmsOXBvCCOd5WcCsvSyu5TrDwVk391gIlpAmsX5F2r_mWFuYKSU7">
+</div>
+<div class="absolute -top-6 -right-6 glass-card p-6 rounded-2xl floating">
+<span class="material-symbols-outlined text-primary-container text-[40px]">verified</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 6: Live Stats -->
+<section class="py-section-v px-gutter relative overflow-hidden" id="live-stats">
+<div class="absolute inset-0 glow-radial -z-10"></div>
+<div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-stack-lg text-center reveal active">
+<div class="glass-card p-10 rounded-2xl"><div class="text-[56px] font-extrabold text-primary-container mb-2 counter" data-target="10000">0</div><div class="text-on-surface-variant uppercase tracking-widest text-label-sm font-bold">Active Users</div></div>
+<div class="glass-card p-10 rounded-2xl"><div class="text-[56px] font-extrabold text-primary-container mb-2 counter" data-target="500">0</div><div class="text-on-surface-variant uppercase tracking-widest text-label-sm font-bold">Available Vehicles</div></div>
+<div class="glass-card p-10 rounded-2xl"><div class="text-[56px] font-extrabold text-primary-container mb-2 counter" data-target="50">0</div><div class="text-on-surface-variant uppercase tracking-widest text-label-sm font-bold">Vehicle Categories</div></div>
+<div class="glass-card p-10 rounded-2xl"><div class="text-[56px] font-extrabold text-primary-container mb-2 counter" data-target="98">0</div><div class="text-on-surface-variant uppercase tracking-widest text-label-sm font-bold">Verified Partners</div></div>
+</div>
+</section>
+<!-- Section 7: Testimonials -->
+<section class="py-section-v px-gutter bg-surface-container-lowest overflow-hidden">
+<div class="max-w-7xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-center text-primary mb-16 reveal active">What Drivers Say</h2>
+<div class="flex gap-stack-lg testimonial-carousel">
+<!-- Testimonial 1 -->
+<div class="min-w-[400px] glass-card p-card-p rounded-2xl reveal active">
+<div class="flex gap-1 text-primary-container mb-6">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<p class="font-body-lg text-body-lg italic mb-8">"Booking took less than 2 minutes. The vehicle was spotless and the performance was exactly as advertised. Best rental experience ever."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<div class="font-bold">Sarah K.</div>
+<div class="text-on-surface-variant text-label-sm">Tech Executive</div>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="min-w-[400px] glass-card p-card-p rounded-2xl reveal active" style="transition-delay: 100ms;">
+<div class="flex gap-1 text-primary-container mb-6">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<p class="font-body-lg text-body-lg italic mb-8">"DriveHive has the best fleet I've seen. The customer support was incredible when I needed to extend my rental last minute."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<div class="font-bold">Mark T.</div>
+<div class="text-on-surface-variant text-label-sm">Travel Blogger</div>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="min-w-[400px] glass-card p-card-p rounded-2xl reveal active" style="transition-delay: 200ms;">
+<div class="flex gap-1 text-primary-container mb-6">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<p class="font-body-lg text-body-lg italic mb-8">"Zero paperwork really means zero paperwork. Everything was done through the app, and the bike was ready in minutes."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<div class="font-bold">David L.</div>
+<div class="text-on-surface-variant text-label-sm">Motocross Fan</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 8: FAQ -->
+<section class="py-section-v px-gutter">
+<div class="max-w-3xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-center text-primary mb-16 reveal active">Frequently Asked Questions</h2>
+<div class="space-y-4">
+<div class="glass-card rounded-2xl overflow-hidden reveal active">
+<button class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors faq-trigger">
+<span class="font-bold text-lg">How do I rent a vehicle?</span>
+<span class="material-symbols-outlined transition-transform">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 bg-white/5">
+<p class="p-6 text-on-surface-variant">Simply sign up, verify your identity, browse our fleet, and select the 'Rent' button. The process takes less than 5 minutes from start to finish.</p>
+</div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden reveal active" style="transition-delay: 100ms;">
+<button class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors faq-trigger">
+<span class="font-bold text-lg">What documents are required?</span>
+<span class="material-symbols-outlined transition-transform">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 bg-white/5">
+<p class="p-6 text-on-surface-variant">You'll need a valid government-issued driver's license and a secondary ID for security. International renters may need an IDP.</p>
+</div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden reveal active" style="transition-delay: 200ms;">
+<button class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors faq-trigger">
+<span class="font-bold text-lg">Can I cancel my booking?</span>
+<span class="material-symbols-outlined transition-transform">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 bg-white/5">
+<p class="p-6 text-on-surface-variant">Yes, free cancellation is available up to 24 hours before your scheduled rental start time.</p>
+</div>
+</div>
+<div class="glass-card rounded-2xl overflow-hidden reveal active" style="transition-delay: 300ms;">
+<button class="w-full flex justify-between items-center p-6 text-left hover:bg-white/5 transition-colors faq-trigger">
+<span class="font-bold text-lg">Are payments secure?</span>
+<span class="material-symbols-outlined transition-transform">expand_more</span>
+</button>
+<div class="max-h-0 overflow-hidden transition-all duration-300 bg-white/5">
+<p class="p-6 text-on-surface-variant">Absolutely. All transactions are handled by PCI-compliant partners with bank-grade encryption.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 9: Final CTA -->
+<section class="py-section-v px-gutter">
+<div class="max-w-7xl mx-auto rounded-3xl overflow-hidden relative p-section-h text-center reveal active" style="background: radial-gradient(circle at 50% 50%, rgba(255, 214, 10, 0.2) 0%, rgba(255, 214, 10, 0.05) 100%);">
+<div class="absolute inset-0 bg-surface-container-low/50 backdrop-blur-3xl -z-10"></div>
+<h2 class="font-headline-lg text-headline-lg mb-6">Ready To Hit The Road?</h2>
+<p class="text-body-lg text-on-surface-variant mb-12 max-w-xl mx-auto">Book your next ride in minutes. Join thousands of drivers who have upgraded their rental experience.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-stack-md">
+<a class="px-12 py-5 rounded-full font-headline-md text-headline-md font-bold bg-primary-container text-on-primary-container magnetic-button shadow-2xl shadow-primary-container/30" href="login.html" style="transform: translate(0px, 0px);">Login First</a>
+<a class="px-12 py-5 rounded-full font-headline-md text-headline-md font-bold border border-outline hover:border-primary transition-colors" href="dashboard.html">Open Dashboard</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-white/5 py-section-v px-gutter">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-stack-lg">
+<div class="max-w-xs">
+<div class="font-headline-md text-headline-md font-bold text-primary mb-6">DriveHive</div>
+<p class="text-on-surface-variant text-body-md mb-8">Redefining high-performance vehicle rentals with cutting-edge technology and premium service.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div class="flex flex-col gap-4"><div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Company</div><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="about.html">About</a><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="contact.html">Contact</a></div>
+<div class="flex flex-col gap-4"><div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Resources</div><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="blog.html">Blog</a><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="support.html">Support</a></div>
+<div class="flex flex-col gap-4"><div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Legal</div><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="privacy.html">Privacy Policy</a><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="terms.html">Terms &amp; Conditions</a></div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 DriveHive. High-Performance Rentals.</p>
+<div class="flex gap-8">
+<span class="text-on-surface-variant text-label-sm font-label-sm">Powered by HiveCore Engine</span>
+</div>
+</div>
 </footer>
-<script src="assets/js/app.js"></script>
+<script src="assets/js/landing-redesign.js"></script>
 </body>
 </html>

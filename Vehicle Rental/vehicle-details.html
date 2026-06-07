@@ -3,42 +3,250 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vehicle Details</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <title>Vehicle Details – DriveHive</title>
+  <meta name="description" content="View full details, specifications, and pricing for this vehicle on DriveHive. Book instantly." />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/vehicle-details.css" />
+  <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#1a1c1d",
+                      "inverse-surface": "#e2e2e4",
+                      "secondary-container": "#474746",
+                      "on-secondary": "#313030",
+                      "on-error": "#690005",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "tertiary-fixed": "#d8e2ff",
+                      "surface-dim": "#111415",
+                      "surface-bright": "#37393b",
+                      "surface-container-highest": "#333537",
+                      "on-error-container": "#ffdad6",
+                      "surface-tint": "#e9c400",
+                      "primary-fixed-dim": "#e9c400",
+                      "on-tertiary-container": "#005bc1",
+                      "error": "#ffb4ab",
+                      "on-surface": "#e2e2e4",
+                      "on-primary": "#3b2f00",
+                      "surface-container-high": "#282a2c",
+                      "on-secondary-container": "#b7b5b4",
+                      "on-primary-fixed-variant": "#554600",
+                      "surface-variant": "#333537",
+                      "primary-fixed": "#ffe171",
+                      "surface-container-lowest": "#0c0e10",
+                      "tertiary-container": "#cad9ff",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-background": "#e2e2e4",
+                      "tertiary": "#f4f5ff",
+                      "inverse-primary": "#705d00",
+                      "tertiary-fixed-dim": "#adc6ff",
+                      "primary": "#fff5dc",
+                      "secondary": "#c8c6c5",
+                      "outline": "#999077",
+                      "on-tertiary-fixed-variant": "#004493",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-primary-container": "#705d00",
+                      "on-tertiary": "#002e69",
+                      "on-secondary-fixed-variant": "#474746",
+                      "inverse-on-surface": "#2f3132",
+                      "on-surface-variant": "#d0c6ab",
+                      "primary-container": "#ffd60a",
+                      "outline-variant": "#4d4632",
+                      "surface": "#111415",
+                      "surface-container": "#1e2021",
+                      "on-tertiary-fixed": "#001a41",
+                      "error-container": "#93000a",
+                      "on-primary-fixed": "#221b00",
+                      "background": "#111415"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "32px",
+                      "gutter": "24px",
+                      "card-p": "32px",
+                      "stack-sm": "8px",
+                      "stack-md": "16px",
+                      "section-v": "120px",
+                      "section-h": "64px"
+              },
+              "fontFamily": {
+                      "display-hero-mobile": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "label-sm": ["Inter"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-hero": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "display-hero-mobile": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "display-hero": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+  </script>
 </head>
-<body data-page="listings">
-<header>
-  <div class="container nav">
-    <a class="brand" href="index.html">DriveHive</a>
-    <nav class="nav-links">
-      <a data-page="home" href="dashboard.html">Dashboard</a>
-      <a data-page="listings" href="listings.html">Listings</a>
-      <a data-page="about" href="about.html">About</a>
-      <a data-page="contact" href="contact.html">Contact</a>
-      <a data-page="blog" href="blog.html">Blog</a>
-      <a data-page="support" href="support.html">Support</a>
-      <a data-page="login" href="login.html">Login</a>
-    </nav>
-  </div>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter py-4 max-w-7xl mx-auto left-1/2 -translate-x-1/2 bg-surface/80 backdrop-blur-xl border-b border-white/10">
+<a class="font-headline-md text-headline-md font-extrabold text-primary-container tracking-tighter" href="index.html">DriveHive</a>
+<nav class="hidden md:flex items-center gap-8"><a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="dashboard.html">Dashboard</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="listings.html">Listings</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="about.html">About</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="blog.html">Blog</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="support.html">Support</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="contact.html">Contact</a></nav>
+<div class="flex items-center gap-4">
+<a id="navLoginLink" class="text-on-surface-variant font-medium hover:text-primary-container transition-colors px-4 py-2" href="login.html" data-magnetic>Login</a>
+<a id="navDashboardLink" class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-bold transition-transform duration-200 active:scale-95" href="dashboard.html" data-magnetic>Dashboard</a>
+</div>
 </header>
-<main class="container">
-<h1>Vehicle Details</h1>
-<div id="vehicleDetailsPanel" class="card"></div>
-<section>
-  <h2>Customer Reviews</h2>
-  <ul id="reviewList" class="review-list"></ul>
-  <form id="reviewForm" class="card">
-    <label>Name</label><input name="author" required />
-    <label>Rating (1-5)</label><input name="rating" type="number" min="1" max="5" required />
-    <label>Review</label><textarea name="text" required></textarea>
-    <button type="submit">Submit Review</button>
-    <div id="reviewNotice"></div>
-  </form>
+<main class="pt-24 hero-gradient">
+<!-- Breadcrumb -->
+<div class="max-w-7xl mx-auto px-gutter py-stack-lg">
+<nav class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="index.html">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="listings.html">Listings</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span id="breadcrumb-vehicle-name" class="text-primary">[Vehicle Name]</span>
+</nav>
+</div>
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-stack-lg pb-stack-lg">
+<!-- Left: Single High-Res Image -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<div class="glass-card rounded-lg overflow-hidden group relative aspect-[1.49] transition-all duration-700 opacity-100 translate-y-0">
+<img id="vehicle-main-image" alt="[Vehicle Name]" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDldyQiLgRVc8XMrtrhT_zL8LT6HjyxLB0f1xI8eqx_SYHVFHbBCcyZ7VO88zj9XE86uic75TENtKVU3bicYSs2hst52DWv_hEeWECl0f80Mz-uuTDncQhbLtNa7Y8ORnTdj1A7_JDEtCYUqyBCxrqhV61sZFkd_ZSRV9k3C56RdzgEunjkHiKRFcjazwOi1CdYOt8BkDWC-cQQ55Jvs98Nb3H9EKI0eTvxwbk5Xf0M1IqVxQbaqlum-V0GXnttB8JyxU56qjfPn99r">
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+</div>
+</div>
+<!-- Right: Booking Card -->
+<div class="lg:col-span-4">
+<div class="glass-card p-card-p rounded-lg sticky top-32 glow-hover transition-all duration-300 duration-700 opacity-100 translate-y-0">
+<div class="mb-stack-lg">
+<h1 id="vehicle-title" class="font-headline-lg text-headline-lg text-primary tracking-tight mb-1">[Vehicle Name]</h1>
+<p id="vehicle-subtitle" class="text-on-surface-variant font-medium">[Brand] • [Vehicle Type] • [Year]</p>
+</div>
+<div class="space-y-stack-md mb-stack-lg border-y border-white/5 py-stack-lg">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Brand</span>
+<span id="spec-brand" class="text-on-surface font-semibold">[Brand]</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Type</span>
+<span id="spec-type" class="text-on-surface font-semibold">[Vehicle Type]</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Fuel</span>
+<span id="spec-fuel" class="text-on-surface font-semibold">[Fuel Type]</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Transmission</span>
+<span id="spec-transmission" class="text-on-surface font-semibold">[Transmission]</span>
+</div>
+</div>
+<div class="mb-stack-lg">
+<div class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Price Per Day</div>
+<div class="flex items-baseline gap-1">
+<span id="vehicle-price" class="font-display-hero text-headline-lg text-primary-container">[Price Per Day]</span>
+<span class="text-on-surface-variant">/day</span>
+</div>
+</div>
+<div class="flex flex-col gap-stack-md">
+<button id="book-now-btn" class="magnetic-button w-full bg-primary-container text-on-primary-container font-extrabold py-5 rounded-full hover:shadow-[0_0_30px_rgba(255,214,10,0.3)] transition-all">
+                        Book Now
+                    </button>
+<a class="w-full bg-white/5 text-on-surface hover:bg-white/10 font-bold py-5 rounded-full border border-white/10 transition-all text-center" href="listings.html">
+                        Back to Listings
+                    </a>
+</div>
+</div>
+</div>
+</section>
+<!-- Specifications Section -->
+<section id="specifications-section" class="max-w-7xl mx-auto px-gutter py-section-v">
+<h2 class="font-headline-lg text-headline-lg mb-stack-lg text-center lg:text-left">Specifications</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<div class="glass-card p-card-p rounded-lg flex flex-col items-center text-center group hover:border-primary/50 transition-colors transition-all duration-700 opacity-100 translate-y-0">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-4 group-hover:scale-110 transition-transform">directions_car</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm uppercase tracking-wider mb-2">Type</span>
+<span id="spec-card-type" class="text-on-surface font-headline-md text-[20px] font-bold">[Vehicle Type]</span>
+</div>
+<div class="glass-card p-card-p rounded-lg flex flex-col items-center text-center group hover:border-primary/50 transition-colors transition-all duration-700 opacity-100 translate-y-0">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-4 group-hover:scale-110 transition-transform">bolt</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm uppercase tracking-wider mb-2">Fuel</span>
+<span id="spec-card-fuel" class="text-on-surface font-headline-md text-[20px] font-bold">[Fuel Type]</span>
+</div>
+<div class="glass-card p-card-p rounded-lg flex flex-col items-center text-center group hover:border-primary/50 transition-colors transition-all duration-700 opacity-100 translate-y-0">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-4 group-hover:scale-110 transition-transform">settings_input_component</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm uppercase tracking-wider mb-2">Transmission</span>
+<span id="spec-card-transmission" class="text-on-surface font-headline-md text-[20px] font-bold">[Transmission]</span>
+</div>
+<div class="glass-card p-card-p rounded-lg flex flex-col items-center text-center group hover:border-primary/50 transition-colors transition-all duration-700 opacity-100 translate-y-0">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-4 group-hover:scale-110 transition-transform">calendar_today</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm uppercase tracking-wider mb-2">Year</span>
+<span id="spec-card-year" class="text-on-surface font-headline-md text-[20px] font-bold">[Year]</span>
+</div>
+</div>
+</section>
+<!-- Description Section -->
+<section class="max-w-7xl mx-auto px-gutter py-section-v">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<div class="lg:col-span-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">Description</h2>
+<div class="w-12 h-1 bg-primary-container mt-4"></div>
+</div>
+<div class="lg:col-span-8">
+<p id="vehicle-description" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed mb-stack-lg">
+                        [Vehicle Description]
+                    </p>
+</div>
+</div>
 </section>
 </main>
-<footer class="footer">
-  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+<!-- Footer Sync: Kinetic Noir Theme Structure -->
+<footer class="bg-surface-container-lowest border-t border-white/5 py-section-v px-gutter">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-stack-lg">
+<div class="max-w-xs">
+<div class="font-headline-md text-headline-md font-bold text-primary mb-6">DriveHive</div>
+<p class="text-on-surface-variant text-body-md mb-8">Redefining high-performance vehicle rentals with cutting-edge technology and premium service.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div class="flex flex-col gap-4"><div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Company</div><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="about.html">About</a><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="contact.html">Contact</a></div>
+<div class="flex flex-col gap-4"><div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Resources</div><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="blog.html">Blog</a><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="support.html">Support</a></div>
+<div class="flex flex-col gap-4"><div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Legal</div><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="privacy.html">Privacy Policy</a><a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="terms.html">Terms &amp; Conditions</a></div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 DriveHive. High-Performance Rentals.</p>
+<div class="flex gap-8">
+<span class="text-on-surface-variant text-label-sm font-label-sm">Powered by HiveCore Engine</span>
+</div>
+</div>
 </footer>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/vehicle-details.js"></script>
 </body>
 </html>

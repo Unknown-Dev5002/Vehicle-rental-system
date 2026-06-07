@@ -15,6 +15,19 @@ function formatINR(amount) {
   return `\u20B9${INR.format(amount)}`;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function isRedesignListingsPage() {
+  return document.body?.dataset?.listingsLayout === "redesign";
+}
+
 function resolveVehicleImageUrl(imageUrl) {
   if (!imageUrl) {
     return DEFAULT_VEHICLE_IMAGE;
@@ -85,7 +98,8 @@ function setActiveNav() {
 }
 
 function updateAuthNav() {
-  const loginLink = document.querySelector(".nav-links a[data-page='login']");
+  const loginLink = document.querySelector(".nav-links a[data-page='login']")
+    || document.getElementById("navLoginLink");
   if (!loginLink) return;
   if (isLoggedIn()) {
     loginLink.textContent = "Logout";
@@ -105,10 +119,40 @@ function updateAuthNav() {
   loginLink.onclick = null;
 }
 
+function renderRedesignVehicleCard(vehicle) {
+  const subtitle = [vehicle.brand, vehicle.model, vehicle.year].filter(Boolean).join(" • ");
+  return `
+<div class="vehicle-card group relative flex flex-col glass-surface rounded-xl overflow-hidden transition-all duration-500 hover:border-primary/30">
+  <div class="relative overflow-hidden aspect-[1.6]">
+    <img alt="${escapeHtml(vehicle.name)}" class="w-full h-full object-cover transition-transform duration-700" src="${escapeHtml(vehicle.image)}" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_VEHICLE_IMAGE}';">
+  </div>
+  <div class="p-5 flex flex-col gap-3">
+    <div>
+      <h3 class="font-headline-md text-[20px] leading-tight text-on-surface group-hover:text-primary transition-colors">${escapeHtml(vehicle.name)}</h3>
+      <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">${escapeHtml(subtitle)}</p>
+    </div>
+    <div class="flex flex-wrap gap-1.5">
+      <span class="bg-white/5 px-2.5 py-0.5 rounded-full font-label-sm text-[11px] text-on-surface-variant">${escapeHtml(vehicle.fuel)}</span>
+      <span class="bg-white/5 px-2.5 py-0.5 rounded-full font-label-sm text-[11px] text-on-surface-variant">${escapeHtml(vehicle.transmission)}</span>
+      <span class="bg-white/5 px-2.5 py-0.5 rounded-full font-label-sm text-[11px] text-on-surface-variant">${escapeHtml(vehicle.type)}</span>
+    </div>
+    <p class="text-on-surface-variant text-body-md line-clamp-2">${escapeHtml(vehicle.description || "Well-maintained rental vehicle ready for your next trip.")}</p>
+    <div class="flex justify-between items-center mt-1">
+      <div class="flex flex-col">
+        <span class="text-primary font-bold text-[20px]">${formatINR(vehicle.price)}</span>
+        <span class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Per Day</span>
+      </div>
+      <a class="bg-primary/10 text-primary hover:bg-primary hover:text-on-primary px-4 py-2 rounded-full font-bold text-label-sm transition-all duration-300" href="vehicle-details.html?id=${encodeURIComponent(vehicle.id)}">View Details</a>
+    </div>
+  </div>
+</div>`;
+}
+
 async function renderListings() {
   const container = document.getElementById("vehicleGrid");
   if (!container) return;
   const page = document.body.dataset.page;
+  const redesign = isRedesignListingsPage();
 
   function parsePriceToNumber(price) {
     if (typeof price === "number" && Number.isFinite(price)) return price;
@@ -122,10 +166,10 @@ async function renderListings() {
   function normalizeVehicle(v) {
     const type = v.type || (String(v.category || "").toLowerCase().includes("bike") ? "Bike" : "Sedan");
     const category = v.category || (String(type).toLowerCase().includes("bike") ? "Bike" : "Car");
-    const fuel = v.fuel || "Petrol";
+    const fuel = v.fuel || v.fuelType || "Petrol";
     const transmission = v.transmission || "Automatic";
     const seats = Number(v.seats ?? (category === "Bike" ? 2 : 5));
-    const priceNum = parsePriceToNumber(v.price);
+    const priceNum = parsePriceToNumber(v.price ?? v.pricePerDay);
 
     return {
       ...v,
@@ -142,15 +186,20 @@ async function renderListings() {
       brand: v.brand || "",
       model: v.model || "",
       year: v.year || "",
-      image: v.image || "assets/images/sample.jpg"
+      image: v.image || resolveVehicleImageUrl(v.imageUrl)
     };
   }
 
   const allVehicles = (await getVehicles()).map(normalizeVehicle);
 
+  if (redesign && typeof window.populateListingsFilters === "function") {
+    window.populateListingsFilters(allVehicles);
+  }
+
   const type = document.getElementById("filterType")?.value || "all";
   const fuel = document.getElementById("filterFuel")?.value || "all";
   const transmission = document.getElementById("filterTransmission")?.value || "all";
+  const brandQuery = document.getElementById("filterBrand")?.value?.trim().toLowerCase() || "";
   const max = Number(document.getElementById("filterPrice")?.value || 999999);
   const sort = document.getElementById("filterSort")?.value || "priceAsc";
 
@@ -159,6 +208,7 @@ async function renderListings() {
     (type === "all" || v.type === type || v.category === type) &&
     (fuel === "all" || v.fuel === fuel) &&
     (transmission === "all" || v.transmission === transmission) &&
+    (!brandQuery || String(v.brand || "").toLowerCase().includes(brandQuery)) &&
     v.price <= max
   );
 
@@ -166,12 +216,24 @@ async function renderListings() {
   if (sort === "priceDesc") list.sort((a, b) => b.price - a.price);
   if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
 
+  const countEl = document.getElementById("listingsCount");
+  if (countEl) {
+    const label = list.length === 1 ? "vehicle" : "vehicles";
+    countEl.textContent = list.length
+      ? `Showing ${list.length} ${label}`
+      : "No vehicles match your filters";
+  }
+
   if (!list.length) {
-    container.innerHTML = `<div class="card"><p>No vehicles match these filters right now.</p></div>`;
+    container.innerHTML = redesign
+      ? `<div class="col-span-full glass-surface rounded-xl p-10 text-center"><p class="text-on-surface-variant text-body-md">No vehicles match these filters right now.</p></div>`
+      : `<div class="card"><p>No vehicles match these filters right now.</p></div>`;
     return;
   }
 
-  container.innerHTML = list.map((v) => `
+  container.innerHTML = redesign
+    ? list.map((v) => renderRedesignVehicleCard(v)).join("")
+    : list.map((v) => `
     <article class="card vehicle-card">
       <img class="vehicle-image" src="${v.image}" alt="${v.name}" loading="lazy" />
       <p class="small vehicle-tag">${v.category}</p>

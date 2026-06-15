@@ -13,6 +13,7 @@
     <nav class="nav-links">
       <a data-page="home" href="dashboard.html">Dashboard</a>
       <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="bookings" href="my-bookings.html">My Bookings</a>
       <a data-page="about" href="about.html">About</a>
       <a data-page="contact" href="contact.html">Contact</a>
       <a data-page="blog" href="blog.html">Blog</a>
@@ -56,6 +57,11 @@
 
   <h2>Your Listed Vehicles</h2>
   <div id="adminVehicleGrid" class="grid"></div>
+
+  <h2>Bookings for Your Vehicles</h2>
+  <p class="small">Customer bookings for vehicles you listed appear here. These are read-only for owners.</p>
+  <div id="ownerBookingsNotice"></div>
+  <div id="ownerBookingsList" class="booking-history-list"></div>
 </main>
 <footer class="footer">
   <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>

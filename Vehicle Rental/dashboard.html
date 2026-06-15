@@ -69,6 +69,7 @@
 <div class="hidden md:flex gap-stack-lg items-center">
 <a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors duration-300" href="#">Dashboard</a>
 <a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="listings.html">Listings</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="my-bookings.html">My Bookings</a>
 <a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="about.html">About</a>
 <a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="blog.html">Blog</a>
 <a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="support.html">Support</a>
@@ -91,83 +92,114 @@
 <a class="px-10 py-4 rounded-full font-bold bg-primary-container text-on-primary-container magnetic-button shadow-xl shadow-primary-container/20 flex items-center justify-center gap-2 transition-transform hover:scale-105" href="listings.html">
                         Browse Vehicles <span class="material-symbols-outlined">directions_car</span>
 </a>
+<a class="px-10 py-4 rounded-full font-bold border border-outline text-on-surface hover:bg-surface-container-high transition-all flex items-center justify-center gap-2" href="my-bookings.html">
+                        My Bookings <span class="material-symbols-outlined">event_note</span>
+</a>
 <a class="px-10 py-4 rounded-full font-bold border border-outline text-on-surface hover:bg-surface-container-high transition-all flex items-center justify-center gap-2" href="admin.html">
                         Admin Dashboard <span class="material-symbols-outlined">dashboard</span>
 </a>
 </div>
 </div>
 </section>
-<!-- Quick Access Action Cards -->
-<section class="max-w-7xl mx-auto px-gutter mb-section-v">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-<a class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-10 glow-effect group reveal active transition-all duration-300 hover:scale-[1.02]" href="listings.html">
-<div class="w-16 h-16 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-8 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-[40px]">explore</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-primary mb-4">Quick Booking</h3>
-<p class="text-on-surface-variant text-body-lg mb-8">Reserve your preferred vehicle in minutes</p>
-<div class="flex items-center text-primary-container font-bold gap-2 group-hover:translate-x-2 transition-transform">
-                        Explore Listings <span class="material-symbols-outlined">arrow_forward</span>
-</div>
-</a>
-<a class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-10 glow-effect group reveal active transition-all duration-300 hover:scale-[1.02]" href="dashboard.html" style="transition-delay: 100ms;">
-<div class="w-16 h-16 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-8 group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-[40px]">admin_panel_settings</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-primary mb-4">Fleet Management</h3>
-<p class="text-on-surface-variant text-body-lg mb-8">Manage Listings, Bookings and vehicle availability</p>
-<div class="flex items-center text-primary-container font-bold gap-2 group-hover:translate-x-2 transition-transform">
-                        Go to Admin <span class="material-symbols-outlined">arrow_forward</span>
-</div>
-</a>
-</div>
-</section>
-<!-- Why Choose DriveHive / Features -->
-<section class="max-w-7xl mx-auto px-gutter mb-section-v">
-<div class="text-center mb-16 reveal active">
-<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Why Choose DriveHive</h2>
-<div class="w-24 h-1 bg-primary-container mx-auto rounded-full"></div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<div class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 reveal active transition-all duration-300 hover:border-primary/30">
-<div class="text-primary-container mb-6">
-<span class="material-symbols-outlined text-[48px]">library_add_check</span>
-</div>
-<h4 class="font-headline-md text-[20px] text-primary mb-3">Instant Verification</h4>
-<p class="text-on-surface-variant">Every vehicle is verified for safety and reliability.</p>
-</div>
-<div class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 reveal active transition-all duration-300 hover:border-primary/30" style="transition-delay: 100ms;">
-<div class="text-primary-container mb-6">
-<span class="material-symbols-outlined text-[48px]">shield_check</span>
-</div>
-<h4 class="font-headline-md text-[20px] text-primary mb-3">Secure Rentals</h4>
-<p class="text-on-surface-variant">Protected bookings with trusted payment security.</p>
-</div>
-<div class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 reveal active transition-all duration-300 hover:border-primary/30" style="transition-delay: 200ms;">
-<div class="text-primary-container mb-6">
-<span class="material-symbols-outlined text-[48px]">speed</span>
-</div>
-<h4 class="font-headline-md text-[20px] text-primary mb-3">Fast Performance</h4>
-<p class="text-on-surface-variant">Smooth browsing and lightning-fast booking experience.</p>
+<!-- Promotional Sections -->
+<section class="dashboard-promos max-w-7xl mx-auto px-gutter">
+<article class="promo-section reveal active">
+<div class="promo-media">
+<img src="assets/images/image2.jpg" alt="Vehicle owners growing their rental business with DriveHive" />
+<div class="promo-stat-card">
+<span class="material-symbols-outlined">trending_up</span>
+<div>
+<strong>Earn from idle vehicles</strong>
+<p>Turn underused cars and bikes into a managed rental income stream.</p>
 </div>
 </div>
-</section>
-<!-- Platform Highlights -->
-<section class="max-w-7xl mx-auto px-gutter">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg">
-<div class="flex items-center gap-4 p-6 rounded-full bg-surface-container/40 backdrop-blur-xl border border-white/10 reveal active">
-<span class="material-symbols-outlined text-primary-container">verified</span>
-<span class="font-semibold text-primary">Verified Vehicles</span>
 </div>
-<div class="flex items-center gap-4 p-6 rounded-full bg-surface-container/40 backdrop-blur-xl border border-white/10 reveal active" style="transition-delay: 100ms;">
-<span class="material-symbols-outlined text-primary-container">calendar_today</span>
-<span class="font-semibold text-primary">Flexible Rentals</span>
-</div>
-<div class="flex items-center gap-4 p-6 rounded-full bg-surface-container/40 backdrop-blur-xl border border-white/10 reveal active" style="transition-delay: 200ms;">
-<span class="material-symbols-outlined text-primary-container">support_agent</span>
-<span class="font-semibold text-primary">24/7 Priority Support</span>
+<div class="promo-content">
+<p class="promo-eyebrow">For vehicle owners</p>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">Put your vehicle to work while DriveHive handles the rental experience.</h2>
+<p class="text-on-surface-variant text-body-lg mb-8">List your car or bike, manage availability, and reach customers looking for trusted rentals. DriveHive gives owners a polished host hub for listings, booking visibility, and simple fleet control.</p>
+<div class="promo-feature-grid">
+<div class="promo-feature">
+<span class="material-symbols-outlined">payments</span>
+<div>
+<strong>Income-ready listings</strong>
+<p>Show pricing, specs, photos, and availability in one premium rental profile.</p>
 </div>
 </div>
+<div class="promo-feature">
+<span class="material-symbols-outlined">garage_home</span>
+<div>
+<strong>Fleet control</strong>
+<p>Add, update, or remove vehicles anytime through the Host Hub.</p>
+</div>
+</div>
+<div class="promo-feature">
+<span class="material-symbols-outlined">visibility</span>
+<div>
+<strong>Booking visibility</strong>
+<p>View customer bookings for your vehicles without taking over customer actions.</p>
+</div>
+</div>
+<div class="promo-feature">
+<span class="material-symbols-outlined">verified_user</span>
+<div>
+<strong>Trusted marketplace</strong>
+<p>Build confidence with transparent details and a consistent rental flow.</p>
+</div>
+</div>
+</div>
+<a class="promo-link" href="admin.html">Open Host Hub <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+</article>
+
+<article class="promo-section promo-section-reverse reveal active">
+<div class="promo-media">
+<img src="assets/images/scenic mountains.jpg" alt="Open road for DriveHive vehicle renters" />
+<div class="promo-stat-card">
+<span class="material-symbols-outlined">route</span>
+<div>
+<strong>Book the right ride faster</strong>
+<p>Browse verified vehicles and reserve a flexible rental in minutes.</p>
+</div>
+</div>
+</div>
+<div class="promo-content">
+<p class="promo-eyebrow">For renters</p>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">Find verified vehicles for everyday plans, weekend escapes, and everything between.</h2>
+<p class="text-on-surface-variant text-body-lg mb-8">DriveHive makes renting feel simple and dependable with clear vehicle details, upfront pricing, easy booking, and booking history that stays organized after every trip.</p>
+<div class="promo-feature-grid">
+<div class="promo-feature">
+<span class="material-symbols-outlined">directions_car</span>
+<div>
+<strong>Verified choices</strong>
+<p>Compare cars and bikes with clear specs, photos, and daily rates.</p>
+</div>
+</div>
+<div class="promo-feature">
+<span class="material-symbols-outlined">event_available</span>
+<div>
+<strong>Easy booking</strong>
+<p>Select dates, pickup and dropoff locations, then confirm in a guided flow.</p>
+</div>
+</div>
+<div class="promo-feature">
+<span class="material-symbols-outlined">savings</span>
+<div>
+<strong>Affordable flexibility</strong>
+<p>Choose the vehicle and rental window that fits your plan and budget.</p>
+</div>
+</div>
+<div class="promo-feature">
+<span class="material-symbols-outlined">support_agent</span>
+<div>
+<strong>Trusted support</strong>
+<p>Track bookings, cancellations, and status updates from your account.</p>
+</div>
+</div>
+</div>
+<a class="promo-link" href="listings.html">Browse Vehicles <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+</article>
 </section>
 </main>
 <!-- Footer -->

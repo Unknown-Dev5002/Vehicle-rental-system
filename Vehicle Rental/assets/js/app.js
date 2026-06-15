@@ -15,6 +15,20 @@ function formatINR(amount) {
   return `\u20B9${INR.format(amount)}`;
 }
 
+function formatBookingDateTime(value) {
+  if (!value) return "N/A";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  }).format(date).replace(/\b(am|pm)\b/i, (period) => period.toUpperCase());
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -1623,7 +1637,221 @@ async function deleteVehicle(id) {
   await fetchVehicles();
   notify("adminNotice", "Vehicle deleted successfully.");
   await renderAdminVehicles();
+  await renderOwnerBookings();
   await renderListings();
+}
+
+async function renderOwnerBookings() {
+  const list = document.getElementById("ownerBookingsList");
+  if (!list) return;
+
+  const token = getAuthToken();
+  if (!token) {
+    list.innerHTML = `<div class="card"><p class="small">Log in to view bookings for your listed vehicles.</p></div>`;
+    return;
+  }
+
+  const statusLabel = (status) => {
+    const value = String(status || "pending").toLowerCase();
+    if (value === "confirmed") return "Confirmed";
+    if (value === "cancelled") return "Cancelled";
+    if (value === "pending_payment") return "Pending Payment";
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  };
+
+  const formatLocation = (location) => {
+    if (!location) return "Not specified";
+    if (typeof location === "string") return location;
+    return location.address || "Not specified";
+  };
+
+  list.innerHTML = `<div class="card"><p class="small">Loading customer bookings...</p></div>`;
+
+  try {
+    const response = await fetch(`${API_BASE}/bookings/owner`, {
+      cache: "no-store",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const bookings = await response.json().catch(() => []);
+    if (!response.ok) throw new Error(bookings.message || "Failed to load owner bookings");
+
+    if (!Array.isArray(bookings) || bookings.length === 0) {
+      list.innerHTML = `<div class="card"><p class="small">No bookings have been made for your listed vehicles yet.</p></div>`;
+      return;
+    }
+
+    list.innerHTML = bookings.map((booking) => {
+      const status = String(booking.status || "").toLowerCase();
+      const isCancelled = status === "cancelled";
+      const isConfirmed = status === "confirmed";
+      return `
+        <article class="card booking-history-card">
+          <div class="booking-history-head">
+            <div>
+              <span class="small">Booking ID</span>
+              <h2>${escapeHtml(booking.id || booking.bookingId)}</h2>
+            </div>
+            <span class="booking-status ${isCancelled ? "cancelled" : isConfirmed ? "confirmed" : "pending"}">${escapeHtml(statusLabel(status))}</span>
+          </div>
+          <div class="booking-detail-grid">
+            <p><span>Vehicle</span>${escapeHtml(booking.vehicleName || booking.vehicleId || "Vehicle")}</p>
+            <p><span>Customer</span>${escapeHtml(booking.user || "Customer")}</p>
+            <p><span>Pickup</span>${escapeHtml(formatBookingDateTime(booking.pickup || booking.pickupDate))}</p>
+            <p><span>Dropoff</span>${escapeHtml(formatBookingDateTime(booking.dropoff || booking.dropoffDate))}</p>
+            <p><span>Total</span>${formatINR(Number(booking.total || booking.totalPrice || 0))}</p>
+            <p><span>Payment</span>${escapeHtml(statusLabel(booking.paymentStatus || "pending"))}</p>
+          </div>
+          <div class="booking-locations">
+            <p><span>Pickup Location</span>${escapeHtml(formatLocation(booking.pickupLocation))}</p>
+            <p><span>Dropoff Location</span>${escapeHtml(formatLocation(booking.dropoffLocation))}</p>
+          </div>
+        </article>
+      `;
+    }).join("");
+  } catch (err) {
+    list.innerHTML = "";
+    notify("ownerBookingsNotice", err?.message || "Unable to load customer bookings.", true);
+  }
+}
+
+async function handleMyBookingsPage() {
+  const bookingsList = document.getElementById("myBookingsList");
+  if (!bookingsList) return;
+
+  const noticeId = "myBookingsNotice";
+  const token = getAuthToken();
+  if (!token) {
+    bookingsList.innerHTML = `
+      <div class="card booking-empty">
+        <h2>Please log in to view your bookings</h2>
+        <p class="small">Your booking history is tied to your DriveHive account.</p>
+        <a class="btn" href="login.html">Login</a>
+      </div>
+    `;
+    return;
+  }
+
+  const statusLabel = (status) => {
+    const value = String(status || "pending").toLowerCase();
+    if (value === "confirmed") return "Confirmed";
+    if (value === "cancelled") return "Cancelled";
+    if (value === "pending_payment") return "Pending Payment";
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  };
+
+  const formatLocation = (location) => {
+    if (!location) return "Not specified";
+    if (typeof location === "string") return location;
+    return location.address || "Not specified";
+  };
+
+  const renderBookings = async () => {
+    bookingsList.innerHTML = `<div class="card"><p class="small">Loading your bookings...</p></div>`;
+
+    try {
+      const [bookingsResponse, vehicles] = await Promise.all([
+        fetch(`${API_BASE}/bookings/my`, {
+          cache: "no-store",
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        getVehicles()
+      ]);
+
+      if (bookingsResponse.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("vr_session");
+        localStorage.removeItem("vr_role");
+        localStorage.removeItem("vr_user_email");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const bookings = await bookingsResponse.json().catch(() => []);
+      if (!bookingsResponse.ok) {
+        throw new Error(bookings.message || "Failed to load bookings");
+      }
+
+      if (!Array.isArray(bookings) || bookings.length === 0) {
+        bookingsList.innerHTML = `
+          <div class="card booking-empty">
+            <h2>No bookings yet</h2>
+            <p class="small">Your confirmed and cancelled bookings will appear here.</p>
+            <a class="btn" href="listings.html">Browse Vehicles</a>
+          </div>
+        `;
+        return;
+      }
+
+      const vehicleNames = new Map(vehicles.map((vehicle) => [String(vehicle.id), vehicle.name]));
+      bookingsList.innerHTML = bookings.map((booking) => {
+        const status = String(booking.status || "").toLowerCase();
+        const canCancel = status === "confirmed";
+        const isCancelled = status === "cancelled";
+        const bookingId = booking.id || booking.bookingId;
+        return `
+          <article class="card booking-history-card">
+            <div class="booking-history-head">
+              <div>
+                <span class="small">Booking ID</span>
+                <h2>${escapeHtml(bookingId)}</h2>
+              </div>
+              <span class="booking-status ${isCancelled ? "cancelled" : canCancel ? "confirmed" : "pending"}">${escapeHtml(statusLabel(status))}</span>
+            </div>
+            <div class="booking-detail-grid">
+              <p><span>Vehicle</span>${escapeHtml(vehicleNames.get(String(booking.vehicleId)) || booking.vehicleId || "Vehicle")}</p>
+              <p><span>Pickup</span>${escapeHtml(formatBookingDateTime(booking.pickup || booking.pickupDate))}</p>
+              <p><span>Dropoff</span>${escapeHtml(formatBookingDateTime(booking.dropoff || booking.dropoffDate))}</p>
+              <p><span>Total</span>${formatINR(Number(booking.total || booking.totalPrice || 0))}</p>
+              <p><span>Payment</span>${escapeHtml(statusLabel(booking.paymentStatus || "pending"))}</p>
+            </div>
+            <div class="booking-locations">
+              <p><span>Pickup Location</span>${escapeHtml(formatLocation(booking.pickupLocation))}</p>
+              <p><span>Dropoff Location</span>${escapeHtml(formatLocation(booking.dropoffLocation))}</p>
+            </div>
+            <div class="booking-actions">
+              ${
+                canCancel
+                  ? `<button type="button" class="cancel-booking-btn" data-booking-id="${escapeHtml(bookingId)}">Cancel Booking</button>`
+                  : `<button type="button" disabled>${isCancelled ? "Cancelled" : "Cancel unavailable"}</button>`
+              }
+            </div>
+          </article>
+        `;
+      }).join("");
+    } catch (err) {
+      bookingsList.innerHTML = "";
+      notify(noticeId, err?.message || "Unable to load your bookings.", true);
+    }
+  };
+
+  bookingsList.addEventListener("click", async (event) => {
+    const button = event.target.closest(".cancel-booking-btn");
+    if (!button) return;
+
+    const bookingId = button.dataset.bookingId;
+    if (!bookingId) return;
+    if (!window.confirm("Cancel this booking? This action cannot be undone.")) return;
+
+    button.disabled = true;
+    button.textContent = "Cancelling...";
+
+    try {
+      const response = await fetch(`${API_BASE}/bookings/${encodeURIComponent(bookingId)}/cancel`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.message || "Failed to cancel booking");
+      notify(noticeId, "Booking cancelled successfully.");
+      await renderBookings();
+    } catch (err) {
+      notify(noticeId, err?.message || "Unable to cancel this booking.", true);
+      button.disabled = false;
+      button.textContent = "Cancel Booking";
+    }
+  });
+
+  await renderBookings();
 }
 
 function handleAdminPanel() {
@@ -1674,6 +1902,7 @@ function handleAdminPanel() {
       notify("adminNotice", existingId ? "Vehicle updated successfully." : "Vehicle added successfully.");
       resetVehicleForm();
       await renderAdminVehicles();
+      await renderOwnerBookings();
       await populateVehicleSelect();
       await renderListings();
     } catch (err) {
@@ -1681,6 +1910,7 @@ function handleAdminPanel() {
     }
   });
   renderAdminVehicles();
+  renderOwnerBookings();
 }
 
 function notify(targetId, message, isError = false) {
@@ -1696,6 +1926,7 @@ async function init() {
   handleDashboard();
   handleAuthForms();
   handleBookingFlow();
+  await handleMyBookingsPage();
   handleSupport();
   renderOffers();
   renderBlog();

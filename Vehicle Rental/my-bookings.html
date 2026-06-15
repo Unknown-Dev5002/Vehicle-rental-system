@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings | DriveHive</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="bookings">
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">DriveHive</a>
+    <nav class="nav-links">
+      <a data-page="home" href="dashboard.html">Dashboard</a>
+      <a data-page="listings" href="listings.html">Listings</a>
+      <a data-page="bookings" href="my-bookings.html">My Bookings</a>
+      <a data-page="about" href="about.html">About</a>
+      <a data-page="contact" href="contact.html">Contact</a>
+      <a data-page="blog" href="blog.html">Blog</a>
+      <a data-page="support" href="support.html">Support</a>
+      <a data-page="login" href="login.html">Login</a>
+    </nav>
+  </div>
+</header>
+<main class="container page-section">
+  <section class="hero compact-hero">
+    <div>
+      <p class="small">Booking history</p>
+      <h1>My Bookings</h1>
+      <p>View your vehicle rentals, track current status, and cancel confirmed bookings when needed.</p>
+    </div>
+    <div class="card booking-summary-card">
+      <strong>Active bookings can be cancelled here.</strong>
+      <p class="small">Cancelled bookings stay visible in your history and cannot be cancelled again.</p>
+    </div>
+  </section>
+  <div id="myBookingsNotice"></div>
+  <section id="myBookingsList" class="booking-history-list" aria-live="polite"></section>
+</main>
+<footer class="footer">
+  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+</footer>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

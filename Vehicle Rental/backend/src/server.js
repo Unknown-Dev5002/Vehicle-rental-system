@@ -433,18 +433,24 @@ require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") }
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const CloudinaryStorage = require("multer-storage-cloudinary");
+      const {CloudinaryStorage} = require("multer-storage-cloudinary");
 const cloudinary = require("./cloudinary");
 const { sendBookingConfirmationEmail, sendContactEmail, hasSmtpCredentials } = require("./email");
 const authRoutes = require("./routes/authRoutes");
+const { authenticate } = require("./middleware/authMiddleware");
 
 const app = express();
 const PORT = 5000;
-
-const storage = CloudinaryStorage({
-  cloudinary: { v2: cloudinary },
-  folder: "drivehive-vehicles"
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "drivehive-vehicles"
+  }
 });
+// const storage =CloudinaryStorage({
+  // cloudinary: { v2: cloudinary },
+  // folder: "drivehive-vehicles"
+// });
 const upload = multer({
   storage,
   fileFilter: (_req, file, cb) => {
@@ -480,6 +486,22 @@ function getBookingRecipientEmail(booking) {
   const details = booking.userDetails || {};
   const candidate = String(details.email || details.user || "").trim();
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate) ? candidate : "";
+}
+
+function getBookingCustomerEmail(row) {
+  let details = row?.userDetails || {};
+  if (typeof details === "string") {
+    try {
+      details = JSON.parse(details);
+    } catch (_err) {
+      details = {};
+    }
+  }
+  return String(details.email || details.user || "").trim().toLowerCase();
+}
+
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function toBooking(row) {
@@ -704,6 +726,73 @@ app.get("/api/bookings", async (_req, res) => {
   }
 });
 
+app.get("/api/bookings/my", authenticate, async (req, res) => {
+  const email = String(req.user?.email || "").trim().toLowerCase();
+  if (!email) return res.status(401).json({ message: "Authentication token invalid" });
+
+  try {
+    const emailPattern = new RegExp(`^${escapeRegex(email)}$`, "i");
+    const rows = await Booking.find({
+      $or: [
+        { "userDetails.email": emailPattern },
+        { "userDetails.user": emailPattern }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const bookings = rows.map((row) =>
+      toBooking({
+        ...row,
+        userDetails:
+          typeof row.userDetails === "string"
+            ? row.userDetails
+            : JSON.stringify(row.userDetails || {})
+      })
+    );
+
+    res.json(bookings);
+  } catch (err) {
+    console.error("[bookings] fetch user bookings failed", err);
+    res.status(500).json({ message: "Failed to fetch your bookings" });
+  }
+});
+
+app.get("/api/bookings/owner", authenticate, async (req, res) => {
+  const email = String(req.user?.email || "").trim().toLowerCase();
+  if (!email) return res.status(401).json({ message: "Authentication token invalid" });
+
+  try {
+    const ownerPattern = new RegExp(`^${escapeRegex(email)}$`, "i");
+    const vehicles = await Vehicle.find({ ownerEmail: ownerPattern }, { _id: 1, name: 1 })
+      .lean();
+    const vehicleIds = vehicles.map((vehicle) => String(vehicle._id));
+    const vehicleNames = new Map(vehicles.map((vehicle) => [String(vehicle._id), vehicle.name]));
+
+    if (vehicleIds.length === 0) return res.json([]);
+
+    const rows = await Booking.find({ vehicleId: { $in: vehicleIds } })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const bookings = rows.map((row) => ({
+      ...toBooking({
+        ...row,
+        userDetails:
+          typeof row.userDetails === "string"
+            ? row.userDetails
+            : JSON.stringify(row.userDetails || {})
+      }),
+      vehicleName: vehicleNames.get(String(row.vehicleId)) || row.vehicleId
+    }));
+
+    res.json(bookings);
+  } catch (err) {
+    console.error("[bookings] fetch owner bookings failed", err);
+    res.status(500).json({ message: "Failed to fetch bookings for your vehicles" });
+  }
+});
+
 app.get("/api/bookings/:id", async (req, res) => {
   const id = String(req.params.id || "").trim();
 
@@ -724,6 +813,49 @@ app.get("/api/bookings/:id", async (req, res) => {
   }
 });
 
+app.patch("/api/bookings/:id/cancel", authenticate, async (req, res) => {
+  const id = String(req.params.id || "").trim();
+  const email = String(req.user?.email || "").trim().toLowerCase();
+
+  if (!id) return res.status(400).json({ message: "Invalid booking ID" });
+  if (!email) return res.status(401).json({ message: "Authentication token invalid" });
+
+  try {
+    const existing = await Booking.findOne({ bookingId: id }).lean();
+    if (!existing) return res.status(404).json({ message: "Booking not found" });
+
+    const customerEmail = getBookingCustomerEmail(existing);
+    if (!customerEmail || customerEmail !== email) {
+      return res.status(403).json({ message: "Only the customer who made this booking can cancel it" });
+    }
+
+    if (String(existing.status || "").toLowerCase() === "cancelled") {
+      return res.status(400).json({ message: "Booking is already cancelled" });
+    }
+
+    if (String(existing.status || "").toLowerCase() !== "confirmed") {
+      return res.status(400).json({ message: "Only confirmed bookings can be cancelled" });
+    }
+
+    const row = await Booking.findOneAndUpdate(
+      { bookingId: id },
+      { status: "cancelled" },
+      { new: true }
+    ).lean();
+
+    res.json(toBooking({
+      ...row,
+      userDetails:
+        typeof row.userDetails === "string"
+          ? row.userDetails
+          : JSON.stringify(row.userDetails || {})
+    }));
+  } catch (err) {
+    console.error("[bookings] cancellation failed", err);
+    res.status(500).json({ message: "Failed to cancel booking" });
+  }
+});
+
 app.post("/api/bookings", async (req, res) => {
   const bookingId = String(req.body.id || req.body.bookingId || `BK-${Date.now()}`);
   const vehicleId = String(req.body.vehicleId || "");
@@ -734,7 +866,7 @@ app.post("/api/bookings", async (req, res) => {
     return res.status(400).json({ message: "Missing booking details" });
   }
 
-  const userEmail = String(req.body.user || req.body.email || "").trim();
+  const userEmail = String(req.body.user || req.body.email || "").trim().toLowerCase();
   const userDetails = {
     user: userEmail || "guest",
     email: userEmail || null,

@@ -98,8 +98,9 @@ function setActiveNav() {
 }
 
 function updateAuthNav() {
-  const loginLink = document.querySelector(".nav-links a[data-page='login']")
-    || document.getElementById("navLoginLink");
+  const loginLink = document.querySelector(".nav-links a[data-page='login']") 
+    || document.getElementById("navLoginLink")
+    || document.querySelector("nav .flex.gap-stack-md a:first-child");
   if (!loginLink) return;
   if (isLoggedIn()) {
     loginLink.textContent = "Logout";
@@ -1235,6 +1236,7 @@ const blogArticles = [
     id: 1,
     title: "Ultimate Mountain Road Trip Guide: Himalayan Adventures",
     category: "Travel Guide",
+    image: "assets/images/mountain-landscape-1.jpg",
     excerpt: "Discover the best mountain routes from Manali to Leh-Ladakh, Shimla, and the Himalayas. Perfect itineraries, road conditions, and must-visit mountain destinations.",
     readTime: "8 min read",
     tags: ["Mountain Road Trip", "Himalayas", "Leh-Ladakh", "Adventure"],
@@ -1277,6 +1279,7 @@ const blogArticles = [
     id: 2,
     title: "Mountain Vehicle Hacks: Conquer Any Peak",
     category: "Rental Tips",
+    image: "assets/images/mountain-vehicle.jpg",
     excerpt: "Essential tips for renting and driving vehicles in mountain terrain. These hacks will help you conquer any mountain safely and confidently.",
     readTime: "6 min read",
     tags: ["Mountain Driving", "Vehicle Hacks", "Safety", "Adventure"],
@@ -1314,6 +1317,7 @@ const blogArticles = [
     id: 3,
     title: "Mountain Driving Mastery: Navigate Peaks Like a Pro",
     category: "Driving Tips",
+    image: "assets/images/mountain-pass.jpg",
     excerpt: "Master the art of mountain driving with these insider tips. From handling hairpin bends to altitude sickness, become a confident mountain driver.",
     readTime: "7 min read",
     tags: ["Mountain Driving", "Altitude", "Safety", "Technique"],
@@ -1347,6 +1351,7 @@ const blogArticles = [
     id: 4,
     title: "Budget Mountain Travel: Live Like a King in the Peaks",
     category: "Budget Travel",
+    image: "assets/images/mountain-resort.jpg",
     excerpt: "Travel mountain destinations like royalty while spending like a backpacker. These insider hacks will help you experience luxury mountain stays without the luxury price tag.",
     readTime: "9 min read",
     tags: ["Budget Travel", "Mountains", "Luxury Hacks", "Accommodation"],
@@ -1379,6 +1384,7 @@ const blogArticles = [
     id: 5,
     title: "Electric Mountain Vehicle Adventures: Complete Guide",
     category: "EV Travel",
+    image: "assets/images/mountain-vehicle.jpg",
     excerpt: "Everything you need to know about EV mountain travel across mountain ranges. Charging stations, range planning, and best electric vehicles for mountain journeys.",
     readTime: "10 min read",
     tags: ["Electric Vehicle", "Mountains", "Charging", "Adventure"],
@@ -1411,6 +1417,7 @@ const blogArticles = [
     id: 6,
     title: "Hidden Mountain Gems: Offbeat Peak Adventures",
     category: "Travel Guide",
+    image: "assets/images/mountain-valley.jpg",
     excerpt: "Beyond the usual mountain tourist spots. Discover lesser-known mountain destinations that offer authentic peak experiences and solitude.",
     readTime: "7 min read",
     tags: ["Hidden Mountains", "Offbeat Travel", "Peaks", "Solitude"],
@@ -1443,6 +1450,8 @@ const blogArticles = [
 
 // Enhanced blog function with Read More functionality
 function renderBlog() {
+  if (document.querySelector(".blog-page")) return;
+
   handleLocationDetection();
   renderDestinations();
   
@@ -1857,3 +1866,10 @@ document.addEventListener("DOMContentLoaded", init);
 window.renderListings = renderListings;
 window.editVehicle = editVehicle;
 window.deleteVehicle = deleteVehicle;
+window.indianDestinations = indianDestinations;
+window.indianCities = indianCities;
+window.blogArticles = blogArticles;
+window.calculateDistance = calculateDistance;
+window.calculateTravelTime = calculateTravelTime;
+window.showArticle = showArticle;
+window.viewDestinationDetails = viewDestinationDetails;

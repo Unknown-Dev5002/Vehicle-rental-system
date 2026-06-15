@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us</title>
+  <title>Contact Us — DriveHive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/contact-redesign.css" />
 </head>
 <body data-page="contact">
 <header>
@@ -21,20 +25,83 @@
     </nav>
   </div>
 </header>
-<main class="container">
-<h1>Contact Us</h1>
-<form class="card">
-  <label>Topic</label><select><option>General</option><option>Booking</option><option>Partnership</option><option>Complaint</option></select>
-  <label>Name</label><input required />
-  <label>Email</label><input type="email" required />
-  <label>Message</label><textarea required></textarea>
-  <button type="submit">Send Message</button>
-</form>
-<div class="card"><p>Phone: +1-800-DRIVE</p><p>Email: help@drivehive.com</p><p>Map: Main Office, Downtown Mobility Hub</p></div>
+
+<main class="contact-page">
+
+  <section class="contact-hero">
+    <div class="container">
+      <span class="contact-badge">Get in Touch</span>
+      <h1>Contact DriveHive</h1>
+      <p>Have a question about bookings, partnerships, or support? Send us a message and our team will respond within 24 hours.</p>
+    </div>
+  </section>
+
+  <section class="contact-main">
+    <div class="container contact-layout">
+
+      <div class="contact-info">
+        <h2>Reach Our Team</h2>
+        <p>We're here to help with rentals, vehicle listings, and general inquiries.</p>
+
+        <div class="info-cards">
+          <div class="info-card">
+            <span class="info-label">Email</span>
+            <a href="mailto:drivehive.notofications@gmail.com">drivehive.notofications@gmail.com</a>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Phone</span>
+            <p>+91 1800-DRIVE-HIVE</p>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Office</span>
+            <p>DriveHive Mobility Hub, Hyderabad, India</p>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Support Hours</span>
+            <p>Monday – Sunday, 24/7 online support</p>
+          </div>
+        </div>
+
+        <div class="info-links">
+          <a href="support.html" class="btn secondary">Visit Support Center</a>
+          <a href="faqs.html" class="btn secondary">Read FAQs</a>
+        </div>
+      </div>
+
+      <form id="contactForm" class="contact-form card" novalidate>
+        <h2>Send a Message</h2>
+        <p class="form-intro">Fill in the form below and we'll get back to you by email.</p>
+
+        <label for="contactTopic">Topic</label>
+        <select id="contactTopic" name="topic" required>
+          <option value="General">General Inquiry</option>
+          <option value="Booking">Booking Support</option>
+          <option value="Partnership">Partnership</option>
+          <option value="Complaint">Complaint</option>
+        </select>
+
+        <label for="contactName">Full Name</label>
+        <input id="contactName" name="name" type="text" placeholder="Your name" required autocomplete="name" />
+
+        <label for="contactEmail">Email Address</label>
+        <input id="contactEmail" name="email" type="email" placeholder="you@example.com" required autocomplete="email" />
+
+        <label for="contactMessage">Message</label>
+        <textarea id="contactMessage" name="message" rows="6" placeholder="How can we help you?" required></textarea>
+
+        <button type="submit" id="contactSubmitBtn">Send Message</button>
+        <div id="contactNotice" class="contact-notice" role="status" aria-live="polite"></div>
+      </form>
+
+    </div>
+  </section>
+
 </main>
+
 <footer class="footer">
-  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+  <div class="container">DriveHive — Secure bookings, flexible plans, 24/7 support.</div>
 </footer>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/contact.js"></script>
 </body>
 </html>

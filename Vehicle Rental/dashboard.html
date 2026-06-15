@@ -4,131 +4,209 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | DriveHive</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#fff5dc",
+                        "primary-container": "#ffd60a",
+                        "on-primary-container": "#3b2f00",
+                        "background": "#111415",
+                        "surface": "#111415",
+                        "surface-container": "#1e2021",
+                        "surface-container-high": "#282a2c",
+                        "on-surface": "#e2e2e4",
+                        "on-surface-variant": "#d0c6ab",
+                        "outline": "#999077"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-h": "64px",
+                        "stack-sm": "8px",
+                        "gutter": "24px",
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "card-p": "32px",
+                        "section-v": "120px"
+                    },
+                    "fontFamily": {
+                        "display-hero": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-hero": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                        "headline-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
 </head>
-<body data-page="home">
-<header>
-  <div class="container nav">
-    <a class="brand" href="index.html">DriveHive</a>
-    <nav class="nav-links">
-      <a data-page="home" href="dashboard.html">Dashboard</a>
-      <a data-page="listings" href="listings.html">Listings</a>
-      <a data-page="about" href="about.html">About</a>
-      <a data-page="contact" href="contact.html">Contact</a>
-      <a data-page="blog" href="blog.html">Blog</a>
-      <a data-page="support" href="support.html">Support</a>
-      <a data-page="login" href="login.html">Login</a>
-    </nav>
-  </div>
-</header>
-<main class="container">
-  <!-- Hero Section with Welcome Message -->
-  <section class="dashboard-hero">
-    <div class="hero-content">
-      <h1>Welcome to DriveHive</h1>
-      <p>Your premium vehicle rental platform starts here. Whether you're looking to rent or list vehicles, we've got you covered.</p>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-number" id="totalVehicles">12+</div>
-          <div class="stat-label">Available Vehicles</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" id="happyCustomers">500+</div>
-          <div class="stat-label">Happy Customers</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" id="citiesCovered">15+</div>
-          <div class="stat-label">Cities Covered</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- User Welcome Panel -->
-  <div id="dashboardPanel" class="user-welcome"></div>
-
-  <!-- Quick Actions Grid -->
-  <section class="quick-actions">
-    <h2>Quick Actions</h2>
-    <div class="grid">
-      <article class="card action-card">
-        <div class="card-icon">🚗</div>
-        <h3>Host Your Vehicle</h3>
-        <p>Add your vehicle, manage details, and earn from customer rentals.</p>
-        <div class="card-features">
-          <span>✓ Easy Listing</span>
-          <span>✓ Best Rates</span>
-          <span>✓ Quick Payouts</span>
-        </div>
-        <a class="btn" href="admin.html">Open Host Hub</a>
-      </article>
-      <article class="card action-card">
-        <div class="card-icon">🔍</div>
-        <h3>Browse Vehicles</h3>
-        <p>Browse cars and bikes, compare daily prices, and continue with booking.</p>
-        <div class="card-features">
-          <span>✓ Best Prices</span>
-          <span>✓ Verified Vehicles</span>
-          <span>✓ Instant Booking</span>
-        </div>
-        <a class="btn secondary" href="listings.html">Open Listings</a>
-      </article>
-    </div>
-  </section>
-
-  <!-- Recent Activity Section -->
-  <section class="recent-activity">
-    <h2>Recent Activity</h2>
-    <div class="activity-grid">
-      <div class="activity-item">
-        <div class="activity-icon">📈</div>
-        <div class="activity-content">
-          <h4>Platform Growth</h4>
-          <p>15% increase in bookings this month</p>
-        </div>
-      </div>
-      <div class="activity-item">
-        <div class="activity-icon">🏆</div>
-        <div class="activity-content">
-          <h4>Top Rated</h4>
-          <p>4.8/5 average customer rating</p>
-        </div>
-      </div>
-      <div class="activity-item">
-        <div class="activity-icon">⚡</div>
-        <div class="activity-content">
-          <h4>Quick Support</h4>
-          <p>24/7 customer assistance available</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Destinations -->
-  <section class="featured-destinations">
-    <h2>Popular Destinations</h2>
-    <div class="destinations-preview">
-      <div class="destination-item">
-        <img src="https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Goa" />
-        <h4>Goa Beaches</h4>
-        <p>Perfect for weekend getaways</p>
-      </div>
-      <div class="destination-item">
-        <img src="https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Rajasthan" />
-        <h4>Rajasthan Tours</h4>
-        <p>Heritage and adventure combined</p>
-      </div>
-      <div class="destination-item">
-        <img src="https://images.pexels.com/photos/1366949/pexels-photo-1366949.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Kerala" />
-        <h4>Kerala Backwaters</h4>
-        <p>Serene houseboat experiences</p>
-      </div>
-    </div>
-  </section>
+<body class="font-body-md text-on-surface bg-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-gutter py-4">
+<div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+<div class="font-headline-md text-headline-md font-extrabold text-primary-container tracking-tighter">DriveHive</div>
+<div class="hidden md:flex gap-stack-lg items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors duration-300" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="listings.html">Listings</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="about.html">About</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="blog.html">Blog</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="support.html">Support</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="contact.html">Contact</a>
+</div>
+<div class="flex gap-stack-md">
+<a class="px-6 py-2 rounded-full font-label-sm text-label-sm font-semibold border border-outline hover:bg-surface-container-high transition-all" href="login.html">Login</a>
+<a class="px-6 py-2 rounded-full font-label-sm text-label-sm font-semibold bg-primary-container text-on-primary-container magnetic-button" href="dashboard.html">Dashboard</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-32 pb-section-v">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-gutter mb-section-v text-center bg-gradient-to-b from-surface to-surface-bright py-section-v">
+<div class="reveal active">
+<h1 class="font-display-hero text-display-hero text-primary mb-6">Welcome to DriveHive</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-2xl mx-auto">Discover verified vehicles, manage bookings, and enjoy seamless rentals anytime, anywhere.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-stack-md">
+<a class="px-10 py-4 rounded-full font-bold bg-primary-container text-on-primary-container magnetic-button shadow-xl shadow-primary-container/20 flex items-center justify-center gap-2 transition-transform hover:scale-105" href="listings.html">
+                        Browse Vehicles <span class="material-symbols-outlined">directions_car</span>
+</a>
+<a class="px-10 py-4 rounded-full font-bold border border-outline text-on-surface hover:bg-surface-container-high transition-all flex items-center justify-center gap-2" href="admin.html">
+                        Admin Dashboard <span class="material-symbols-outlined">dashboard</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Quick Access Action Cards -->
+<section class="max-w-7xl mx-auto px-gutter mb-section-v">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<a class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-10 glow-effect group reveal active transition-all duration-300 hover:scale-[1.02]" href="listings.html">
+<div class="w-16 h-16 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-8 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[40px]">explore</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Quick Booking</h3>
+<p class="text-on-surface-variant text-body-lg mb-8">Reserve your preferred vehicle in minutes</p>
+<div class="flex items-center text-primary-container font-bold gap-2 group-hover:translate-x-2 transition-transform">
+                        Explore Listings <span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</a>
+<a class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-10 glow-effect group reveal active transition-all duration-300 hover:scale-[1.02]" href="dashboard.html" style="transition-delay: 100ms;">
+<div class="w-16 h-16 bg-primary-container/10 rounded-2xl flex items-center justify-center text-primary-container mb-8 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[40px]">admin_panel_settings</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Fleet Management</h3>
+<p class="text-on-surface-variant text-body-lg mb-8">Manage Listings, Bookings and vehicle availability</p>
+<div class="flex items-center text-primary-container font-bold gap-2 group-hover:translate-x-2 transition-transform">
+                        Go to Admin <span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</a>
+</div>
+</section>
+<!-- Why Choose DriveHive / Features -->
+<section class="max-w-7xl mx-auto px-gutter mb-section-v">
+<div class="text-center mb-16 reveal active">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Why Choose DriveHive</h2>
+<div class="w-24 h-1 bg-primary-container mx-auto rounded-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 reveal active transition-all duration-300 hover:border-primary/30">
+<div class="text-primary-container mb-6">
+<span class="material-symbols-outlined text-[48px]">library_add_check</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-primary mb-3">Instant Verification</h4>
+<p class="text-on-surface-variant">Every vehicle is verified for safety and reliability.</p>
+</div>
+<div class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 reveal active transition-all duration-300 hover:border-primary/30" style="transition-delay: 100ms;">
+<div class="text-primary-container mb-6">
+<span class="material-symbols-outlined text-[48px]">shield_check</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-primary mb-3">Secure Rentals</h4>
+<p class="text-on-surface-variant">Protected bookings with trusted payment security.</p>
+</div>
+<div class="bg-surface-container/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 reveal active transition-all duration-300 hover:border-primary/30" style="transition-delay: 200ms;">
+<div class="text-primary-container mb-6">
+<span class="material-symbols-outlined text-[48px]">speed</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-primary mb-3">Fast Performance</h4>
+<p class="text-on-surface-variant">Smooth browsing and lightning-fast booking experience.</p>
+</div>
+</div>
+</section>
+<!-- Platform Highlights -->
+<section class="max-w-7xl mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg">
+<div class="flex items-center gap-4 p-6 rounded-full bg-surface-container/40 backdrop-blur-xl border border-white/10 reveal active">
+<span class="material-symbols-outlined text-primary-container">verified</span>
+<span class="font-semibold text-primary">Verified Vehicles</span>
+</div>
+<div class="flex items-center gap-4 p-6 rounded-full bg-surface-container/40 backdrop-blur-xl border border-white/10 reveal active" style="transition-delay: 100ms;">
+<span class="material-symbols-outlined text-primary-container">calendar_today</span>
+<span class="font-semibold text-primary">Flexible Rentals</span>
+</div>
+<div class="flex items-center gap-4 p-6 rounded-full bg-surface-container/40 backdrop-blur-xl border border-white/10 reveal active" style="transition-delay: 200ms;">
+<span class="material-symbols-outlined text-primary-container">support_agent</span>
+<span class="font-semibold text-primary">24/7 Priority Support</span>
+</div>
+</div>
+</section>
 </main>
-<footer class="footer">
-  <div class="container">DriveHive - Secure bookings, flexible plans, 24/7 support.</div>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-white/10 py-section-v px-gutter">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-stack-lg">
+<div class="max-w-xs">
+<div class="font-headline-md text-headline-md font-bold text-primary mb-6">DriveHive</div>
+<p class="text-on-surface-variant text-body-md mb-8">Redefining high-performance vehicle rentals with cutting-edge technology and premium service.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div class="flex flex-col gap-4">
+<div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Company</div>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="about.html">About</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="contact.html">Contact</a>
+</div>
+<div class="flex flex-col gap-4">
+<div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Resources</div>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="blog.html">Blog</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="support.html">Support</a>
+</div>
+<div class="flex flex-col gap-4">
+<div class="font-bold text-primary uppercase text-label-sm tracking-widest mb-2">Legal</div>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="privacy.html">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors font-label-sm text-label-sm" href="terms.html">Terms &amp; Conditions</a>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 DriveHive. High-Performance Rentals.</p>
+<div class="flex gap-8">
+<span class="text-on-surface-variant text-label-sm font-label-sm">Powered by HiveCore Engine</span>
+</div>
+</div>
 </footer>
+<script src="assets/js/dashboard.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>
